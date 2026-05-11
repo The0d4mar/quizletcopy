@@ -5,12 +5,15 @@ import { CARDS_KEY, loadCards, loadDecks, saveDecks, STORAGE_KEY } from "@/stora
 import { Card, Deck } from "@/types/type";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation';
 
 
 
 export default function Home() {
   const [decks, setDecks] = useState<Deck[]>([]);
   const [cards, setCards] = useState<Card[]>([])
+  const router = useRouter();
+
 
   useEffect(()=>{
     const storedDeck = loadDecks();
@@ -20,14 +23,22 @@ export default function Home() {
   }, []);
 
 
-  const addDeck = (e: React.MouseEvent<HTMLButtonElement>, deckName: string) => {
-    e.stopPropagation();
-    e.preventDefault();
-    if(deckName != ''){
+  const addDeck = (e: React.MouseEvent<HTMLButtonElement>) => {
+     e.preventDefault();
 
-      const newDeck: Deck = {
-      id: crypto.randomUUID(),
-      title: deckName,
+  const collectionDecks = decks.filter(deck =>
+    deck.title.startsWith('Новая коллекция')
+  );
+
+  const newDeckTitle =
+    collectionDecks.length === 0
+      ? 'Новая коллекция'
+      : `Новая коллекция ${collectionDecks.length + 1}`;
+
+    const id = crypto.randomUUID()
+    const newDeck: Deck = {
+      id: id,
+      title: newDeckTitle,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       public: false,
@@ -39,29 +50,18 @@ export default function Home() {
       saveDecks(updatedDecks);
       return updatedDecks;
     });
-    setDeckName('')
-    }
+    router.push(`/deck/${id}/deckEdit`);
   };
 
-  const [deckName, setDeckName] = useState<string>('');
 
-  const changeDeckName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDeckName(e.target.value);
-  };
+
 
 
   return (
     <section className="">
       
-      <div>
-        <input type="text"
-         placeholder="Название колоды"
-         id="deckName"
-         className="border p-2 rounded mr-2"
-         value={deckName}
-         onChange={e => changeDeckName(e)}
-        />
-        <button onClick = {e => addDeck(e, deckName)}>Добавить колоду</button>
+      <div className="flex mb-10">
+        <button onClick = {e => addDeck(e)} className="border-1 rounded-xl flex justify-center items-center px-4 py-3">Добавить колоду</button>
       </div>
         
       <h1>
