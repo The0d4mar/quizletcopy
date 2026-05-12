@@ -50,7 +50,7 @@ export default function Home() {
       saveDecks(updatedDecks);
       return updatedDecks;
     });
-    router.push(`/deck/${id}/deckEdit`);
+    router.push(`/deck/${id}/deckEdit/{state="createNewDeck"}`);
   };
 
 

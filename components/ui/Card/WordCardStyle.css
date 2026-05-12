@@ -34,7 +34,6 @@
 
   backface-visibility: hidden;
 }
-
 .flashcardBack {
   transform: rotateY(180deg);
 }

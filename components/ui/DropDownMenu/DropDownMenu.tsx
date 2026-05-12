@@ -16,7 +16,7 @@ export default function DropdownMenu({ localId }: { localId: string }) {
       {
         label: 'Редактировать',
         icon: Pencil ,
-        way: `${sendedDeckId}/deckEdit`
+        way: `${sendedDeckId}/deckEdit/{state="renderDeck"}`
       },
       {
         label: 'Создать копию',

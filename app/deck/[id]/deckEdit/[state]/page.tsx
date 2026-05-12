@@ -8,10 +8,12 @@ import Link from 'next/link';
 import { Trash2, Plus, ChevronLeft } from 'lucide-react';
 
 export default function EditDeckPage() {
-  const params = useParams<{ id: string }>();
+  const params = useParams<{ id: string, state: string }>();
   const router = useRouter();
 
   const deckId = params.id;
+  const stater = params.state;
+  console.log(stater)
 
   const [decks, setDecks] = useState<Deck[]>([]);
   const [cards, setCards] = useState<Card[]>([]);
@@ -80,6 +82,14 @@ export default function EditDeckPage() {
     setCards(prev => prev.filter(card => card.id !== cardId));
   };
 
+  const cancelDeckCreation = (e: React.MouseEvent<HTMLButtonElement>) =>{
+    e.preventDefault()
+    const newDecks = decks.filter(deck => deck.id != deckId)
+    console.log(newDecks)
+    saveDecks(newDecks)
+    router.push('/');
+  }
+
   const saveChanges = () => {
     const updatedDecks = decks.map(deck =>
       deck.id === deckId
@@ -93,7 +103,8 @@ export default function EditDeckPage() {
     );
 
     saveDecks(updatedDecks);
-    saveCards(cards);
+    const updatedCards = cards.filter(card => card.original != '' && card.translation != '')
+    saveCards(updatedCards);
 
     router.push(`/deck/${deckId}`);
   };
@@ -102,19 +113,23 @@ export default function EditDeckPage() {
     <section className="min-h-screen w-full px-10 py-8 text-white">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex items-center justify-between">
-          <Link
-            href={`/deck/${deckId}`}
-            className="flex items-center gap-2 text-sm font-semibold text-indigo-200 hover:text-white"
-          >
-            <ChevronLeft size={20} />
-            Назад к модулю
-          </Link>
+          {stater == '%7Bstate%3D%22renderDeck%22%7D' ?
+            <Link
+              href={`/deck/${deckId}`}
+              className="flex items-center gap-2 text-sm font-semibold text-indigo-200 hover:text-white"
+            >
+              <ChevronLeft size={20} />
+                Назад к модулю
+            </Link> 
+          :
+           <button className="font-light font-normal text-gray-700 underline underline-offset-3 hover:text-white" onClick={e => cancelDeckCreation(e)}>Cancel</button>
+          }
 
           <button
             onClick={saveChanges}
             className="rounded-full bg-indigo-500 px-6 py-3 text-sm font-bold text-white transition hover:bg-indigo-400"
           >
-            Готово
+            {stater == '%7Bstate%3D%22createNewDeck%22%7D' ? "Открыть модуль": "Внести изменения"}
           </button>
         </div>
 
@@ -141,15 +156,7 @@ export default function EditDeckPage() {
           />
         </div>
 
-        <div className="mb-6 flex items-center gap-4">
-          <button
-            onClick={addCard}
-            className="flex items-center gap-2 rounded-full bg-slate-700 px-5 py-3 text-sm font-bold transition hover:bg-slate-600"
-          >
-            <Plus size={18} />
-            Добавить карточку
-          </button>
-        </div>
+
 
         <div className="space-y-6">
           {deckCards.map((card, index) => (
@@ -203,11 +210,17 @@ export default function EditDeckPage() {
           ))}
         </div>
 
-        {deckCards.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-slate-500 px-6 py-10 text-center text-slate-300">
-            В этой колоде пока нет карточек
-          </div>
-        )}
+        <div className="mt-6 flex items-center gap-4 justify-center">
+          <button
+            onClick={addCard}
+            className="flex items-center gap-2 rounded-full bg-slate-700 px-5 py-3 text-sm font-bold transition hover:bg-slate-600"
+          >
+            <Plus size={18} />
+            Добавить карточку
+          </button>
+        </div>
+
+       
       </div>
     </section>
   );
