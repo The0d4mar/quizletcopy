@@ -9,6 +9,8 @@ import {
 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import DropDownMenuBtn from './DropDownMenuBtn';
+import { loadDecks } from '@/storage';
+import { delCenDeck } from '@/api/localFunc';
 
 export default function DropdownMenu({ localId }: { localId: string }) {
     const sendedDeckId = localId;
@@ -16,32 +18,39 @@ export default function DropdownMenu({ localId }: { localId: string }) {
       {
         label: 'Редактировать',
         icon: Pencil ,
-        way: `${sendedDeckId}/deckEdit/{state="renderDeck"}`
+        way: `${sendedDeckId}/deckEdit/{state="renderDeck"}`,
+        onClick: () => console.log('Редактировать'),
       },
       {
         label: 'Создать копию',
         icon: Copy ,
+        onClick: () => console.log('Создать копию'),
       },
       {
         label: 'Печать',
         icon: Printer ,
+        onClick: () => console.log('Создать копию'),
       },
       {
         label: 'Объединить',
         icon: GitMerge ,
+        onClick: () => console.log('Создать копию'),
       },
       {
         label: 'Экспортировать',
         icon: Download ,
+        onClick: () => console.log('Создать копию'),
       },
       {
         label: 'Внедрить',
         icon: Code2 ,
+        onClick: () => console.log('Создать копию'),
       },
       {
         label: 'Удалить',
         icon: Trash2 ,
         danger: true,
+        onClick: () => delCenDeck(loadDecks(), sendedDeckId),
       },
     ];
 

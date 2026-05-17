@@ -6,6 +6,7 @@ import { Card, Deck } from '@/types/type';
 import { loadCards, loadDecks, saveCards, saveDecks } from '@/storage';
 import Link from 'next/link';
 import { Trash2, Plus, ChevronLeft } from 'lucide-react';
+import { delCenDeck } from '@/api/localFunc';
 
 export default function EditDeckPage() {
   const params = useParams<{ id: string, state: string }>();
@@ -83,14 +84,13 @@ export default function EditDeckPage() {
   };
 
   const cancelDeckCreation = (e: React.MouseEvent<HTMLButtonElement>) =>{
-    e.preventDefault()
-    const newDecks = decks.filter(deck => deck.id != deckId)
-    console.log(newDecks)
-    saveDecks(newDecks)
+    e.preventDefault();
+    delCenDeck(decks, deckId)
     router.push('/');
   }
 
-  const saveChanges = () => {
+  const saveChanges = (e: React.MouseEvent<HTMLButtonElement>, flag: number) => {
+    e.preventDefault();
     const updatedDecks = decks.map(deck =>
       deck.id === deckId
         ? {
@@ -105,8 +105,10 @@ export default function EditDeckPage() {
     saveDecks(updatedDecks);
     const updatedCards = cards.filter(card => card.original != '' && card.translation != '')
     saveCards(updatedCards);
+    if(flag == 0) router.push('/');
+    else {router.push(`/deck/${deckId}`);}
 
-    router.push(`/deck/${deckId}`);
+    
   };
 
   return (
@@ -124,13 +126,24 @@ export default function EditDeckPage() {
           :
            <button className="font-light font-normal text-gray-700 underline underline-offset-3 hover:text-white" onClick={e => cancelDeckCreation(e)}>Cancel</button>
           }
+          <div className = "flex items-center gap-5">
+            {stater == '%7Bstate%3D%22createNewDeck%22%7D' ?
 
-          <button
-            onClick={saveChanges}
-            className="rounded-full bg-indigo-500 px-6 py-3 text-sm font-bold text-white transition hover:bg-indigo-400"
-          >
-            {stater == '%7Bstate%3D%22createNewDeck%22%7D' ? "Открыть модуль": "Внести изменения"}
-          </button>
+            <button className="px-6 py-3 text-sm font-bold text-white" onClick={ e => saveChanges(e, 0)}>
+                Создать и закрыть
+            </button>
+
+            :  null
+            }
+
+            <button
+              onClick={e => saveChanges(e, 1)}
+              className="rounded-full bg-indigo-500 px-6 py-3 text-sm font-bold text-white transition hover:bg-indigo-400"
+            >
+              
+              {stater == '%7Bstate%3D%22createNewDeck%22%7D' ? "Открыть модуль": "Внести изменения"}
+            </button>
+          </div>
         </div>
 
 

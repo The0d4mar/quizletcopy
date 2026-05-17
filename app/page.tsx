@@ -1,11 +1,11 @@
 'use client'
 
 import DeckCard from "@/components/ui/Card/DeckCard";
-import { CARDS_KEY, loadCards, loadDecks, saveDecks, STORAGE_KEY } from "@/storage";
+import {loadCards, loadDecks} from "@/storage";
 import { Card, Deck } from "@/types/type";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
+import { addNewDeck } from "@/api/localFunc";
 
 
 
@@ -24,32 +24,9 @@ export default function Home() {
 
 
   const addDeck = (e: React.MouseEvent<HTMLButtonElement>) => {
-     e.preventDefault();
-
-  const collectionDecks = decks.filter(deck =>
-    deck.title.startsWith('Новая коллекция')
-  );
-
-  const newDeckTitle =
-    collectionDecks.length === 0
-      ? 'Новая коллекция'
-      : `Новая коллекция ${collectionDecks.length + 1}`;
-
-    const id = crypto.randomUUID()
-    const newDeck: Deck = {
-      id: id,
-      title: newDeckTitle,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      public: false,
-      createdBy: "User",
-    };
-
-    setDecks((prev) => {
-      const updatedDecks = [...prev, newDeck];
-      saveDecks(updatedDecks);
-      return updatedDecks;
-    });
+    e.preventDefault();
+    const id = addNewDeck(decks)
+    
     router.push(`/deck/${id}/deckEdit/{state="createNewDeck"}`);
   };
 

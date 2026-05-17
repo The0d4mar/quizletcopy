@@ -1,13 +1,10 @@
 
-import { Deck } from '@/types/type';
+import { Deck, DeckCardProps } from '@/types/type';
 import { IdCardLanyard} from 'lucide-react';
 import Link from 'next/link';
 import React, {FC} from 'react';
 
-interface DeckCardProps{
-    deck: Deck,
-    cardsCount: number,
-}
+
 
 const DeckCard:FC<DeckCardProps> = ({deck, cardsCount}) => {
   return (

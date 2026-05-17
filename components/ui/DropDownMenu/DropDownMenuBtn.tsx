@@ -1,5 +1,8 @@
+'use client'
+
 import { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import {FC} from 'react';
 
@@ -8,7 +11,8 @@ interface Label {
     icon: LucideIcon,
     active?: boolean,
     danger?: boolean,
-    way?: string
+    way?: string,
+    onClick?: () => void,
 }
 
 interface DropDownMenuBtnProps {
@@ -16,14 +20,18 @@ interface DropDownMenuBtnProps {
 }
 
 const DropDownMenuBtn: FC<DropDownMenuBtnProps> = ({item}) => {
-    function call(){
+    const router = useRouter();
+    function call(e: React.MouseEvent<HTMLAnchorElement>) {
+        e.preventDefault();
         console.log(item.way)
+        item.onClick?.()
+        if(item.danger) router.push('/')
     }
     const Icon = item.icon;
   return (
     <Link
         href={item.way ? item.way : ''}
-        onClick={call}
+        onClick={(e) => call(e)}
         className={`
             flex
             h-[44px]

@@ -35,3 +35,9 @@ export type StorageSchema = {
   repeats: Repeats[];
 };
 
+//////////////////////////////////////////////////////
+
+export interface DeckCardProps{
+    deck: Deck,
+    cardsCount: number,
+}
