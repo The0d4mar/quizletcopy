@@ -1,11 +1,6 @@
-import { LucideIcon } from 'lucide-react';
+import { SideBarChapProps } from '@/types/type';
 import React, {FC} from 'react';
 
-interface SideBarChapProps{
-    title: string,
-    headers: string[],
-    icons: LucideIcon[],
-}
 
 
 const SideBarChap:FC<SideBarChapProps> = ({ title, headers, icons }) => {

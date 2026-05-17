@@ -1,3 +1,5 @@
+import { LucideIcon } from "lucide-react";
+
 export type Deck = {
     id: string;
     title: string;
@@ -40,4 +42,10 @@ export type StorageSchema = {
 export interface DeckCardProps{
     deck: Deck,
     cardsCount: number,
+}
+
+export interface SideBarChapProps{
+    title: string,
+    headers: string[],
+    icons: LucideIcon[],
 }

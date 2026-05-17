@@ -23,7 +23,6 @@ const DropDownMenuBtn: FC<DropDownMenuBtnProps> = ({item}) => {
     const router = useRouter();
     function call(e: React.MouseEvent<HTMLAnchorElement>) {
         e.preventDefault();
-        console.log(item.way)
         item.onClick?.()
         if(item.danger) router.push('/')
     }
@@ -31,7 +30,7 @@ const DropDownMenuBtn: FC<DropDownMenuBtnProps> = ({item}) => {
   return (
     <Link
         href={item.way ? item.way : ''}
-        onClick={(e) => call(e)}
+        onClick={!item.way ? (e) => call(e) : undefined}
         className={`
             flex
             h-[44px]

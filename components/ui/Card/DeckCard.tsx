@@ -8,7 +8,7 @@ import React, {FC} from 'react';
 
 const DeckCard:FC<DeckCardProps> = ({deck, cardsCount}) => {
   return (
-    <Link className="mb-3 flex gap-5 items-center border-1 border-white rounded-2xl px-3 py-4" href = {`/deck/${deck.id}`}>
+    <Link className=" inline-flex w-fit gap-5 items-center border border-white rounded-2xl px-3 py-4" href = {`/deck/${deck.id}`}>
         <div>
             <IdCardLanyard size={48}/>
         </div>

@@ -1,28 +1,13 @@
 import React, {FC} from 'react';
 import SideBarChap from './SideBarChap';
-import { Bell, Boxes, Folder, Folders, House, NotebookIcon, WalletCards } from 'lucide-react';
+import { sideNavData } from '@/api/DataBlock';
+
 
 
 
 
 const SideBar:FC = () => {
-  const innerSideNav = {
-    stableInner: {
-      title: '',
-      headers: ['Главная', "Ваша библиотека", "Учебные группы", "Уведомления"],
-      icons:[House, Folders, Boxes, Bell],
-    },
-    userFolders:{
-      title: 'Ваши папки',
-      headers: [],
-      icons: [Folder],
-    },
-    infoMenu: {
-      title: 'Начинте здесь',
-      headers: ["Карточки", "Решения от экспертов"],
-      icons: [WalletCards, NotebookIcon],
-    },
-  }
+  const innerSideNav = sideNavData;
 
   return (
     <aside className=' py-6 flex flex-col gap-4 relative'>

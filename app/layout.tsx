@@ -15,11 +15,13 @@ export default function RootLayout({
       lang="en"
       className="h-full antialiased"
     >
-      <body className="min-w-screen mb-5">
+      <body className="w-full mb-5">
         <Header/>
-        <main className="flex gap-15 relative w-screen px-6">
+        <main className="flex gap-15 relative w-full px-6">
           <SideBar/>
-          {children}
+          <div className="flex-1 min-w-0">
+            {children}
+          </div>
         </main>
       </body>
     </html>

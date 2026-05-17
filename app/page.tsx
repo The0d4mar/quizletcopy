@@ -3,24 +3,17 @@
 import DeckCard from "@/components/ui/Card/DeckCard";
 import {loadCards, loadDecks} from "@/storage";
 import { Card, Deck } from "@/types/type";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { addNewDeck } from "@/api/localFunc";
 
-
+await new Promise(resolve => setTimeout(resolve, 5000));
 
 export default function Home() {
-  const [decks, setDecks] = useState<Deck[]>([]);
-  const [cards, setCards] = useState<Card[]>([])
+  const [decks, setDecks] = useState<Deck[]>(() => loadDecks());
+  const [cards, setCards] = useState<Card[]>(() => loadCards());
   const router = useRouter();
 
-
-  useEffect(()=>{
-    const storedDeck = loadDecks();
-    const storedCard = loadCards()
-    setDecks(storedDeck);
-    setCards(storedCard)
-  }, []);
 
 
   const addDeck = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -41,7 +34,7 @@ export default function Home() {
         <button onClick = {e => addDeck(e)} className="border-1 rounded-xl flex justify-center items-center px-4 py-3">Добавить колоду</button>
       </div>
         
-      <h1>
+      <div className="mb-6 flex-col flex justify-start gap-3">
         {decks.map(deck => {
           const cardsCount = cards.filter(card => card.deckId === deck.id).length;
 
@@ -49,7 +42,7 @@ export default function Home() {
             <DeckCard key ={deck.id} deck={deck} cardsCount={cardsCount}/>
           );
         })}
-      </h1>
+      </div>
 
 
     </section>
