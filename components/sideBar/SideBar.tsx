@@ -20,7 +20,7 @@ const SideBar:FC = () => {
           />
 
           {index !== array.length - 1 && (
-            <div className='relative w-full h-0.5 bg-white rounded-2xl' />
+            <div className='relative w-full h-0.5 bg-[var(--color-border)] rounded-2xl' />
           )}
         </React.Fragment>
       ))}

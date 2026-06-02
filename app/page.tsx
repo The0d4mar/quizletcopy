@@ -1,50 +1,55 @@
 'use client'
 
 import DeckCard from "@/components/ui/Card/DeckCard";
-import {loadCards, loadDecks} from "@/storage";
+import { loadCards, loadDecks } from "@/storage";
 import { Card, Deck } from "@/types/type";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import { addNewDeck } from "@/api/localFunc";
 
-await new Promise(resolve => setTimeout(resolve, 5000));
-
 export default function Home() {
-  const [decks, setDecks] = useState<Deck[]>(() => loadDecks());
-  const [cards, setCards] = useState<Card[]>(() => loadCards());
+  const [decks, setDecks] = useState<Deck[]>([]);
+  const [cards, setCards] = useState<Card[]>([]);
   const router = useRouter();
+  console.log(loadCards());
 
-
+  useEffect(() => {
+    setDecks(loadDecks());
+    setCards(loadCards());
+  }, []);
 
   const addDeck = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const id = addNewDeck(decks)
-    
-    router.push(`/deck/${id}/deckEdit/{state="createNewDeck"}`);
+
+    const id = addNewDeck(decks);
+
+    router.push(`/deck/${id}/deckEdit/state=createNewDeck`);
   };
 
-
-
-
-
   return (
-    <section className="">
-      
+    <section>
       <div className="flex mb-10">
-        <button onClick = {e => addDeck(e)} className="border-1 rounded-xl flex justify-center items-center px-4 py-3">Добавить колоду</button>
+        <button
+          onClick={addDeck}
+          className="border-1 rounded-[var(--radius-card)] flex justify-center items-center px-[var(--padding-x-card)] py-[var(--padding-y-card)]"
+        >
+          Добавить колоду
+        </button>
       </div>
-        
-      <div className="mb-6 flex-col flex justify-start gap-3">
+
+      <div className="mb-6 flex flex-col items-start gap-3">
         {decks.map(deck => {
           const cardsCount = cards.filter(card => card.deckId === deck.id).length;
 
           return (
-            <DeckCard key ={deck.id} deck={deck} cardsCount={cardsCount}/>
+            <DeckCard
+              key={deck.id}
+              deck={deck}
+              cardsCount={cardsCount}
+            />
           );
         })}
       </div>
-
-
     </section>
   );
 }

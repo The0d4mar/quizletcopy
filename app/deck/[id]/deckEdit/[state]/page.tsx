@@ -127,7 +127,7 @@ export default function EditDeckPage() {
            <button className="font-light font-normal text-gray-700 underline underline-offset-3 hover:text-white" onClick={e => cancelDeckCreation(e)}>Cancel</button>
           }
           <div className = "flex items-center gap-5">
-            {stater == '%7Bstate%3D%22createNewDeck%22%7D' ?
+            {stater == 'state%3DcreateNewDeck' ?
 
             <button className="px-6 py-3 text-sm font-bold text-white" onClick={ e => saveChanges(e, 0)}>
                 Создать и закрыть
@@ -141,7 +141,7 @@ export default function EditDeckPage() {
               className="rounded-full bg-indigo-500 px-6 py-3 text-sm font-bold text-white transition hover:bg-indigo-400"
             >
               
-              {stater == '%7Bstate%3D%22createNewDeck%22%7D' ? "Открыть модуль": "Внести изменения"}
+              {stater == 'state%3DcreateNewDeck' ? "Открыть модуль": "Внести изменения"}
             </button>
           </div>
         </div>

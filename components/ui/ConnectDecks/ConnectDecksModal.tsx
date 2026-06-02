@@ -1,0 +1,63 @@
+import { connectedDecks } from '@/api/localFunc';
+import { loadDecks } from '@/storage';
+import { modalState } from '@/store/modalStore';
+import { RootState } from '@/store/store';
+import React from 'react';
+import {FC} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+interface ConnectDecksModalProps {
+  sendedDeckId: string;
+  onConnected: () => void;
+}
+
+const ConnectDecksModal: FC<ConnectDecksModalProps> = ({
+  sendedDeckId,
+  onConnected,
+}) => {
+  const decks = loadDecks();
+  const hideFlag = useSelector((state: RootState) => state.modal.state);
+  const dispatch = useDispatch();
+
+  const connectFunc = (joinedDeckId: string) => {
+    connectedDecks(sendedDeckId, joinedDeckId);
+    onConnected();
+    dispatch(modalState(false));
+  };
+
+  return (
+    <div
+      className={`
+        ${!hideFlag ? 'hidden' : 'flex'}
+        fixed inset-0 z-50 items-center justify-center bg-black/50
+      `}
+    >
+      <div className="w-full max-w-lg rounded-2xl border border-white bg-black p-6">
+        <h2 className="mb-4 text-xl">
+          Выберите колоду для объединения
+        </h2>
+
+        <ul className="flex flex-col gap-2">
+          {decks.map(deck => {
+            if (deck.id !== sendedDeckId) {
+              return (
+                <li key={deck.id}>
+                  <button
+                    className="w-full rounded-xl border p-3 text-left"
+                    onClick={() => connectFunc(deck.id)}
+                  >
+                    {deck.title}
+                  </button>
+                </li>
+              );
+            }
+
+            return null;
+          })}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default ConnectDecksModal;

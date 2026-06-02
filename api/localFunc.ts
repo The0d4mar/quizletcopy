@@ -1,5 +1,5 @@
 
-import { saveDecks } from "@/storage";
+import { loadCards, loadDecks, saveCards, saveDecks } from "@/storage";
 import { Card, Deck } from "@/types/type";
 
 
@@ -34,5 +34,35 @@ export const addNewDeck = (decks: Deck[]) => {
 
 export const delCenDeck = (decks: Deck[], deckId: string) =>{
     const newDecks = decks.filter(deck => deck.id != deckId)
+    
     saveDecks(newDecks)
   }
+
+  export const delConnectedCards = (cards: Card[], deletedDeckId: string) => {
+    const newCards = cards.filter(card => card.deckId !== deletedDeckId)
+    
+    saveCards(newCards)
+  }
+
+export const connectedDecks = (
+  sendedDeckId: string,
+  joinedDeckId: string
+) => {
+  const cards = loadCards();
+
+  const updatedCards = cards.map(card => {
+    if (card.deckId === joinedDeckId) {
+      return {
+        ...card,
+        deckId: sendedDeckId,
+        updatedAt: new Date().toISOString(),
+      };
+    }
+
+    return card;
+  });
+
+  delCenDeck(loadDecks(), joinedDeckId);
+  saveCards(updatedCards);
+  return updatedCards;
+};

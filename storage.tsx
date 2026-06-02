@@ -1,3 +1,5 @@
+'use client'
+
 import { Card, Deck, StorageSchema } from "./types/type";
 
 export const STORAGE_KEY = "quiz-app-data";
@@ -60,6 +62,10 @@ export function saveDecks(decks: Deck[]): void {
 
 
 export function loadCards(): Card[] {
+  if (typeof window === 'undefined') {
+    return [];
+  }
+
   const raw = localStorage.getItem(CARDS_KEY);
 
   if (!raw) {
@@ -67,7 +73,9 @@ export function loadCards(): Card[] {
   }
 
   try {
-    return JSON.parse(raw) as Card[];
+    const parsed = JSON.parse(raw);
+
+    return parsed.filter(Boolean);
   } catch {
     return [];
   }

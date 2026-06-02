@@ -10,9 +10,9 @@ const SideBarChap:FC<SideBarChapProps> = ({ title, headers, icons }) => {
         {headers.map((header, index) => (
             <button className='
             
-            flex items-center gap-2 px-4 py-2.5 rounded-2xl
+            flex items-center gap-2 px-[var(--padding-x-card)] py-[var(--padding-y-card)] rounded-[var(--radius-card)]
             transition-all duration-300 ease-in-out
-            hover:bg-gray-100 hover:scale-[1.02]
+            hover:bg-[var(--color-hover)]
             
             ' key={index}>
                 <span>{React.createElement(icons[index])}</span>

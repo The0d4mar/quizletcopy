@@ -11,7 +11,7 @@ const Header:FC = () => {
     <header className='px-6 py-5 flex items-center justify-between'> 
         <div className='flex items-center justify-between'>
         <HeaderBarBtn/>
-        <HeaderToMain/>
+        <HeaderToMain/> 
         </div>
       <HeaderSearch/>
       <div>

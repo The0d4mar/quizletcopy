@@ -31,10 +31,18 @@ export type Repeats = {
     numOfRepeats: number[];
 }
 
+export type Folder ={
+    id: string;
+    title: string;
+    deckTitles: string[];
+    deckIds: string[];
+}
+
 export type StorageSchema = {
   decks: Deck[];    
   cards: Card[];
   repeats: Repeats[];
+  folders: Folder[];
 };
 
 //////////////////////////////////////////////////////

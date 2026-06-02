@@ -9,11 +9,16 @@ import {
 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import DropDownMenuBtn from './DropDownMenuBtn';
-import { loadDecks } from '@/storage';
-import { delCenDeck } from '@/api/localFunc';
+import { loadCards, loadDecks } from '@/storage';
+import { delCenDeck, delConnectedCards } from '@/api/localFunc';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+import { modalState } from '@/store/modalStore';
 
 export default function DropdownMenu({ localId }: { localId: string }) {
     const sendedDeckId = localId;
+    const hideFlag = useSelector((state: RootState) => state.modal.state) 
+    const dispatch = useDispatch();
     const menuItems = [
       {
         label: 'Редактировать',
@@ -34,7 +39,7 @@ export default function DropdownMenu({ localId }: { localId: string }) {
       {
         label: 'Объединить',
         icon: GitMerge ,
-        onClick: () => console.log('Создать копию'),
+        onClick: () => {dispatch(modalState(true))},
       },
       {
         label: 'Экспортировать',
@@ -50,7 +55,10 @@ export default function DropdownMenu({ localId }: { localId: string }) {
         label: 'Удалить',
         icon: Trash2 ,
         danger: true,
-        onClick: () => delCenDeck(loadDecks(), sendedDeckId),
+        onClick: () => {
+          delCenDeck(loadDecks(), sendedDeckId)
+          delConnectedCards(loadCards(), sendedDeckId)
+        },
       },
     ];
 

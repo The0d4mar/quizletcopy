@@ -8,6 +8,7 @@ import { WordCard } from '@/components/ui/Card/WordCard';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import DropDownDeckMenu from '@/components/ui/DropDownDeck/DropDownDeckMenu';
+import ConnectDecksModal from '@/components/ui/ConnectDecks/ConnectDecksModal';
 
 export default function Page() {
   const params = useParams<{ id: string }>();
@@ -16,6 +17,10 @@ export default function Page() {
   const [cards, setCards] = useState<Card[]>([]);
   const [newWord, setNewWord] = useState<[string, string]>(['', '']);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const refreshCards = () => {
+    setCards(loadCards());
+  };
 
   const deckTitle = loadDecks().find(deck => deck.id === sendedDeckId);
 
@@ -47,6 +52,10 @@ export default function Page() {
 
   return (
     <section className='relative flex-1 w-full'>
+      <ConnectDecksModal
+        sendedDeckId={sendedDeckId}
+        onConnected={refreshCards}
+      />
       <div className='flex justify-start mb-10'>
         <Link href={'/'}>На главную</Link>
       </div>
@@ -71,7 +80,7 @@ export default function Page() {
               <button
                 onClick={goToPrevCard}
                 disabled={isFirstCard}
-                className='border-1 border-white rounded-[50%] w-8 h-8 flex items-center justify-center'
+                className='border-1 border-[var(--color-border)] rounded-[50%] w-8 h-8 flex items-center justify-center'
               >
                 <ArrowLeft size={24}/>
               </button>
@@ -83,7 +92,7 @@ export default function Page() {
               <button
                 onClick={goToNextCard}
                 disabled={isLastCard}
-                className='border-1 border-white rounded-[50%] w-8 h-8 items-center justify-center'
+                className='border-1 border-[var(--color-border)] rounded-[50%] w-8 h-8 items-center justify-center'
               >
                 <ArrowRight size={24}/>
               </button>
