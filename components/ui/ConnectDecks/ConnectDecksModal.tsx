@@ -2,6 +2,7 @@ import { connectedDecks } from '@/api/localFunc';
 import { loadDecks } from '@/storage';
 import { modalState } from '@/store/modalStore';
 import { RootState } from '@/store/store';
+import { Cross, X } from 'lucide-react';
 import React from 'react';
 import {FC} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,9 +34,19 @@ const ConnectDecksModal: FC<ConnectDecksModalProps> = ({
       `}
     >
       <div className="w-full max-w-lg rounded-2xl border border-white bg-black p-6">
-        <h2 className="mb-4 text-xl">
-          Выберите колоду для объединения
-        </h2>
+        <div className="relative mb-6 flex items-center justify-between">
+          <h2 className="text-xl">
+            Выберите колоду для объединения
+          </h2>
+
+          <button
+            className="text-white hover:text-gray-300"
+            onClick={() => dispatch(modalState(false))}
+          >
+            <X size={24}/>
+          </button>
+
+        </div>
 
         <ul className="flex flex-col gap-2">
           {decks.map(deck => {

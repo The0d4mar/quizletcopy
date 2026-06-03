@@ -1,12 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Card, Deck } from '@/types/type';
 import { loadCards, loadDecks, saveCards, saveDecks } from '@/storage';
 import Link from 'next/link';
-import { Trash2, Plus, ChevronLeft } from 'lucide-react';
+import { Plus, ChevronLeft } from 'lucide-react';
 import { delCenDeck } from '@/api/localFunc';
+import EditDeckComp from '@/components/ui/EditDeckComp/EditDeckComp';
+import AddCardField from '@/components/ui/AddCardField/AddCardField';
 
 export default function EditDeckPage() {
   const params = useParams<{ id: string, state: string }>();
@@ -16,25 +18,16 @@ export default function EditDeckPage() {
   const stater = params.state;
   console.log(stater)
 
-  const [decks, setDecks] = useState<Deck[]>([]);
-  const [cards, setCards] = useState<Card[]>([]);
-  const [deckTitle, setDeckTitle] = useState('');
-  const [deckDescription, setDeckDescription] = useState('');
+  const [decks, setDecks] = useState<Deck[]>(() => loadDecks());
+  const [cards, setCards] = useState<Card[]>(() => loadCards());
+  const currentDeck = decks.find(deck => deck.id === deckId);
 
-  useEffect(() => {
-    const storedDecks = loadDecks();
-    const storedCards = loadCards();
+  const [deckTitle, setDeckTitle] = useState(() => currentDeck?.title ?? '');
+  const [deckDescription, setDeckDescription] = useState(
+    () => currentDeck?.description ?? ''
+  );
 
-    const currentDeck = storedDecks.find(deck => deck.id === deckId);
-
-    setDecks(storedDecks);
-    setCards(storedCards);
-
-    if (currentDeck) {
-      setDeckTitle(currentDeck.title);
-      setDeckDescription(currentDeck.description ?? '');
-    }
-  }, [deckId]);
+  
 
   const deckCards = cards.filter(card => card.deckId === deckId);
 
@@ -111,6 +104,10 @@ export default function EditDeckPage() {
     
   };
 
+  const updateDeckTitle = (id: string, value: string) => {
+    setDeckTitle(value);
+  }
+
   return (
     <section className="min-h-screen w-full px-10 py-8 text-white">
       <div className="mx-auto max-w-7xl">
@@ -152,13 +149,14 @@ export default function EditDeckPage() {
             <span className="mb-1 block text-xs font-bold text-slate-300">
               Название
             </span>
+            <EditDeckComp
+                  original={deckTitle}
+                  updateCardfunc={updateDeckTitle}
+                  placeholder="Название колоды"
+                  className="w-full bg-transparent text-lg font-bold text-white outline-none"
+                  spanFlag={false}
+                />
 
-            <input
-              value={deckTitle}
-              onChange={e => setDeckTitle(e.target.value)}
-              className="w-full bg-transparent text-lg font-bold text-white outline-none"
-              placeholder="Название колоды"
-            />
           </label>
 
           <textarea
@@ -173,53 +171,16 @@ export default function EditDeckPage() {
 
         <div className="space-y-6">
           {deckCards.map((card, index) => (
-            <div
+            <AddCardField
               key={card.id}
-              className="rounded-2xl bg-slate-700 px-6 py-5"
-            >
-              <div className="mb-6 flex items-center justify-between">
-                <span className="font-bold text-slate-200">
-                  {index + 1}
-                </span>
-
-                <button
-                  onClick={() => deleteCard(card.id)}
-                  className="rounded-lg p-2 text-slate-300 transition hover:bg-slate-600 hover:text-white"
-                >
-                  <Trash2 size={18} />
-                </button>
-              </div>
-
-              <div className="grid gap-6 md:grid-cols-2">
-                <div>
-                  <input
-                    value={card.original}
-                    onChange={e => updateCardOriginal(card.id, e.target.value)}
-                    placeholder="Термин"
-                    className="w-full rounded-lg bg-[#0b092b] px-4 py-4 text-lg font-bold text-white outline-none"
-                  />
-
-                  <span className="mt-3 block text-xs font-bold uppercase text-slate-300">
-                    Термин
-                  </span>
-                </div>
-
-                <div>
-                  <input
-                    value={card.translation}
-                    onChange={e =>
-                      updateCardTranslation(card.id, e.target.value)
-                    }
-                    placeholder="Определение"
-                    className="w-full rounded-lg bg-[#0b092b] px-4 py-4 text-lg font-bold text-white outline-none"
-                  />
-
-                  <span className="mt-3 block text-xs font-bold uppercase text-slate-300">
-                    Определение
-                  </span>
-                </div>
-              </div>
-            </div>
+              id={card.id}
+              original={card.original}
+              translation={card.translation}
+              updateCardOriginal={updateCardOriginal}
+              updateCardTranslation={updateCardTranslation}
+              deleteCard={deleteCard}
+              index={index}
+            />
           ))}
         </div>
 

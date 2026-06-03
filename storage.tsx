@@ -9,6 +9,7 @@ const defaultData: StorageSchema = {
     decks: [],
     cards: [],
     repeats: [],
+    folders: [],
 };
 
 export const storage = {

@@ -2,20 +2,20 @@
 
 import { loadCards, loadDecks, saveCards } from '@/storage';
 import { Card } from '@/types/type';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { WordCard } from '@/components/ui/Card/WordCard';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import DropDownDeckMenu from '@/components/ui/DropDownDeck/DropDownDeckMenu';
 import ConnectDecksModal from '@/components/ui/ConnectDecks/ConnectDecksModal';
+import ProgressBar from '@/components/ui/ProgressBar/ProgressBar';
+import CardsController from '@/components/ui/CardsController/CardsController';
 
 export default function Page() {
   const params = useParams<{ id: string }>();
   const sendedDeckId = params.id;
 
-  const [cards, setCards] = useState<Card[]>([]);
-  const [newWord, setNewWord] = useState<[string, string]>(['', '']);
+  const [cards, setCards] = useState<Card[]>(loadCards());
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const refreshCards = () => {
@@ -23,11 +23,7 @@ export default function Page() {
   };
 
   const deckTitle = loadDecks().find(deck => deck.id === sendedDeckId);
-
-  useEffect(() => {
-    const startedCards = loadCards();
-    setCards(startedCards);
-  }, []);
+  
 
   const deckCards = cards.filter(card => card.deckId === sendedDeckId);
   const currentCard = deckCards[currentIndex];
@@ -71,56 +67,23 @@ export default function Page() {
         ) : (
           <div>
             <WordCard
+              key={currentCard.id}
               original={currentCard.original}
               translation={currentCard.translation}
               flipped={false}
             />
 
-            <div className='text-center flex items-center justify-center gap-4 mt-4'>
-              <button
-                onClick={goToPrevCard}
-                disabled={isFirstCard}
-                className='border-1 border-[var(--color-border)] rounded-[50%] w-8 h-8 flex items-center justify-center'
-              >
-                <ArrowLeft size={24}/>
-              </button>
+            <CardsController
+              goToPrevCard={goToPrevCard}
+              goToNextCard={goToNextCard}
+              isFirstCard={isFirstCard}
+              isLastCard={isLastCard}
+              currentIndex={currentIndex}
+              deckCardsLength={deckCards.length}
+            />
 
-              <span>
-                {currentIndex + 1} / {deckCards.length}
-              </span>
+            <ProgressBar progressPercent={progressPercent} currentIndex={currentIndex} deckCardsLength={deckCards.length} />
 
-              <button
-                onClick={goToNextCard}
-                disabled={isLastCard}
-                className='border-1 border-[var(--color-border)] rounded-[50%] w-8 h-8 items-center justify-center'
-              >
-                <ArrowRight size={24}/>
-              </button>
-            </div>
-
-            <div
-              style={{
-                width: '100%',
-                height: '8px',
-                background: '#ddd',
-                borderRadius: '999px',
-                overflow: 'hidden',
-                marginTop: '16px',
-              }}
-            >
-              <div
-                style={{
-                  width: `${progressPercent}%`,
-                  height: '100%',
-                  background: '#4f46e5',
-                  transition: 'width 0.3s ease',
-                }}
-              />
-            </div>
-
-            <p>
-              Просмотрено: {currentIndex + 1} из {deckCards.length}
-            </p>
           </div>
         )}
       </div>

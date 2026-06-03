@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './WordCardStyle.css';
 
 type WordCardProps = {
@@ -9,12 +9,12 @@ type WordCardProps = {
   flipped?: boolean;
 };
 
-export function WordCard({ original, translation, flipped }: WordCardProps) {
+export function WordCard({
+  original,
+  translation,
+  flipped = false,
+}: WordCardProps) {
   const [isFlipped, setIsFlipped] = useState(flipped);
-
-  useEffect(()=>{
-    setIsFlipped(false)
-  },[original, translation])
 
   return (
     <button
