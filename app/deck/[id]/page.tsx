@@ -10,6 +10,9 @@ import DropDownDeckMenu from '@/components/ui/DropDownDeck/DropDownDeckMenu';
 import ConnectDecksModal from '@/components/ui/ConnectDecks/ConnectDecksModal';
 import ProgressBar from '@/components/ui/ProgressBar/ProgressBar';
 import CardsController from '@/components/ui/CardsController/CardsController';
+import AddFolder from '@/components/ui/AddFolder/AddFolder';
+import { RootState } from '@/store/store';
+import { useSelector } from 'react-redux';
 
 export default function Page() {
   const params = useParams<{ id: string }>();
@@ -43,8 +46,6 @@ export default function Page() {
     if (isLastCard) return;
     setCurrentIndex(prev => prev + 1);
   };
-
- 
 
   return (
     <section className='relative flex-1 w-full'>

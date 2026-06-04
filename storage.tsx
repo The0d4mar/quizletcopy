@@ -1,9 +1,10 @@
 'use client'
 
-import { Card, Deck, StorageSchema } from "./types/type";
+import { Card, Deck, Folder, StorageSchema } from "./types/type";
 
 export const STORAGE_KEY = "quiz-app-data";
 export const CARDS_KEY = "quiz-app:cards";
+export const FOLDERS_KEY = "quiz-app:folders";
 
 const defaultData: StorageSchema = {
     decks: [],
@@ -86,3 +87,25 @@ export function loadCards(): Card[] {
 export function saveCards(cards: Card[]): void {
   localStorage.setItem(CARDS_KEY, JSON.stringify(cards));
 };
+
+export function loadFolders(): Folder[] {
+  if (typeof window === 'undefined') {
+    return [];
+  }
+  const raw = localStorage.getItem(FOLDERS_KEY);
+
+  if (!raw) {
+    return [];
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed.filter(Boolean);
+  } catch {
+    return [];
+  }
+
+}
+
+export function saveFolders(folders: Folder[]): void {
+  localStorage.setItem(FOLDERS_KEY, JSON.stringify(folders));
+}

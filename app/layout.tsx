@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header/Header";
 import { AppProvider } from "./provider/AppProvider";
 import { ReduxProvider } from "./provider/ReduxProvider";
+import AddFolder from "@/components/ui/AddFolder/AddFolder";
 
 
 
@@ -27,6 +28,7 @@ export default function RootLayout({
                 <SideBar />
 
                 <div className="flex-1 min-w-0">
+                  <AddFolder/>
                   {children}
                 </div>
               </main>

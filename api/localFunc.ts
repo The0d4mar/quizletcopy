@@ -1,6 +1,6 @@
 
-import { loadCards, loadDecks, saveCards, saveDecks } from "@/storage";
-import { Card, Deck } from "@/types/type";
+import { loadCards, loadDecks, loadFolders, saveCards, saveDecks, saveFolders } from "@/storage";
+import { Card, Deck, Folder } from "@/types/type";
 
 
 
@@ -44,6 +44,22 @@ export const delCenDeck = (decks: Deck[], deckId: string) =>{
     saveCards(newCards)
   }
 
+  export const updateFolderList = (deckId: string) => {
+    const folders = loadFolders();
+
+    const updatedFolders = folders.map(folder => {
+      if (folder.deckIds.includes(deckId)) {
+        return {
+          ...folder,
+          deckIds: folder.deckIds.filter(id => id !== deckId),
+        };
+      }
+
+      return folder;
+    });
+    saveFolders(updatedFolders);
+    return updatedFolders;
+  }
 export const connectedDecks = (
   sendedDeckId: string,
   joinedDeckId: string

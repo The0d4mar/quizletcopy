@@ -1,8 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit'
 import modalReducer from './modalStore'
+import addFolderStore  from './addFolderStore'
+import folderStore from './folderStore'
+import AddDeckToFolderStore  from './AddDeckToFolderStore'
 export const store = configureStore({
   reducer: {
+
     modal: modalReducer,
+    folderFlag: addFolderStore,
+    folders: folderStore,
+    adddecktofolderflag: AddDeckToFolderStore,
+    
   },
 })
 

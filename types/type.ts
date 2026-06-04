@@ -53,6 +53,7 @@ export interface DeckCardProps{
 }
 
 export interface SideBarChapProps{
+    id: string,
     title: string,
     headers: string[],
     icons: LucideIcon[],

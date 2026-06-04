@@ -14,6 +14,7 @@ const SideBar:FC = () => {
       {Object.values(innerSideNav).map((item, index, array) => (
         <React.Fragment key={index}>
           <SideBarChap
+            id={item.id}
             title={item.title}
             headers={item.headers}
             icons={item.icons}

@@ -9,11 +9,12 @@ import {
 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import DropDownMenuBtn from './DropDownMenuBtn';
-import { loadCards, loadDecks } from '@/storage';
-import { delCenDeck, delConnectedCards } from '@/api/localFunc';
+import { loadCards, loadDecks, loadFolders } from '@/storage';
+import { delCenDeck, delConnectedCards, updateFolderList } from '@/api/localFunc';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { modalState } from '@/store/modalStore';
+import { setFolders } from '@/store/folderStore';
 
 export default function DropdownMenu({ localId }: { localId: string }) {
     const sendedDeckId = localId;
@@ -58,6 +59,8 @@ export default function DropdownMenu({ localId }: { localId: string }) {
         onClick: () => {
           delCenDeck(loadDecks(), sendedDeckId)
           delConnectedCards(loadCards(), sendedDeckId)
+          const updatedFolders = updateFolderList(sendedDeckId)
+          dispatch(setFolders(updatedFolders))
         },
       },
     ];
