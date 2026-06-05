@@ -30,8 +30,27 @@ const folderStore = createSlice({
       );
       saveFolders(state.folders);
     },
-  },
+    createFolderCopy(state, action: PayloadAction<{ folderId: string}>) {
+      const foldersName = state.folders.map(folder => folder.title);
+      const folderToCopy = state.folders.find(folder => folder.id === action.payload.folderId);
+      if (!folderToCopy) return;
+      let copyIndex = 1;
+      let newTitle = `Copy: ${folderToCopy.title}`;
+      while (foldersName.includes(newTitle)) {
+        copyIndex++;
+        newTitle = `Copy (${copyIndex}): ${folderToCopy.title}`;
+      }
+
+      const newFolder: Folder = {
+        ...folderToCopy,
+        id: crypto.randomUUID(),
+        title: newTitle,
+      };
+        state.folders.push(newFolder);
+        saveFolders(state.folders);
+    },
+  }
 });
 
-export const { setFolders, addFolder, deleteFolder } = folderStore.actions;
+export const { setFolders, addFolder, deleteFolder, createFolderCopy } = folderStore.actions;
 export default folderStore.reducer;

@@ -10,13 +10,19 @@ import {
 import { useParams } from 'next/navigation';
 import DropDownMenuBtn from './DropDownMenuBtn';
 import { loadCards, loadDecks, loadFolders } from '@/storage';
-import { delCenDeck, delConnectedCards, updateFolderList } from '@/api/localFunc';
+import { delCenDeck, delConnectedCards, delFolder, updateFolderList } from '@/api/localFunc';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { modalState } from '@/store/modalStore';
-import { setFolders } from '@/store/folderStore';
+import { createFolderCopy, deleteFolder, setFolders } from '@/store/folderStore';
+import { foldernameflag } from '@/store/EditFolderName';
 
-export default function DropdownMenu({ localId }: { localId: string }) {
+interface DropdownMenuProps {
+  localId: string;
+  windowFlag?: string;
+} 
+
+const DropdownMenu: React.FC<DropdownMenuProps> = ({ localId, windowFlag = 'openedDeck' }) => {
     const sendedDeckId = localId;
     const hideFlag = useSelector((state: RootState) => state.modal.state) 
     const dispatch = useDispatch();
@@ -65,6 +71,36 @@ export default function DropdownMenu({ localId }: { localId: string }) {
       },
     ];
 
+    const folderMenu = [
+      {
+        label: 'Редактировать',
+        icon: Pencil ,
+        onClick: () => {
+
+          dispatch(foldernameflag(true))
+          
+        },
+      },
+      {
+        label: 'Создать копию',
+        icon: Copy ,
+        onClick: () => {
+          dispatch(createFolderCopy({ folderId: localId }))
+        },
+      },
+      {
+        label: 'Удалить',
+        icon: Trash2 ,
+        danger: true,
+        onClick: () => {
+          const updatedFolders = delFolder(localId);
+          dispatch(setFolders(updatedFolders));
+        },
+      },
+    ];
+
+    const sendedMenuData = windowFlag === 'openedDeck' ? menuItems : folderMenu;
+
     return (
       <div
         className="
@@ -79,9 +115,11 @@ export default function DropdownMenu({ localId }: { localId: string }) {
           mt-3
         "
       >
-        {menuItems.map((item) => (
+        {sendedMenuData.map((item) => (
           <DropDownMenuBtn item={item} key={item.label}/>
         ))}
       </div>
     );
 }
+
+export default DropdownMenu;

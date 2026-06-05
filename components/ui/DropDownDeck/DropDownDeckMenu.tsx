@@ -9,7 +9,13 @@ import React, {
 
 import DropdownMenu from '../DropDownMenu/DropDownMenu';
 
-const DropDownDeckMenu = ({ localId }: { localId: string }) => {
+interface DropDownDeckMenuProps {
+  localId: string;
+  windowFlag: string;
+} 
+
+const DropDownDeckMenu: React.FC<DropDownDeckMenuProps> = ( { localId, windowFlag = 'openedDeck' } ) => {
+  const sendedFlag = windowFlag;
   const [dropDownFlag, setDropDownFlag] = useState(false);
 
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -69,7 +75,7 @@ const DropDownDeckMenu = ({ localId }: { localId: string }) => {
         <Ellipsis />
       </button>
 
-      {dropDownFlag && <DropdownMenu localId={localId} />}
+      {dropDownFlag && <DropdownMenu localId={localId} windowFlag={sendedFlag} />}
     </div>
   );
 };

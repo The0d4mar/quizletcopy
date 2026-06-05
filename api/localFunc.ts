@@ -82,3 +82,10 @@ export const connectedDecks = (
   saveCards(updatedCards);
   return updatedCards;
 };
+
+export const delFolder = (folderId: string) => {
+  const folders = loadFolders();
+  const updatedFolders = folders.filter(folder => folder.id !== folderId);
+  saveFolders(updatedFolders);
+  return updatedFolders;
+}

@@ -3,6 +3,7 @@ import modalReducer from './modalStore'
 import addFolderStore  from './addFolderStore'
 import folderStore from './folderStore'
 import AddDeckToFolderStore  from './AddDeckToFolderStore'
+import  EditFolderName  from './EditFolderName'
 export const store = configureStore({
   reducer: {
 
@@ -10,6 +11,7 @@ export const store = configureStore({
     folderFlag: addFolderStore,
     folders: folderStore,
     adddecktofolderflag: AddDeckToFolderStore,
+    folderChangeNameFlag: EditFolderName,
     
   },
 })

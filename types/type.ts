@@ -8,6 +8,7 @@ export type Deck = {
     updatedAt: string;
     createdBy: string;
     public: boolean;
+    lastRepeat?: string;
 }
 export type Card = {
     id: string;

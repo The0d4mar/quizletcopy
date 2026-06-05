@@ -1,14 +1,17 @@
 'use client'
 
 import AddDeckToFolder from '@/components/ui/AddDeckToFolder/AddDeckToFolder';
+import DropDownDeckMenu from '@/components/ui/DropDownDeck/DropDownDeckMenu';
 import DeckList from '@/components/ui/MainDeckList/DeckList';
-import { loadCards, loadDecks, loadFolders } from '@/storage';
+import { loadCards, loadDecks } from '@/storage';
 import { addDeckFolderFlag } from '@/store/AddDeckToFolderStore';
+import { foldernameflag } from '@/store/EditFolderName';
+import { setFolders } from '@/store/folderStore';
 import { RootState } from '@/store/store';
-import { Card, Deck, Folder } from '@/types/type';
+import { Card, Deck } from '@/types/type';
 import { FolderIcon, Plus, Search } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useParams } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function FolderPage() {
@@ -18,24 +21,71 @@ export default function FolderPage() {
 
   const [decks] = useState<Deck[]>(() => loadDecks());
   const [cards] = useState<Card[]>(() => loadCards());
+
   const folders = useSelector(
     (state: RootState) => state.folders.folders
   );
+
   const [searchValue, setSearchValue] = useState('');
+
+  const changeFolderNameFlag = useSelector(
+    (state: RootState) => state.folderChangeNameFlag.state
+  );
 
   const dispatch = useDispatch();
 
-  const currentFolder = folders.find(folder => folder.id === folderId);
-  console.log(currentFolder?.deckIds)
-
-  const folderDecks = decks.filter(deck => currentFolder?.deckIds.includes(deck.id)) || []
-
-  const filteredDecks = folderDecks.filter(deck =>
-    deck.title.toLowerCase().includes(searchValue.toLowerCase())
+  const currentFolder = folders.find(
+    folder => folder.id === folderId
   );
 
-  const filteredCards = cards.filter(card => filteredDecks.some(deck => deck.id === card.deckId));
+  const [folderName, setFolderName] = useState<string>(
+    currentFolder?.title || ''
+  );
 
+  const folderNameInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (!changeFolderNameFlag) return;
+
+    folderNameInputRef.current?.focus();
+    folderNameInputRef.current?.select();
+  }, [changeFolderNameFlag]);
+
+  const folderDecks =
+    decks.filter(deck =>
+      currentFolder?.deckIds.includes(deck.id)
+    ) || [];
+
+  const filteredDecks = folderDecks.filter(deck =>
+    deck.title
+      .toLowerCase()
+      .includes(searchValue.toLowerCase())
+  );
+
+  const filteredCards = cards.filter(card =>
+    filteredDecks.some(deck => deck.id === card.deckId)
+  );
+
+  const changeFolderName = () => {
+    const updatedFolders = folders.map(folder => {
+      if (folder.id === folderId) {
+        return {
+          ...folder,
+          title: folderName,
+        };
+      }
+
+      return folder;
+    });
+
+    dispatch(setFolders(updatedFolders));
+    dispatch(foldernameflag(false));
+  };
+
+  const cancelChangeFolderName = () => {
+    setFolderName(currentFolder?.title || '');
+    dispatch(foldernameflag(false));
+  };
 
   if (!currentFolder) {
     return (
@@ -48,26 +98,55 @@ export default function FolderPage() {
   }
 
   return (
-    <section className="w-full min-w-0 px-6 py-8">
-        <AddDeckToFolder folderId={currentFolder.id}/>
-      <div className="mb-10 flex items-start justify-between">
+    <section className="relative flex-1 w-full">
+      <AddDeckToFolder folderId={currentFolder.id} />
+
+      <div className="mb-10 flex items-center justify-between">
         <div className="flex items-center gap-5">
           <div className="flex h-20 w-20 items-center justify-center rounded-[var(--radius-card)] bg-[var(--color-hover)]">
             <FolderIcon size={44} />
           </div>
 
-          <div>
-            <h1 className="text-4xl font-bold">
-              {currentFolder.title}
-            </h1>
+          <div className="flex items-start justify-between">
+            {!changeFolderNameFlag ? (
+              <h1 className="max-w-[700px] truncate text-4xl font-bold">
+                {currentFolder.title}
+              </h1>
+            ) : (
+              <div className="flex items-center gap-4">
+                <input
+                  ref={folderNameInputRef}
+                  value={folderName}
+                  onChange={e => setFolderName(e.target.value)}
+                  placeholder="Введите название папки"
+                  className="w-full rounded-[var(--radius-card)] bg-[var(--color-hover)] px-5 py-4 pr-12 font-semibold outline-none placeholder:text-white/40"
+                />
 
+                <button
+                  className="flex items-center justify-center rounded-xl border px-[var(--padding-x-card)] py-[var(--padding-y-card)]"
+                  onClick={changeFolderName}
+                >
+                  Изменить
+                </button>
+
+                <button
+                  className="flex items-center justify-center rounded-xl border border-red-500 px-[var(--padding-x-card)] py-[var(--padding-y-card)] text-red-500"
+                  onClick={cancelChangeFolderName}
+                >
+                  Отменить
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
+        <DropDownDeckMenu
+          localId={folderId}
+          windowFlag="folder"
+        />
       </div>
 
       <div className="mb-10 flex items-center justify-between">
-
         <div className="relative w-full max-w-md">
           <input
             value={searchValue}
@@ -83,9 +162,8 @@ export default function FolderPage() {
         </div>
       </div>
 
-
       {filteredDecks.length === 0 ? (
-        <div className=" px-[var(--padding-x-card)] py-[var(--padding-y-card)] text-white/60">
+        <div className="px-[var(--padding-x-card)] py-[var(--padding-y-card)] text-white/60">
           В этой папке пока нет колод
         </div>
       ) : (
@@ -96,9 +174,10 @@ export default function FolderPage() {
       )}
 
       <div className="fixed bottom-8 left-1/2 flex -translate-x-1/2 gap-4 rounded-full bg-[var(--color-hover)] p-3">
-
         <button
-          onClick={() => dispatch(addDeckFolderFlag(true))}
+          onClick={() =>
+            dispatch(addDeckFolderFlag(true))
+          }
           className="flex items-center gap-2 rounded-full bg-blue-600 px-10 py-3 font-bold text-white"
         >
           <Plus size={20} />
