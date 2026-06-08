@@ -1,17 +1,85 @@
 :root {
+  /* Colors */
   --color-bg: #050505;
+  --color-bg-soft: #090909;
+
   --color-surface: #111111;
   --color-surface-light: #1f1f1f;
+  --color-surface-muted: #171717;
+
   --color-text: #ffffff;
   --color-text-muted: #a3a3a3;
-  --color-border: #ffffff;
-  --color-focus: #2f4d7c;
-  --color-hover: #2f2f2f;
+  --color-text-soft: rgba(255, 255, 255, 0.72);
+  --color-text-disabled: rgba(255, 255, 255, 0.36);
 
+  --color-border: rgba(255, 255, 255, 0.22);
+  --color-border-strong: rgba(255, 255, 255, 0.42);
+  --color-border-hover: #8a8888;
+
+  --color-focus: #3b82f6;
+  --color-hover: #171717;
+
+  --color-danger: #ef4444;
+  --color-danger-soft: rgba(239, 68, 68, 0.14);
+
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+
+  /* Radius */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
   --radius-card: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
   --radius-button: 999px;
 
-  --spacing-page-x: 24px;
-  --padding-x-card: 16px;
-  --padding-y-card: 11px;
+  /* Layout */
+  --layout-max-width: 1280px;
+  --sidebar-width: 260px;
+  --header-height: 72px;
+
+  /* Adaptive page spacing */
+  --spacing-page-x: clamp(16px, 3vw, 32px);
+  --spacing-page-y: clamp(20px, 4vw, 40px);
+
+  --section-gap: clamp(32px, 5vw, 64px);
+  --block-gap: clamp(20px, 3vw, 36px);
+  --item-gap: 12px;
+
+  /* Component padding */
+  --padding-x-card: clamp(14px, 2vw, 20px);
+  --padding-y-card: clamp(10px, 1.5vw, 16px);
+
+  --padding-x-input: 18px;
+  --padding-y-input: 13px;
+
+  --padding-x-button: 16px;
+  --padding-y-button: 11px;
+
+  --padding-modal: clamp(20px, 4vw, 32px);
+
+  /*Component margin*/
+
+  --margin-b-elems : 40px;
+
+
+  /* Typography */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-md: 18px;
+  --font-size-lg: 22px;
+  --font-size-xl: 28px;
+  --font-size-page-title: clamp(30px, 5vw, 44px);
+
+  --line-height-tight: 1.1;
+  --line-height-base: 1.5;
+
+  /* Effects */
+  --shadow-card: 0 14px 40px rgba(0, 0, 0, 0.28);
+  --shadow-modal: 0 24px 80px rgba(0, 0, 0, 0.55);
+
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
 }

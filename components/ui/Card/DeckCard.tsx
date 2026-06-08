@@ -8,13 +8,13 @@ import React, {FC} from 'react';
 
 const DeckCard:FC<DeckCardProps> = ({deck, cardsCount}) => {
   return (
-    <Link className=" inline-flex w-fit gap-5 items-center border border-[var(--color-border)] rounded-[var(--radius-card)] px-[var(--padding-x-card)] py-[var(--padding-y-card)]" href = {`/deck/${deck.id}`}>
+    <Link className="custom-deck" href = {`/deck/${deck.id}`}>
         <div>
             <IdCardLanyard size={48}/>
         </div>
         <div className='flex flex-col justify-start'>
             <h2>{deck.title}</h2>
-            <div className='flex items-center gap-5'>
+            <div className='custom-deck-info'>
                 <p>Автор: {deck.createdBy}</p>
                 <p>Карточек: {cardsCount}</p>
             </div>

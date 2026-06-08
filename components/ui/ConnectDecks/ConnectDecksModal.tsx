@@ -1,5 +1,7 @@
 import { connectedDecks } from '@/api/localFunc';
 import { loadDecks } from '@/storage';
+import { setUpdatedCards } from '@/store/cardStore';
+import { setDecks } from '@/store/deckStore';
 import { modalState } from '@/store/modalStore';
 import { RootState } from '@/store/store';
 import { Cross, X } from 'lucide-react';
@@ -16,12 +18,14 @@ const ConnectDecksModal: FC<ConnectDecksModalProps> = ({
   sendedDeckId,
   onConnected,
 }) => {
-  const decks = loadDecks();
+  const decks = useSelector((state: RootState) => state.deckStore.decks);
   const hideFlag = useSelector((state: RootState) => state.modal.state);
   const dispatch = useDispatch();
 
   const connectFunc = (joinedDeckId: string) => {
-    connectedDecks(sendedDeckId, joinedDeckId);
+    const [updatedCards, newDecks] = connectedDecks(sendedDeckId, joinedDeckId);
+    dispatch(setDecks(newDecks))
+    dispatch(setUpdatedCards(updatedCards))
     onConnected();
     dispatch(modalState(false));
   };

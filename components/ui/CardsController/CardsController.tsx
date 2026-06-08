@@ -14,7 +14,7 @@ interface CardsControllerProps {
 
 const CardsController: FC<CardsControllerProps> = ({ goToPrevCard, goToNextCard, isFirstCard, isLastCard, currentIndex, deckCardsLength }) => {
   return (
-    <div className='text-center flex items-center justify-center gap-4 mt-4'>
+    <div className='text-center flex items-center justify-center gap-4 mb-[var(--item-gap)] mt-[var(--item-gap)]'>
         
         <CardsControllerBtn
             onClick={goToPrevCard}

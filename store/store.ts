@@ -4,6 +4,8 @@ import addFolderStore  from './addFolderStore'
 import folderStore from './folderStore'
 import AddDeckToFolderStore  from './AddDeckToFolderStore'
 import  EditFolderName  from './EditFolderName'
+import deckStore from './deckStore'
+import cardStore from './cardStore'
 export const store = configureStore({
   reducer: {
 
@@ -12,6 +14,8 @@ export const store = configureStore({
     folders: folderStore,
     adddecktofolderflag: AddDeckToFolderStore,
     folderChangeNameFlag: EditFolderName,
+    deckStore: deckStore,
+    cardStore: cardStore,
     
   },
 })

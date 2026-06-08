@@ -16,6 +16,8 @@ import { RootState } from '@/store/store';
 import { modalState } from '@/store/modalStore';
 import { createFolderCopy, deleteFolder, setFolders } from '@/store/folderStore';
 import { foldernameflag } from '@/store/EditFolderName';
+import { delDecks } from '@/store/deckStore';
+import { setUpdatedCards } from '@/store/cardStore';
 
 interface DropdownMenuProps {
   localId: string;
@@ -63,8 +65,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ localId, windowFlag = 'open
         icon: Trash2 ,
         danger: true,
         onClick: () => {
-          delCenDeck(loadDecks(), sendedDeckId)
-          delConnectedCards(loadCards(), sendedDeckId)
+          dispatch(delDecks(sendedDeckId))
+          const decksIds = loadDecks().map(deck => deck.id)
+          const newCards = delConnectedCards(loadCards(), sendedDeckId).filter(card => decksIds.includes(card.deckId))
+          dispatch(setUpdatedCards(newCards))
           const updatedFolders = updateFolderList(sendedDeckId)
           dispatch(setFolders(updatedFolders))
         },
@@ -107,9 +111,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ localId, windowFlag = 'open
           w-[220px]
           overflow-hidden
           rounded-2xl
-          border border-[#4a4d70]
-          py-2
-          shadow-[0_20px_50px_rgba(0,0,0,0.45)]
+          border border-[var(--color-border-strong)]
+          shadow-[var(--shadow-modal)]
           absolute
           right-[0]
           mt-3

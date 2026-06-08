@@ -4,7 +4,37 @@
 @import "../styled/tokens.css";
 @import "../styled/utilities.css";
 
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 220px;
+    --section-gap: 40px;
+  }
+}
 
+@media (max-width: 768px) {
+  :root {
+    --spacing-page-x: 16px;
+    --spacing-page-y: 20px;
+
+    --padding-x-card: 14px;
+    --padding-y-card: 12px;
+
+  }
+
+  .app-modal {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --spacing-page-x: 12px;
+    --spacing-page-y: 16px;
+
+    --padding-x-button: 16px;
+    --padding-y-button: 10px;
+  }
+}
 
 
 @theme inline {
@@ -12,6 +42,52 @@
   --color-foreground: var(--color-text);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+.custom-main-section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+}
+
+/*"border-1 rounded-[var(--radius-card)] flex justify-center items-center px-[var(--padding-x-card)] py-[var(--padding-y-card)]"*/
+
+.custom-btn {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--padding-y-button) var(--padding-x-button);
+  transition: var(--transition-base);
+  gap:8px;
+}
+.custom-btn:hover{
+  transition: var(--transition-base);
+  border-color: var(--color-border-hover);
+
+}
+
+/*inline-flex w-fit gap-5 items-center border border-[var(--color-border)] rounded-[var(--radius-card)] px-[var(--padding-x-card)] py-[var(--padding-y-card)]*/
+
+.custom-deck{
+  display: inline-flex;
+  width: fit-content;
+  gap: 20px;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--padding-y-button) var(--padding-x-button);
+}
+
+.custom-deck-info{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  color: var(--color-text-muted);
 }
 
 .custom-scrollbar {

@@ -37,7 +37,7 @@ const DropDownMenuBtn: FC<DropDownMenuBtnProps> = ({item}) => {
             w-full
             items-center
             gap-4
-            px-6
+            px-[var(--padding-x-card)] py-[var(--padding-y-card)]
             text-left
             text-[15px]
             font-semibold
@@ -52,7 +52,7 @@ const DropDownMenuBtn: FC<DropDownMenuBtnProps> = ({item}) => {
 
             ${
             item.danger
-                ? 'text-[#ff5a5a] hover:bg-[rgba(255,90,90,0.12)]'
+                ? 'text-[--color-base] hover:bg-[var(--color-danger)]'
                 : ''
             }
         `}

@@ -22,12 +22,12 @@ export function WordCard({
       className="flashcard"
       onClick={() => setIsFlipped(prev => !prev)}
     >
-      <div className={`flashcardInner ${isFlipped ? 'flipped' : ''}`}>
-        <div className="flashcardFace flashcardFront">
+      <div className={`flashcard-inner ${isFlipped ? 'flipped' : ''}`}>
+        <div className="flashcard-face flashcard-front">
           <span>{original}</span>
         </div>
 
-        <div className="flashcardFace flashcardBack">
+        <div className="flashcard-face flashcard-back">
           <span>{translation}</span>
         </div>
       </div>

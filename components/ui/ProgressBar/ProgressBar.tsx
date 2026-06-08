@@ -1,37 +1,28 @@
-import React from 'react';
-import {FC} from 'react';
+import React, { FC } from 'react';
 
 interface ProgressBarProps {
-    progressPercent: number;
-    currentIndex: number;
-    deckCardsLength: number;
+  progressPercent: number;
+  currentIndex: number;
+  deckCardsLength: number;
 }
 
-const ProgressBar: FC<ProgressBarProps> = ({ progressPercent, currentIndex, deckCardsLength }) => {
+const ProgressBar: FC<ProgressBarProps> = ({
+  progressPercent,
+  currentIndex,
+  deckCardsLength,
+}) => {
   return (
-    <div>
+    <div className="mt-[var(--spacing-item)]">
+      <div className="h-2 w-full overflow-hidden rounded-[var(--radius-button)] bg-[var(--color-surface-light)]">
         <div
-            style={{
-            width: '100%',
-            height: '8px',
-            background: '#ddd',
-            borderRadius: '999px',
-            overflow: 'hidden',
-            marginTop: '16px',
-            }}
-        >
-            <div
-            style={{
-                width: `${progressPercent}%`,
-                height: '100%',
-                background: '#4f46e5',
-                transition: 'width 0.3s ease',
-            }}
-            />
-        </div>
-        <p>
-            Просмотрено: {currentIndex + 1} из {deckCardsLength}
-        </p>
+          className="h-full rounded-[var(--radius-button)] bg-[var(--color-focus)] transition-all duration-300"
+          style={{ width: `${progressPercent}%` }}
+        />
+      </div>
+
+      <p className="mt-3 text-sm text-[var(--color-text-muted)]">
+        Просмотрено: {currentIndex + 1} из {deckCardsLength}
+      </p>
     </div>
   );
 };

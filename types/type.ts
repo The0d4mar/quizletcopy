@@ -50,15 +50,68 @@ export type StorageSchema = {
 
 //////////////////////////////////////////////////////
 
-export interface DeckCardProps{
-    deck: Deck,
-    cardsCount: number,
+export type DeckCardProps = {
+    deck: Deck;
+    cardsCount: number;
 }
 
-export interface SideBarChapProps{
-    id: string,
-    title: string,
-    headers: string[],
-    icons: LucideIcon[],
-    ways: string[],
+export type SideBarChapProps = {
+    id: string;
+    title: string;
+    headers: string[];
+    icons: LucideIcon[];
+    ways: string[];
 }
+
+export type SearchResult =
+  | {
+      type: 'deck';
+      id: string;
+      title: string;
+      subtitle: string;
+      href: string;
+    }
+  | {
+      type: 'folder';
+      id: string;
+      title: string;
+      subtitle: string;
+      href: string;
+    }
+  | {
+      type: 'card';
+      id: string;
+      title: string;
+      subtitle: string;
+      href: string;
+    };
+
+    ////////////////////////////////////////////////////
+
+    export type LibraryItem =
+  | {
+      type: 'deck';
+      id: string;
+      title: string;
+      createdAt: string;
+      updatedAt: string;
+      viewedAt?: string;
+      cardsCount: number;
+      href: string;
+    }
+  | {
+      type: 'folder';
+      id: string;
+      title: string;
+      createdAt: string;
+      updatedAt: string;
+      viewedAt?: string;
+      modulesCount: number;
+      href: string;
+    };
+
+export type EntityFilter = 'all' | 'decks' | 'folders';
+
+export type SortType = 'created' | 'updated' | 'viewed';
+
+export type GroupedLibraryItems = Record<string, LibraryItem[]>;

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Folder } from '@/types/type';
 import { loadFolders, saveFolders } from '@/storage';
 
-type FoldersState = {
+interface FoldersState {
   folders: Folder[];
 };
 

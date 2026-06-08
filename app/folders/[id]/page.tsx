@@ -19,8 +19,8 @@ export default function FolderPage() {
 
   const folderId = params.id;
 
-  const [decks] = useState<Deck[]>(() => loadDecks());
-  const [cards] = useState<Card[]>(() => loadCards());
+  const [decks] = useState<Deck[]>(useSelector((state: RootState) => state.deckStore.decks));
+  const [cards] = useState<Card[]>((useSelector((state: RootState) => state.cardStore.cards)));
 
   const folders = useSelector(
     (state: RootState) => state.folders.folders
@@ -168,8 +168,9 @@ export default function FolderPage() {
         </div>
       ) : (
         <DeckList
-          decksList={filteredDecks}
-          cardsList={filteredCards}
+            currentFolder = {currentFolder}
+            folderId = {currentFolder.id}
+            searchValue = {searchValue}
         />
       )}
 
