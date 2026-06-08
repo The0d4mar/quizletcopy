@@ -6,7 +6,16 @@ import Link from 'next/link';
 
 
 
-const SideBarChap:FC<SideBarChapProps> = ({id, title, headers, icons }) => {
+const SideBarChap:FC<SideBarChapProps> = ({id, title, headers, icons, ways }) => {
+
+  const localway = ways.length == 0 ? [] : ways;
+
+  if(localway.length == 0 ) {
+    for(let head of headers) {
+      localway.push('/');
+    }
+  }
+
 
 
 
@@ -26,7 +35,7 @@ const SideBarChap:FC<SideBarChapProps> = ({id, title, headers, icons }) => {
             hover:bg-[var(--color-hover)]
             
             ' key={index}
-            href = {'/'}>
+            href = {localway[index]}>
                 <span>{React.createElement(icons[index])}</span>
                 <span>{header}</span>
             </Link>

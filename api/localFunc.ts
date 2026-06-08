@@ -3,18 +3,44 @@ import { loadCards, loadDecks, loadFolders, saveCards, saveDecks, saveFolders } 
 import { Card, Deck, Folder } from "@/types/type";
 
 
+export const changeDeckLastRepeat = (deckId: string) => {
+  const decks = loadDecks();
 
+  const updatedDecks = decks.map(deck => {
+    if (deck.id === deckId) {
+      return {
+        ...deck,
+        lastRepeat: new Date().toISOString(),
+      };
+    }
+    return deck;
+  });
+
+  saveDecks(updatedDecks);
+};
 
 export const addNewDeck = (decks: Deck[]) => {
+  const decksTitles = decks.map(deck => deck.title);
+  let newDeckTitle = '';
+  
+    const newDeckCTitleNames = decksTitles.filter(title => title.startsWith('Новая коллекция'));
+    console.log(decksTitles, newDeckCTitleNames)
+    if(newDeckCTitleNames.length === 0){
+      newDeckTitle = 'Новая коллекция';
+    }
+    else{
+      newDeckCTitleNames.sort((a, b) => {
+        const numA = parseInt(a.replace('Новая коллекция ', '')) || 0;
+        const numB = parseInt(b.replace('Новая коллекция ', '')) || 0;
+        return numA - numB;
+      });
+      const lastNewDeckTitle = newDeckCTitleNames[newDeckCTitleNames.length - 1];
+      const lastNum = parseInt(lastNewDeckTitle.replace('Новая коллекция ', '')) || 0;
+      console.log(newDeckCTitleNames, lastNewDeckTitle, lastNum)
+      newDeckTitle = `Новая коллекция ${lastNum + 1}`;
+    }
 
-    const collectionDecks = decks.filter(deck =>
-      deck.title.startsWith('Новая коллекция')
-    );
 
-    const newDeckTitle =
-      collectionDecks.length === 0
-        ? 'Новая коллекция'
-        : `Новая коллекция ${collectionDecks.length + 1}`;
 
       const id = crypto.randomUUID()
       const newDeck: Deck = {
@@ -24,6 +50,7 @@ export const addNewDeck = (decks: Deck[]) => {
         updatedAt: new Date().toISOString(),
         public: false,
         createdBy: "User",
+        lastRepeat: new Date().toISOString(),
       };
 
         const updatedDecks = [...decks, newDeck];

@@ -32,6 +32,8 @@ const AddFolder = () => {
     title: trimmedTitle,
     deckTitles: [],
     deckIds: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 
   dispatch(addFolder(newFolder));

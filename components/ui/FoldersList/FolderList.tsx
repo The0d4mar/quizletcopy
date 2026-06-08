@@ -10,7 +10,7 @@ const FolderList = () => {
   );
 
   return (
-    <div className="h-[264px] shrink-0 overflow-y-auto pr-2 custom-scrollbar">
+    <div className="max-h-[264px] shrink-0 overflow-y-auto pr-2 custom-scrollbar">
       <div className="flex flex-col gap-4 px-[var(--padding-x-card)] py-[var(--padding-y-card)]">
         {folders.map(folder => (
           <Link

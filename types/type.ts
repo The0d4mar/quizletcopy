@@ -8,7 +8,7 @@ export type Deck = {
     updatedAt: string;
     createdBy: string;
     public: boolean;
-    lastRepeat?: string;
+    lastRepeat: string;
 }
 export type Card = {
     id: string;
@@ -37,6 +37,8 @@ export type Folder ={
     title: string;
     deckTitles: string[];
     deckIds: string[];
+    createdAt: string;
+    updatedAt: string;
 }
 
 export type StorageSchema = {
@@ -58,4 +60,5 @@ export interface SideBarChapProps{
     title: string,
     headers: string[],
     icons: LucideIcon[],
+    ways: string[],
 }

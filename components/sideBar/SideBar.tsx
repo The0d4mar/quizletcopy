@@ -18,6 +18,7 @@ const SideBar:FC = () => {
             title={item.title}
             headers={item.headers}
             icons={item.icons}
+            ways = {item.ways}
           />
 
           {index !== array.length - 1 && (

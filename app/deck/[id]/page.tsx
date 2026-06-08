@@ -2,7 +2,7 @@
 
 import { loadCards, loadDecks, saveCards } from '@/storage';
 import { Card } from '@/types/type';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { WordCard } from '@/components/ui/Card/WordCard';
 import Link from 'next/link';
@@ -13,10 +13,15 @@ import CardsController from '@/components/ui/CardsController/CardsController';
 import AddFolder from '@/components/ui/AddFolder/AddFolder';
 import { RootState } from '@/store/store';
 import { useSelector } from 'react-redux';
+import { changeDeckLastRepeat } from '@/api/localFunc';
 
 export default function Page() {
   const params = useParams<{ id: string }>();
   const sendedDeckId = params.id;
+
+  useEffect(() => {
+    changeDeckLastRepeat(sendedDeckId);
+  }, [sendedDeckId]);
 
   const [cards, setCards] = useState<Card[]>(loadCards());
   const [currentIndex, setCurrentIndex] = useState(0);

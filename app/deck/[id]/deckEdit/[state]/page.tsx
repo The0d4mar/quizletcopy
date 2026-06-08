@@ -17,7 +17,6 @@ export default function EditDeckPage() {
   const deckId = params.id;
   const stater = params.state;
   console.log(stater)
-
   const [decks, setDecks] = useState<Deck[]>(() => loadDecks());
   const [cards, setCards] = useState<Card[]>(() => loadCards());
   const currentDeck = decks.find(deck => deck.id === deckId);

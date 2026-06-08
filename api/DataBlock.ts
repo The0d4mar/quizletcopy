@@ -5,6 +5,7 @@ export const sideNavData = {
       id: 'stableInner',
       title: '',
       headers: ['Главная', "Ваша библиотека", "Учебные группы", "Уведомления"],
+      ways: ['/', '/sets', '/', '/'],
       icons:[House, Folders, Boxes, Bell],
     },
     userFolders:{
@@ -12,11 +13,13 @@ export const sideNavData = {
       title: 'Ваши папки',
       headers: [],
       icons: [Folder],
+      ways: [],
     },
     infoMenu: {
       id: 'infoMenu',
       title: 'Начинте здесь',
       headers: ["Карточки", "Решения от экспертов"],
       icons: [WalletCards, NotebookIcon],
+      ways: [],
     },
   }

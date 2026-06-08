@@ -11,7 +11,7 @@ import DropdownMenu from '../DropDownMenu/DropDownMenu';
 
 interface DropDownDeckMenuProps {
   localId: string;
-  windowFlag: string;
+  windowFlag?: string;
 } 
 
 const DropDownDeckMenu: React.FC<DropDownDeckMenuProps> = ( { localId, windowFlag = 'openedDeck' } ) => {
