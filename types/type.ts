@@ -20,10 +20,11 @@ export type Card = {
 }
 
 export type CardData = {
-    id: string;
-    cardId: string;
-    numOfRepeats: number;
-    lastRepeat: string;
+  id: string;
+  cardId: string;
+  numOfRepeats: number;
+  wrongRepeats: number;
+  lastRepeat: string[];
 }
 
 export type Repeats = {
@@ -115,3 +116,40 @@ export type EntityFilter = 'all' | 'decks' | 'folders';
 export type SortType = 'created' | 'updated' | 'viewed';
 
 export type GroupedLibraryItems = Record<string, LibraryItem[]>;
+
+
+
+export type TrainingMode = 'cards' | 'learn' | 'test';
+
+export type QuestionSide = 'original' | 'translation';
+
+export type TestQuestionType = 'choice' | 'match' | 'write';
+
+export type AnswerStatus = 'idle' | 'correct' | 'wrong';
+
+
+export type LearnQuestionData = {
+  type: 'choice';
+  card: Card;
+  question: string;
+  correctAnswer: string;
+  answers: string[];
+};
+
+export type MatchQuestionData = {
+  type: 'match';
+  id: string;
+  cards: Card[];
+};
+
+export type WriteQuestionData = {
+  type: 'write';
+  card: Card;
+  question: string;
+  correctAnswer: string;
+};
+
+export type TestQuestionData =
+  | LearnQuestionData
+  | MatchQuestionData
+  | WriteQuestionData;
