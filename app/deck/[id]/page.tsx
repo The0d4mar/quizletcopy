@@ -11,17 +11,21 @@ import ConnectDecksModal from '@/components/ui/ConnectDecks/ConnectDecksModal';
 import ProgressBar from '@/components/ui/ProgressBar/ProgressBar';
 import CardsController from '@/components/ui/CardsController/CardsController';
 import { RootState } from '@/store/store';
-import { useSelector } from 'react-redux';
-import { changeDeckLastRepeat } from '@/api/localFunc';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateDeckLastRepeat } from '@/api/localFunc';
+import { setDecks } from '@/store/deckStore';
 
 type SlideDirection = 'next' | 'prev';
 
 export default function Page() {
   const params = useParams<{ id: string }>();
   const sendedDeckId = params.id;
+  const deck = useSelector((state: RootState) => state.deckStore.decks)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    changeDeckLastRepeat(sendedDeckId);
+    const updatedDecks = updateDeckLastRepeat(deck, sendedDeckId);
+    dispatch(setDecks(updatedDecks))
   }, [sendedDeckId]);
 
   const [cards, setCards] = useState<Card[]>(
@@ -37,7 +41,7 @@ export default function Page() {
     setCards(loadCards());
   };
 
-  const deckTitle = loadDecks().find(deck => deck.id === sendedDeckId);
+  const deckTitle = deck.find(deck => deck.id === sendedDeckId);
 
   const deckCards = cards.filter(card => card.deckId === sendedDeckId);
 

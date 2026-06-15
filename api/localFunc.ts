@@ -1,63 +1,65 @@
 
-import { loadCards, loadDecks, loadFolders, saveCards, saveDecks, saveFolders } from "@/storage";
 import { Card, Deck, Folder } from "@/types/type";
 import { LibraryItem, SortType, GroupedLibraryItems, EntityFilter } from '@/types/type';
+import { monthNames } from "./DataBlock";
 
 
 
-export const changeDeckLastRepeat = (deckId: string) => {
-  const decks = loadDecks();
-
-  const updatedDecks = decks.map(deck => {
-    if (deck.id === deckId) {
-      return {
-        ...deck,
-        lastRepeat: new Date().toISOString(),
-      };
-    }
-    return deck;
-  });
-
-  saveDecks(updatedDecks);
+export const updateDeckLastRepeat = (
+  decks: Deck[],
+  deckId: string
+): Deck[] => {
+  return decks.map(deck =>
+    deck.id === deckId
+      ? {
+          ...deck,
+          lastRepeat:
+            new Date().toISOString(),
+        }
+      : deck
+  );
 };
 
-export const basicDeckName = () =>{
-  const decksTitles = loadDecks().map(deck => deck.title);
-  let newDeckTitle = '';
-  
-  const newDeckCTitleNames = decksTitles.filter(title => title.startsWith('Новая коллекция'));
-  console.log(decksTitles, newDeckCTitleNames)
-  if(newDeckCTitleNames.length === 0){
-    newDeckTitle = 'Новая коллекция';
-  }
-  else{
-    newDeckCTitleNames.sort((a, b) => {
-      const numA = parseInt(a.replace('Новая коллекция ', '')) || 0;
-      const numB = parseInt(b.replace('Новая коллекция ', '')) || 0;
-      return numA - numB;
-    });
-    const lastNewDeckTitle = newDeckCTitleNames[newDeckCTitleNames.length - 1];
-    const lastNum = parseInt(lastNewDeckTitle.replace('Новая коллекция ', '')) || 0;
-    newDeckTitle = `Новая коллекция ${lastNum + 1}`;
-  }
-  return newDeckTitle
-}
+export const basicDeckName = (
+  decks: Deck[]
+): string => {
+  const baseName = 'Новая коллекция';
 
-export const addNewDeck = (decks: Deck[]) :[string, Deck] => {
-      const newDeckTitle = basicDeckName()
-      const id = crypto.randomUUID()
-      const newDeck: Deck = {
-        id: id,
-        title: newDeckTitle,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        public: false,
-        createdBy: "User",
-        lastRepeat: new Date().toISOString(),
-      };
+  const titles = decks.map(deck =>
+    deck.title.trim()
+  );
 
-        return [id, newDeck];
-  };
+  // 1. Проверяем базовое имя без цифры
+  const hasBaseDeck =
+    titles.includes(baseName);
+
+  if (!hasBaseDeck) {
+    return baseName;
+  }
+
+  // 2. Собираем все номера
+  const usedNumbers = new Set<number>();
+
+  titles.forEach(title => {
+    const match = title.match(
+      /^Новая коллекция\s+(\d+)$/
+    );
+
+    if (match) {
+      usedNumbers.add(Number(match[1]));
+    }
+  });
+
+  // 3. Ищем первую свободную цифру
+  let nextNumber = 1;
+
+  while (usedNumbers.has(nextNumber)) {
+    nextNumber++;
+  }
+
+  return `${baseName} ${nextNumber}`;
+};
+
 
 
 export const delCenDeck = (decks: Deck[], deckId: string) =>{
@@ -66,34 +68,14 @@ export const delCenDeck = (decks: Deck[], deckId: string) =>{
     
   }
 
-  export const delConnectedCards = (cards: Card[], deletedDeckId: string) => {
-    const newCards = cards.filter(card => card.deckId !== deletedDeckId)
-    
-    return newCards
-  }
 
-  export const updateFolderList = (deckId: string) => {
-    const folders = loadFolders();
-
-    const updatedFolders = folders.map(folder => {
-      if (folder.deckIds.includes(deckId)) {
-        return {
-          ...folder,
-          deckIds: folder.deckIds.filter(id => id !== deckId),
-        };
-      }
-
-      return folder;
-    });
-    saveFolders(updatedFolders);
-    return updatedFolders;
-  }
   
 export const connectedDecks = (
   sendedDeckId: string,
-  joinedDeckId: string
+  joinedDeckId: string,
+  cards: Card[],
+  decks: Deck[]
 ) : [Card[], Deck[]] => {
-  const cards = loadCards();
 
   const updatedCards = cards.map(card => {
     if (card.deckId === joinedDeckId) {
@@ -107,14 +89,29 @@ export const connectedDecks = (
     return card;
   });
 
-  const newDecks = delCenDeck(loadDecks(), joinedDeckId);
+  const newDecks = delCenDeck(decks, joinedDeckId);
   return [updatedCards, newDecks];
 };
 
-export const delFolder = (folderId: string) => {
-  const folders = loadFolders();
+export const removeDeckFromFolders = (
+  folders: Folder[],
+  deckId: string
+): Folder[] => {
+  return folders.map(folder => {
+    if (!folder.deckIds.includes(deckId)) {
+      return folder;
+    }
+
+    return {
+      ...folder,
+      deckIds: folder.deckIds.filter(id => id !== deckId),
+      updatedAt: new Date().toISOString(),
+    };
+  });
+};
+
+export const delFolder = (folders: Folder[], folderId: string) => {
   const updatedFolders = folders.filter(folder => folder.id !== folderId);
-  saveFolders(updatedFolders);
   return updatedFolders;
 }
 
@@ -130,21 +127,13 @@ export const addNewCard = (deckId: string) => {
     return newCard
 }
 
+export const delConnectedCards = (cards: Card[], deletedDeckId: string) => {
+  const newCards = cards.filter(card => card.deckId !== deletedDeckId)
+  
+  return newCards
+}
+////////////////////////////////////////////////////////////////////////////////
 
-const monthNames = [
-  'Январь',
-  'Февраль',
-  'Март',
-  'Апрель',
-  'Май',
-  'Июнь',
-  'Июль',
-  'Август',
-  'Сентябрь',
-  'Октябрь',
-  'Ноябрь',
-  'Декабрь',
-];
 
 export function isSameDay(dateA: Date, dateB: Date): boolean {
   return (

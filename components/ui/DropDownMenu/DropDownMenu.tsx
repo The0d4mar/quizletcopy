@@ -10,7 +10,7 @@ import {
 import { useParams } from 'next/navigation';
 import DropDownMenuBtn from './DropDownMenuBtn';
 import { loadCards, loadDecks, loadFolders } from '@/storage';
-import { delCenDeck, delConnectedCards, delFolder, updateFolderList } from '@/api/localFunc';
+import { delCenDeck, delConnectedCards, delFolder, removeDeckFromFolders } from '@/api/localFunc';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { modalState } from '@/store/modalStore';
@@ -27,6 +27,9 @@ interface DropdownMenuProps {
 const DropdownMenu: React.FC<DropdownMenuProps> = ({ localId, windowFlag = 'openedDeck' }) => {
     const sendedDeckId = localId;
     const hideFlag = useSelector((state: RootState) => state.modal.state) 
+    const folders = useSelector((state: RootState) => state.folders.folders);
+    const decks = useSelector((state: RootState) => state.deckStore.decks);
+    const cards = useSelector((state: RootState) => state.cardStore.cards);
     const dispatch = useDispatch();
     const menuItems = [
       {
@@ -66,10 +69,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ localId, windowFlag = 'open
         danger: true,
         onClick: () => {
           dispatch(delDecks(sendedDeckId))
-          const decksIds = loadDecks().map(deck => deck.id)
-          const newCards = delConnectedCards(loadCards(), sendedDeckId).filter(card => decksIds.includes(card.deckId))
+          const decksIds = decks.map(deck => deck.id)
+          const newCards = delConnectedCards(cards, sendedDeckId).filter(card => decksIds.includes(card.deckId))
           dispatch(setUpdatedCards(newCards))
-          const updatedFolders = updateFolderList(sendedDeckId)
+          const updatedFolders = removeDeckFromFolders(folders, sendedDeckId)
           dispatch(setFolders(updatedFolders))
         },
       },
@@ -97,7 +100,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ localId, windowFlag = 'open
         icon: Trash2 ,
         danger: true,
         onClick: () => {
-          const updatedFolders = delFolder(localId);
+          const updatedFolders = delFolder(folders, localId);
           dispatch(setFolders(updatedFolders));
         },
       },

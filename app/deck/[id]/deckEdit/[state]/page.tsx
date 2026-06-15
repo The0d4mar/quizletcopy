@@ -18,23 +18,25 @@ export default function EditDeckPage() {
   const router = useRouter();
 
   const deckId = params.id;
-  const decks = useSelector((state: RootState) => state.deckStore.decks)
-  let currentDeck: Deck;
-  const newDeckTitle = basicDeckName()
-  if(decks.some(deck => deck.id == deckId)){
-    currentDeck = decks.find(deck => deck.id == deckId)
-  } else {
-    currentDeck = {
-          id: deckId,
-          title: newDeckTitle,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          public: false,
-          createdBy: "User",
-          lastRepeat: new Date().toISOString(),
-        };
-  }
-  const stater = params.state;
+
+const decks = useSelector(
+  (state: RootState) => state.deckStore.decks
+);
+
+const newDeckTitle = basicDeckName(decks);
+
+const currentDeck: Deck =
+  decks.find(deck => deck.id === deckId) ?? {
+    id: deckId,
+    title: newDeckTitle,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    public: false,
+    createdBy: 'User',
+    lastRepeat: new Date().toISOString(),
+  };
+
+const stater = params.state;
 
   const [cards, setCards] = useState<Card[]>(useSelector((state: RootState) => state.cardStore.cards));
   const dispatch = useDispatch()

@@ -19,11 +19,12 @@ const ConnectDecksModal: FC<ConnectDecksModalProps> = ({
   onConnected,
 }) => {
   const decks = useSelector((state: RootState) => state.deckStore.decks);
+  const cards = useSelector((state: RootState) => state.cardStore.cards);
   const hideFlag = useSelector((state: RootState) => state.modal.state);
   const dispatch = useDispatch();
 
   const connectFunc = (joinedDeckId: string) => {
-    const [updatedCards, newDecks] = connectedDecks(sendedDeckId, joinedDeckId);
+    const [updatedCards, newDecks] = connectedDecks(sendedDeckId, joinedDeckId, cards, decks);
     dispatch(setDecks(newDecks))
     dispatch(setUpdatedCards(updatedCards))
     onConnected();

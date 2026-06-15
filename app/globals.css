@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
-@import "../styled/components.css";
 @import "../styled/tokens.css";
+@import "../styled/components.css";
 @import "../styled/utilities.css";
 
 @media (max-width: 1024px) {
