@@ -1,0 +1,324 @@
+.custom-main-section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+}
+
+/*"border-1 rounded-[var(--radius-card)] flex justify-center items-center px-[var(--padding-x-card)] py-[var(--padding-y-card)]"*/
+
+.custom-btn {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--padding-y-button) var(--padding-x-button);
+  transition: var(--transition-base);
+  gap:8px;
+}
+.custom-btn:hover{
+  transition: var(--transition-base);
+  border-color: var(--color-border-hover);
+
+}
+
+/*inline-flex w-fit gap-5 items-center border border-[var(--color-border)] rounded-[var(--radius-card)] px-[var(--padding-x-card)] py-[var(--padding-y-card)]*/
+
+.custom-deck{
+  display: inline-flex;
+  width: fit-content;
+  gap: 20px;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--padding-y-button) var(--padding-x-button);
+}
+
+.custom-deck-info{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  color: var(--color-text-muted);
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+/* Chrome, Edge, Safari */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-hover);
+}
+
+.app-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface-light);
+  color: var(--color-text);
+  padding: var(--padding-y-card) var(--padding-x-card);
+  transition: border-color var(--transition-base), background var(--transition-base);
+}
+
+.app-card:hover {
+  border-color: var(--color-border-hover);
+}
+
+.app-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  padding: var(--spacing-page-x);
+}
+
+.app-modal {
+  width: 100%;
+  max-width: 560px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-soft);
+  color: var(--color-text);
+  padding: var(--padding-modal);
+  box-shadow: var(--shadow-modal);
+}
+
+.training-answer {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+
+  background: transparent;
+  color: var(--color-text);
+
+  padding:
+    var(--padding-y-card)
+    var(--padding-x-card);
+
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  text-align: left;
+
+  transition:
+    border-color var(--transition-base),
+    background var(--transition-base),
+    transform var(--transition-fast),
+    color var(--transition-base),
+    font-weight var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.training-answer:hover {
+  border-color: var(--color-border-hover);
+  background: rgba(255,255,255,0.03);
+}
+
+/* ВЫБРАННЫЙ ОТВЕТ */
+.training-answer-selected {
+  border-color: var(--color-border-strong);
+  background: rgba(255,255,255,0.05);
+
+  font-weight: 700;
+
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.12),
+    0 8px 24px rgba(255,255,255,0.06);
+
+  transform: translateY(-1px);
+}
+
+/* Правильный */
+.training-answer-correct {
+  border-color: var(--color-success);
+  background: rgba(34, 197, 94, 0.12);
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+/* Неправильный */
+.training-answer-wrong {
+  border-color: var(--color-danger);
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+
+.training-result {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.training-result-header {
+  margin-bottom: var(--block-gap);
+  text-align: center;
+}
+
+.training-result-deck-title {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+  margin-bottom: 8px;
+}
+
+.training-result-title {
+  font-size: var(--font-size-page-title);
+  font-weight: 700;
+}
+
+.training-result-card {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  padding: var(--padding-modal);
+  margin-bottom: var(--block-gap);
+}
+
+.training-result-chart {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.training-result-chart-inner {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.training-result-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.training-result-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+}
+
+.training-result-success {
+  color: var(--color-success);
+}
+
+.training-result-wrong {
+  color: var(--color-warning);
+}
+
+.training-result-count {
+  min-width: 52px;
+  height: 40px;
+  border-radius: var(--radius-button);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid currentColor;
+  font-weight: 700;
+}
+
+.training-result-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--item-gap);
+}
+
+.training-result-back-btn {
+  background: var(--color-focus);
+  border-color: transparent;
+}
+
+@media (max-width: 768px) {
+  .training-result-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .training-result-row {
+    justify-content: center;
+  }
+
+  .training-result-actions {
+    flex-direction: column;
+  }
+}
+
+.training-match-filled-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-button);
+  padding: 6px 12px;
+
+  width: 100%;
+  min-width: 0;
+}
+
+.training-match-filled-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.training-match-remove-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  color: var(--color-text-muted);
+  transition: color var(--transition-base);
+}
+
+.training-match-remove-btn:hover {
+  color: var(--color-danger);
+}
+
+.training-math-filled-answer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-focus);
+  position: relative;
+  border-radius: var(--radius-card);
+  padding: 6px 12px;
+}

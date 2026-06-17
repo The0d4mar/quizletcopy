@@ -1,7 +1,6 @@
 'use client'
 
 import { Card } from '@/types/type';
-import { Check, X } from 'lucide-react';
 
 export type TrainingMistake = {
   card: Card;
@@ -14,6 +13,7 @@ interface TrainingResultProps {
   correctCount: number;
   wrongCount: number;
   mistakes: TrainingMistake[];
+  pageFlag: boolean;
   onRestart: () => void;
   onExit: () => void;
 }
@@ -25,52 +25,66 @@ const TrainingResult = ({
   mistakes,
   onRestart,
   onExit,
+  pageFlag,
 }: TrainingResultProps) => {
-  const total = correctCount + wrongCount;
-  const percent = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+  const totalAnswers = correctCount + wrongCount;
+
+  const correctPercent =
+    totalAnswers > 0 ? (correctCount / totalAnswers) * 100 : 0;
+
+  const wrongPercent =
+    totalAnswers > 0 ? (wrongCount / totalAnswers) * 100 : 0;
+
+  const successRate = Math.round(correctPercent);
+
+  const chartStyle = {
+    background: `
+      conic-gradient(
+        var(--color-success) 0% ${correctPercent}%,
+        var(--color-warning) ${correctPercent}% ${correctPercent + wrongPercent}%,
+        rgba(255,255,255,0.08) ${correctPercent + wrongPercent}% 100%
+      )
+    `,
+  };
 
   return (
-    <section className="mx-auto flex w-full max-w-[960px] flex-col gap-[var(--block-gap)]">
-      <div className="text-center">
-        <p className="mb-2 text-[var(--color-text-muted)] font-bold">
+    <section className="training-result">
+      <div className="training-result-header">
+        <p className="training-result-deck-title">
           {deckTitle}
         </p>
 
-        <h2 className="text-[var(--font-size-xl)] font-bold">
-          {percent >= 70
+        <h2 className="training-result-title">
+          {successRate >= 80
             ? 'Отлично, продолжайте в том же духе!'
-            : 'Не волнуйтесь, в другой раз все получится!'}
+            : successRate >= 50
+              ? 'Хороший результат, но есть что повторить'
+              : 'Не волнуйтесь, в другой раз всё получится!'}
         </h2>
       </div>
 
-      <div className="app-card">
-        <div className="grid gap-[var(--block-gap)] md:grid-cols-[160px_1fr] md:items-center">
-          <div className="flex h-[120px] w-[120px] items-center justify-center rounded-full border-[10px] border-[var(--color-warning)] text-[var(--font-size-xl)] font-bold">
-            {percent}%
+      <div className="training-result-card app-card">
+        <div className="training-result-chart" style={chartStyle}>
+          <div className="training-result-chart-inner">
+            {successRate}%
+          </div>
+        </div>
+
+        <div className="training-result-stats">
+          <div className="training-result-row training-result-success">
+            <span>✓ Правильно</span>
+            <div className="training-result-count">{correctCount}</div>
           </div>
 
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-4 text-[var(--color-success)] font-bold">
-              <Check size={20} />
-              <span>Правильно</span>
-              <span className="rounded-[var(--radius-button)] border border-[var(--color-success)] px-4 py-1">
-                {correctCount}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-4 text-[var(--color-warning)] font-bold">
-              <X size={20} />
-              <span>Неправильно</span>
-              <span className="rounded-[var(--radius-button)] border border-[var(--color-warning)] px-4 py-1">
-                {wrongCount}
-              </span>
-            </div>
+          <div className="training-result-row training-result-wrong">
+            <span>✕ Неправильно</span>
+            <div className="training-result-count">{wrongCount}</div>
           </div>
         </div>
       </div>
 
       {mistakes.length > 0 && (
-        <div>
+        <div className="training-result-mistakes">
           <h3 className="mb-4 text-[var(--font-size-lg)] font-bold">
             Ошибки
           </h3>
@@ -85,7 +99,8 @@ const TrainingResult = ({
                   <p className="mb-2 text-[var(--color-text-muted)] font-bold">
                     Термин
                   </p>
-                  <p className="text-[var(--font-size-md)]">
+
+                  <p className="font-bold">
                     | {mistake.card.original} |
                   </p>
                 </div>
@@ -94,11 +109,12 @@ const TrainingResult = ({
                   <p className="mb-2 text-[var(--color-text-muted)] font-bold">
                     Правильный ответ
                   </p>
-                  <p className="text-[var(--color-success)] font-bold">
+
+                  <p className="font-bold text-[var(--color-success)]">
                     | {mistake.correctAnswer} |
                   </p>
 
-                  <p className="mt-3 text-[var(--color-danger)]">
+                  <p className="mt-2 text-[var(--color-danger)]">
                     Ваш ответ: {mistake.selectedAnswer}
                   </p>
                 </div>
@@ -108,22 +124,24 @@ const TrainingResult = ({
         </div>
       )}
 
-      <div className="flex justify-center gap-[var(--item-gap)]">
+      <div className="training-result-actions">
         <button
           type="button"
           onClick={onRestart}
-          className="custom-btn rounded-[var(--radius-button)]"
+          className="custom-btn"
         >
           Повторить
         </button>
-
-        <button
-          type="button"
-          onClick={onExit}
-          className="custom-btn rounded-[var(--radius-button)] bg-[var(--color-focus)]"
-        >
-          Вернуться к карточкам
-        </button>
+      {!pageFlag ? 
+          <button
+            type="button"
+            onClick={onExit}
+            className="custom-btn training-result-back-btn"
+          >
+            Вернуться к карточкам
+          </button>
+          : undefined
+        }
       </div>
     </section>
   );

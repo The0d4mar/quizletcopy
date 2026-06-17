@@ -1,7 +1,8 @@
 
-import { Card, Deck, Folder } from "@/types/type";
+import { Card, CardData, Deck, Folder, MatchQuestionData } from "@/types/type";
 import { LibraryItem, SortType, GroupedLibraryItems, EntityFilter } from '@/types/type';
 import { monthNames } from "./DataBlock";
+import { getRandomInt, shuffleArray } from "@/components/Training/trainingUtils";
 
 
 
@@ -110,6 +111,50 @@ export const removeDeckFromFolders = (
   });
 };
 
+export const createDeckCopy = (
+  decks: Deck[],
+  cards: Card[],
+  targetDeckId: string
+): {
+  decks: Deck[];
+  cards: Card[];
+  newDeckId: string;
+} | null => {
+  const targetDeck = decks.find(deck => deck.id === targetDeckId);
+
+  if (!targetDeck) {
+    return null;
+  }
+
+  const now = new Date().toISOString();
+  const newDeckId = crypto.randomUUID();
+
+  const newDeck: Deck = {
+    ...targetDeck,
+    id: newDeckId,
+    title: `Copy: ${targetDeck.title}`,
+    createdAt: now,
+    updatedAt: now,
+    lastRepeat: now,
+  };
+
+  const targetCards = cards.filter(card => card.deckId === targetDeckId);
+
+  const copiedCards: Card[] = targetCards.map(card => ({
+    ...card,
+    id: crypto.randomUUID(),
+    deckId: newDeckId,
+    createdAt: now,
+    updatedAt: now,
+  }));
+
+  return {
+    decks: [...decks, newDeck],
+    cards: [...cards, ...copiedCards],
+    newDeckId,
+  };
+};
+
 export const delFolder = (folders: Folder[], folderId: string) => {
   const updatedFolders = folders.filter(folder => folder.id !== folderId);
   return updatedFolders;
@@ -132,6 +177,38 @@ export const delConnectedCards = (cards: Card[], deletedDeckId: string) => {
   
   return newCards
 }
+
+export const delConnectedCardData = (
+  cards: Card[],
+  cardData: CardData[],
+  deletedDeckId: string
+): CardData[] => {
+  const deletedCardsIds = cards
+    .filter(card => card.deckId === deletedDeckId)
+    .map(card => card.id);
+
+  return cardData.filter(
+    data => !deletedCardsIds.includes(data.cardId)
+  );
+};
+
+export const resetDeckCardData = (
+  cardData: CardData[],
+  deckCardsIds: string[]
+): CardData[] => {
+  return cardData.map(card => {
+    if (!deckCardsIds.includes(card.cardId)) {
+      return card;
+    }
+
+    return {
+      ...card,
+      numOfRepeats: 0,
+      wrongRepeats: 0,
+      lastRepeat: [],
+    };
+  });
+};
 ////////////////////////////////////////////////////////////////////////////////
 
 
@@ -250,3 +327,4 @@ export function groupLibraryItems(
     return acc;
   }, {});
 }
+/////////////////////////////////////////

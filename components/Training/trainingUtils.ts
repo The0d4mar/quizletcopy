@@ -78,15 +78,7 @@ export const createWriteQuestion = (
   };
 };
 
-export const createMatchQuestion = (
-  cards: Card[]
-): MatchQuestionData => {
-  return {
-    type: 'match',
-    id: crypto.randomUUID(),
-    cards,
-  };
-};
+
 
 export const createLearnQuestions = (
   cards: Card[],
@@ -97,37 +89,6 @@ export const createLearnQuestions = (
   );
 };
 
-export const createTestQuestions = (
-  cards: Card[],
-  questionSide: QuestionSide,
-  questionTypes: TestQuestionType[]
-): TestQuestionData[] => {
-  const questions: TestQuestionData[] = [];
-
-  cards.forEach(card => {
-    if (questionTypes.includes('choice')) {
-      questions.push(createChoiceQuestion(card, cards, questionSide));
-    }
-
-    if (questionTypes.includes('write')) {
-      questions.push(createWriteQuestion(card, questionSide));
-    }
-  });
-
-  if (questionTypes.includes('match')) {
-    const shuffledCards = shuffleArray(cards);
-
-    for (let i = 0; i < shuffledCards.length; i += 5) {
-      const group = shuffledCards.slice(i, i + 5);
-
-      if (group.length >= 2) {
-        questions.push(createMatchQuestion(group));
-      }
-    }
-  }
-
-  return shuffleArray(questions);
-};
 
 export const normalizeAnswer = (value: string): string => {
   return value.trim().toLowerCase();
@@ -194,3 +155,53 @@ export const updateCardDataWrong = (
   );
 };
 
+export const getRandomInt = (
+  min: number,
+  max: number
+): number => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+export const createMatchQuestion = (
+  cards: Card[]
+): MatchQuestionData => {
+  const maxPairs = Math.min(8, cards.length);
+  const minPairs = Math.min(3, maxPairs);
+
+  const pairsCount = getRandomInt(minPairs, maxPairs);
+
+  const selectedCards = shuffleArray(cards).slice(0, pairsCount);
+
+  return {
+    type: 'match',
+    id: crypto.randomUUID(),
+    cards: selectedCards,
+    shuffledCards: shuffleArray(selectedCards),
+  };
+};
+
+export const createTestQuestions = (
+  cards: Card[],
+  questionSide: QuestionSide,
+  questionTypes: TestQuestionType[]
+): TestQuestionData[] => {
+  const questions: TestQuestionData[] = [];
+
+  const shuffledCards = shuffleArray(cards);
+
+  shuffledCards.forEach(card => {
+    if (questionTypes.includes('choice')) {
+      questions.push(createChoiceQuestion(card, cards, questionSide));
+    }
+
+    if (questionTypes.includes('write')) {
+      questions.push(createWriteQuestion(card, questionSide));
+    }
+  });
+
+  if (questionTypes.includes('match') && cards.length >= 3) {
+    questions.push(createMatchQuestion(cards));
+  }
+
+  return shuffleArray(questions);
+};

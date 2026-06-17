@@ -10,14 +10,15 @@ import {
 import { useParams } from 'next/navigation';
 import DropDownMenuBtn from './DropDownMenuBtn';
 import { loadCards, loadDecks, loadFolders } from '@/storage';
-import { delCenDeck, delConnectedCards, delFolder, removeDeckFromFolders } from '@/api/localFunc';
+import { createDeckCopy, delCenDeck, delConnectedCardData, delConnectedCards, delFolder, removeDeckFromFolders } from '@/api/localFunc';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { modalState } from '@/store/modalStore';
 import { createFolderCopy, deleteFolder, setFolders } from '@/store/folderStore';
 import { foldernameflag } from '@/store/EditFolderName';
-import { delDecks } from '@/store/deckStore';
+import { delDecks, setDecks } from '@/store/deckStore';
 import { setUpdatedCards } from '@/store/cardStore';
+import { setCardData } from '@/store/cardDataStore';
 
 interface DropdownMenuProps {
   localId: string;
@@ -30,6 +31,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ localId, windowFlag = 'open
     const folders = useSelector((state: RootState) => state.folders.folders);
     const decks = useSelector((state: RootState) => state.deckStore.decks);
     const cards = useSelector((state: RootState) => state.cardStore.cards);
+    const cardData = useSelector((state: RootState) => state.cardDataStore.cardData);
     const dispatch = useDispatch();
     const menuItems = [
       {
@@ -41,12 +43,18 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ localId, windowFlag = 'open
       {
         label: 'Создать копию',
         icon: Copy ,
-        onClick: () => console.log('Создать копию'),
-      },
-      {
-        label: 'Печать',
-        icon: Printer ,
-        onClick: () => console.log('Создать копию'),
+        onClick: () => {
+          const result = createDeckCopy(
+            decks,
+            cards,
+            sendedDeckId
+          );
+
+          if (!result) return;
+
+          dispatch(setDecks(result.decks));
+          dispatch(setUpdatedCards(result.cards));
+        },
       },
       {
         label: 'Объединить',
@@ -54,26 +62,33 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ localId, windowFlag = 'open
         onClick: () => {dispatch(modalState(true))},
       },
       {
-        label: 'Экспортировать',
-        icon: Download ,
-        onClick: () => console.log('Создать копию'),
-      },
-      {
-        label: 'Внедрить',
-        icon: Code2 ,
-        onClick: () => console.log('Создать копию'),
-      },
-      {
         label: 'Удалить',
         icon: Trash2 ,
         danger: true,
         onClick: () => {
-          dispatch(delDecks(sendedDeckId))
-          const decksIds = decks.map(deck => deck.id)
-          const newCards = delConnectedCards(cards, sendedDeckId).filter(card => decksIds.includes(card.deckId))
-          dispatch(setUpdatedCards(newCards))
-          const updatedFolders = removeDeckFromFolders(folders, sendedDeckId)
-          dispatch(setFolders(updatedFolders))
+          dispatch(delDecks(sendedDeckId));
+
+            const updatedCards = delConnectedCards(
+              cards,
+              sendedDeckId
+            );
+
+            dispatch(setUpdatedCards(updatedCards));
+
+            const updatedCardData = delConnectedCardData(
+              cards,
+              cardData,
+              sendedDeckId
+            );
+
+            dispatch(setCardData(updatedCardData));
+
+            const updatedFolders = removeDeckFromFolders(
+              folders,
+              sendedDeckId
+            );
+
+            dispatch(setFolders(updatedFolders));
         },
       },
     ];
@@ -116,6 +131,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ localId, windowFlag = 'open
           rounded-2xl
           border border-[var(--color-border-strong)]
           shadow-[var(--shadow-modal)]
+          bg-[var(--color-bg)]
           absolute
           right-[0]
           mt-3

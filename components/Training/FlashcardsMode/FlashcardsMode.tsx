@@ -1,29 +1,47 @@
 'use client'
 
-import CardsController from '@/components/ui/CardsController/CardsController';
 import ProgressBar from '@/components/ui/ProgressBar/ProgressBar';
 import { WordCard } from '@/components/ui/Card/WordCard';
 import { setCardData } from '@/store/cardDataStore';
 import { RootState } from '@/store/store';
 import { Card } from '@/types/type';
 import { Check, X } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { shuffleArray, updateCardDataCorrect } from '../trainingUtils';
+import {
+  shuffleArray,
+  updateCardDataCorrect,
+  updateCardDataWrong,
+} from '../trainingUtils';
 import FlashcardsToolbar from './FlashcardsToolbar';
+import CardsController from '@/components/ui/CardsController/CardsController';
+import TrainingResult, { TrainingMistake } from '../TrainingResult/TrainingResult';
+import FlashcardsSettingsModal from '@/components/ui/FlashcardsSettingsModal/FlashcardsSettingsModal';
+import { FlashcardFrontSide } from '@/types/type';
+import { delConnectedCardData, resetDeckCardData } from '@/api/localFunc';
 
 type SlideDirection = 'next' | 'prev';
 
 interface FlashcardsModeProps {
   deckCards: Card[];
+  deckTitle: string;
+  onExit: () => void;
+  deckId:string;
 }
 
-const FlashcardsMode = ({ deckCards }: FlashcardsModeProps) => {
+const FlashcardsMode = ({
+  deckCards,
+  deckTitle,
+  onExit,
+  deckId
+}: FlashcardsModeProps) => {
   const dispatch = useDispatch();
 
   const cardData = useSelector(
     (state: RootState) => state.cardDataStore.cardData
   );
+
+  const [orderedCards, setOrderedCards] = useState<Card[]>(deckCards);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [previousIndex, setPreviousIndex] = useState<number | null>(null);
@@ -32,12 +50,17 @@ const FlashcardsMode = ({ deckCards }: FlashcardsModeProps) => {
 
   const [repeatTracking, setRepeatTracking] = useState(false);
   const [shuffled, setShuffled] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
 
-  const orderedCards = useMemo(() => {
-    return shuffled ? shuffleArray(deckCards) : deckCards;
-  }, [deckCards, shuffled]);
+  const [frontSide, setFrontSide] = useState<FlashcardFrontSide>('original');
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
+  const [correctCount, setCorrectCount] = useState(0);
+  const [wrongCount, setWrongCount] = useState(0);
+  const [mistakes, setMistakes] = useState<TrainingMistake[]>([]);
 
   const currentCard = orderedCards[currentIndex];
+
   const previousCard =
     previousIndex !== null ? orderedCards[previousIndex] : null;
 
@@ -49,6 +72,30 @@ const FlashcardsMode = ({ deckCards }: FlashcardsModeProps) => {
       ? ((currentIndex + 1) / orderedCards.length) * 100
       : 0;
 
+  const getWordCardContent = (card: Card) => {
+    if (frontSide === 'original') {
+      return {
+        original: card.original,
+        translation: card.translation,
+      };
+    }
+
+    return {
+      original: card.translation,
+      translation: card.original,
+    };
+  };
+
+  const finishTraining = () => {
+    if (!repeatTracking) {
+      setCorrectCount(orderedCards.length);
+      setWrongCount(0);
+      setMistakes([]);
+    }
+
+    setIsFinished(true);
+  };
+
   const goToPrevCard = () => {
     if (isFirstCard || isAnimating) return;
 
@@ -59,7 +106,12 @@ const FlashcardsMode = ({ deckCards }: FlashcardsModeProps) => {
   };
 
   const goToNextCard = () => {
-    if (isLastCard || isAnimating) return;
+    if (isAnimating) return;
+
+    if (isLastCard) {
+      finishTraining();
+      return;
+    }
 
     setPreviousIndex(currentIndex);
     setSlideDirection('next');
@@ -70,13 +122,42 @@ const FlashcardsMode = ({ deckCards }: FlashcardsModeProps) => {
   const handleKnownCard = () => {
     if (!currentCard) return;
 
-    const updatedCardData = updateCardDataCorrect(cardData, currentCard.id);
+    const updatedCardData = updateCardDataCorrect(
+      cardData,
+      currentCard.id
+    );
+
     dispatch(setCardData(updatedCardData));
+
+    setCorrectCount(prev => prev + 1);
 
     goToNextCard();
   };
 
   const handleUnknownCard = () => {
+    if (!currentCard) return;
+
+    const updatedCardData = updateCardDataWrong(
+      cardData,
+      currentCard.id
+    );
+
+    dispatch(setCardData(updatedCardData));
+
+    setWrongCount(prev => prev + 1);
+
+    setMistakes(prev => [
+      ...prev,
+      {
+        card: currentCard,
+        selectedAnswer: 'Не знаю',
+        correctAnswer:
+          frontSide === 'original'
+            ? currentCard.translation
+            : currentCard.original,
+      },
+    ]);
+
     goToNextCard();
   };
 
@@ -85,21 +166,93 @@ const FlashcardsMode = ({ deckCards }: FlashcardsModeProps) => {
     setIsAnimating(false);
   };
 
+  const toggleShuffle = () => {
+    setShuffled(prev => !prev);
+
+    setOrderedCards(prevCards => {
+      const viewedCards = prevCards.slice(0, currentIndex + 1);
+      const notViewedCards = prevCards.slice(currentIndex + 1);
+
+      return [
+        ...viewedCards,
+        ...shuffleArray(notViewedCards),
+      ];
+    });
+  };
+
+  const resetProgress = () => {
+    setOrderedCards(shuffled ? shuffleArray(deckCards) : deckCards);
+    setCurrentIndex(0);
+    setPreviousIndex(null);
+    setSlideDirection('next');
+    setIsAnimating(false);
+    setIsFinished(false);
+    setCorrectCount(0);
+    setWrongCount(0);
+    setMistakes([]);
+    setSettingsOpen(false);
+  };
+
+  const cleanLearningProgress = () =>{
+    const deckCardsIds = deckCards.map(card => card.id);
+
+    const updatedCardData = resetDeckCardData(
+      cardData,
+      deckCardsIds
+    );
+
+    dispatch(setCardData(updatedCardData));
+  }
+
+  const restartTraining = () => {
+    resetProgress();
+  };
+
+  if (isFinished) {
+    return (
+      <TrainingResult
+        deckTitle={deckTitle}
+        correctCount={correctCount}
+        wrongCount={wrongCount}
+        mistakes={mistakes}
+        onRestart={restartTraining}
+        onExit={onExit}
+        pageFlag={true}
+      />
+    );
+  }
+
+  const currentCardContent = currentCard
+    ? getWordCardContent(currentCard)
+    : null;
+
+  const previousCardContent = previousCard
+    ? getWordCardContent(previousCard)
+    : null;
+
   return (
     <div className="flex justify-center">
+      {settingsOpen && (
+        <FlashcardsSettingsModal
+          frontSide={frontSide}
+          onChangeFrontSide={setFrontSide}
+          onResetProgress={resetProgress}
+          onClose={() => setSettingsOpen(false)}
+          onCleanCardsData = {cleanLearningProgress}
+        />
+      )}
+
       <div className="w-full max-w-[720px]">
         <FlashcardsToolbar
           repeatTracking={repeatTracking}
           shuffled={shuffled}
           onToggleRepeatTracking={() => setRepeatTracking(prev => !prev)}
-          onToggleShuffle={() => {
-            setShuffled(prev => !prev);
-            setCurrentIndex(0);
-          }}
+          onToggleShuffle={toggleShuffle}
+          onOpenSettings={() => setSettingsOpen(true)}
         />
 
         <div className="word-card-slider">
-          {previousCard && (
+          {previousCardContent && (
             <div
               className={`
                 word-card-slide
@@ -111,16 +264,16 @@ const FlashcardsMode = ({ deckCards }: FlashcardsModeProps) => {
               `}
             >
               <WordCard
-                original={previousCard.original}
-                translation={previousCard.translation}
+                original={previousCardContent.original}
+                translation={previousCardContent.translation}
                 flipped={false}
               />
             </div>
           )}
 
-          {currentCard && (
+          {currentCardContent && (
             <div
-              key={currentCard.id}
+              key={`${currentCard?.id}-${frontSide}`}
               onAnimationEnd={handleSlideEnd}
               className={`
                 word-card-slide
@@ -132,8 +285,8 @@ const FlashcardsMode = ({ deckCards }: FlashcardsModeProps) => {
               `}
             >
               <WordCard
-                original={currentCard.original}
-                translation={currentCard.translation}
+                original={currentCardContent.original}
+                translation={currentCardContent.translation}
                 flipped={false}
               />
             </div>
@@ -141,11 +294,11 @@ const FlashcardsMode = ({ deckCards }: FlashcardsModeProps) => {
         </div>
 
         {repeatTracking ? (
-          <div className="mt-4 flex items-center justify-center gap-4">
+          <div className="text-center flex items-center justify-center gap-4 mb-[var(--item-gap)] mt-[var(--item-gap)]">
             <button
               type="button"
               onClick={handleUnknownCard}
-              disabled={isLastCard || isAnimating}
+              disabled={isAnimating}
               className="custom-btn rounded-[var(--radius-button)] border-[var(--color-danger)] text-[var(--color-danger)]"
             >
               <X size={22} />
@@ -158,7 +311,7 @@ const FlashcardsMode = ({ deckCards }: FlashcardsModeProps) => {
             <button
               type="button"
               onClick={handleKnownCard}
-              disabled={isLastCard || isAnimating}
+              disabled={isAnimating}
               className="custom-btn rounded-[var(--radius-button)] border-[var(--color-success)] text-[var(--color-success)]"
             >
               <Check size={22} />
@@ -169,7 +322,7 @@ const FlashcardsMode = ({ deckCards }: FlashcardsModeProps) => {
             goToPrevCard={goToPrevCard}
             goToNextCard={goToNextCard}
             isFirstCard={isFirstCard || isAnimating}
-            isLastCard={isLastCard || isAnimating}
+            isLastCard={false}
             currentIndex={currentIndex}
             deckCardsLength={orderedCards.length}
           />

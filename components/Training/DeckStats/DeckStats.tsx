@@ -1,9 +1,11 @@
 'use client'
 
+import { setUpdatedCards } from '@/store/cardStore';
 import { RootState } from '@/store/store';
 import { Card } from '@/types/type';
 import { Pencil, Star, Volume2 } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface DeckStatsProps {
   deckCards: Card[];
@@ -16,12 +18,55 @@ type DeckStatsGroup = {
 };
 
 const DeckStats = ({ deckCards }: DeckStatsProps) => {
+  const dispatch = useDispatch();
+
+  const allCards = useSelector(
+    (state: RootState) => state.cardStore.cards
+  );
+
   const cardData = useSelector(
     (state: RootState) => state.cardDataStore.cardData
   );
 
+  const [editingCardId, setEditingCardId] = useState<string | null>(null);
+  const [editOriginal, setEditOriginal] = useState('');
+  const [editTranslation, setEditTranslation] = useState('');
+
   const getCardData = (cardId: string) => {
     return cardData.find(data => data.cardId === cardId);
+  };
+
+  const startEditCard = (card: Card) => {
+    setEditingCardId(card.id);
+    setEditOriginal(card.original);
+    setEditTranslation(card.translation);
+  };
+
+  const cancelEditCard = () => {
+    setEditingCardId(null);
+    setEditOriginal('');
+    setEditTranslation('');
+  };
+
+  const saveEditCard = (cardId: string) => {
+    const trimmedOriginal = editOriginal.trim();
+    const trimmedTranslation = editTranslation.trim();
+
+    if (!trimmedOriginal || !trimmedTranslation) return;
+
+    const updatedCards = allCards.map(card =>
+      card.id === cardId
+        ? {
+            ...card,
+            original: trimmedOriginal,
+            translation: trimmedTranslation,
+            updatedAt: new Date().toISOString(),
+          }
+        : card
+    );
+
+    dispatch(setUpdatedCards(updatedCards));
+    cancelEditCard();
   };
 
   const learnedCards = deckCards.filter(card => {
@@ -37,16 +82,13 @@ const DeckStats = ({ deckCards }: DeckStatsProps) => {
   const repeatCards = deckCards.filter(card => {
     const data = getCardData(card.id);
 
-    return (
-      data &&
-      data.wrongRepeats > data.numOfRepeats
-    );
+    return data && data.wrongRepeats > data.numOfRepeats;
   });
 
   const notLearnedCards = deckCards.filter(card => {
     const data = getCardData(card.id);
 
-    return !data || data.numOfRepeats === 0 && data.wrongRepeats === 0;
+    return !data || data.numOfRepeats === 0;
   });
 
   const groups: DeckStatsGroup[] = [
@@ -110,41 +152,120 @@ const DeckStats = ({ deckCards }: DeckStatsProps) => {
                 {group.cards.map(card => {
                   const data = getCardData(card.id);
                   const lastRepeat = data?.lastRepeat?.at(-1);
+                  const isEditing = editingCardId === card.id;
 
                   return (
                     <div
                       key={card.id}
                       className="app-card grid gap-4 md:grid-cols-[1fr_1fr_auto]"
                     >
-                      <div>
-                        <p className="text-[var(--font-size-md)] font-bold">
-                          | {card.original} |
-                        </p>
-                      </div>
+                      {isEditing ? (
+                        <>
+                          <div>
+                            <p className="mb-2 text-[var(--color-text-muted)] font-bold">
+                              Термин
+                            </p>
 
-                      <div>
-                        <p className="text-[var(--font-size-md)] font-bold">
-                          | {card.translation} |
-                        </p>
+                            <input
+                              value={editOriginal}
+                              onChange={e => setEditOriginal(e.target.value)}
+                              className="
+                                w-full
+                                rounded-[var(--radius-card)]
+                                border
+                                border-[var(--color-border)]
+                                bg-[var(--color-bg-soft)]
+                                px-[var(--padding-x-input)]
+                                py-[var(--padding-y-input)]
+                                font-bold
+                                outline-none
+                                focus:ring-2
+                                focus:ring-[var(--color-focus)]
+                              "
+                            />
+                          </div>
 
-                        <p className="mt-2 text-[var(--font-size-sm)] text-[var(--color-text-muted)]">
-                          Успешно: {data?.numOfRepeats ?? 0} · Ошибок:{' '}
-                          {data?.wrongRepeats ?? 0}
-                        </p>
+                          <div>
+                            <p className="mb-2 text-[var(--color-text-muted)] font-bold">
+                              Перевод
+                            </p>
 
-                        {lastRepeat && (
-                          <p className="text-[var(--font-size-sm)] text-[var(--color-text-muted)]">
-                            Последнее повторение:{' '}
-                            {new Date(lastRepeat).toLocaleDateString()}
-                          </p>
-                        )}
-                      </div>
+                            <input
+                              value={editTranslation}
+                              onChange={e => setEditTranslation(e.target.value)}
+                              className="
+                                w-full
+                                rounded-[var(--radius-card)]
+                                border
+                                border-[var(--color-border)]
+                                bg-[var(--color-bg-soft)]
+                                px-[var(--padding-x-input)]
+                                py-[var(--padding-y-input)]
+                                font-bold
+                                outline-none
+                                focus:ring-2
+                                focus:ring-[var(--color-focus)]
+                              "
+                            />
+                          </div>
 
-                      <div className="flex items-center gap-4">
-                        <Star size={22} />
-                        <Volume2 size={22} />
-                        <Pencil size={22} />
-                      </div>
+                          <div className="flex items-center gap-3">
+                            <button
+                              type="button"
+                              onClick={() => saveEditCard(card.id)}
+                              className="custom-btn rounded-[var(--radius-button)] bg-[var(--color-focus)]"
+                            >
+                              Изменить
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={cancelEditCard}
+                              className="custom-btn rounded-[var(--radius-button)] border-[var(--color-danger)] text-[var(--color-danger)]"
+                            >
+                              Отменить
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div>
+                            <p className="text-[var(--font-size-md)] font-bold">
+                              | {card.original} |
+                            </p>
+                          </div>
+
+                          <div>
+                            <p className="text-[var(--font-size-md)] font-bold">
+                              | {card.translation} |
+                            </p>
+
+                            <p className="mt-2 text-[var(--font-size-sm)] text-[var(--color-text-muted)]">
+                              Успешно: {data?.numOfRepeats ?? 0} · Ошибок:{' '}
+                              {data?.wrongRepeats ?? 0}
+                            </p>
+
+                            {lastRepeat && (
+                              <p className="text-[var(--font-size-sm)] text-[var(--color-text-muted)]">
+                                Последнее повторение:{' '}
+                                {new Date(lastRepeat).toLocaleDateString()}
+                              </p>
+                            )}
+                          </div>
+
+                          <div className="flex items-center gap-4">
+                            <Star size={22} />
+                            <Volume2 size={22} />
+
+                            <button
+                              type="button"
+                              onClick={() => startEditCard(card)}
+                            >
+                              <Pencil size={22} />
+                            </button>
+                          </div>
+                        </>
+                      )}
                     </div>
                   );
                 })}

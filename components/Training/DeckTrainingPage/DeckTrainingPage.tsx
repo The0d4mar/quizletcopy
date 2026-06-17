@@ -27,7 +27,7 @@ const DeckTrainingPage = () => {
   const [trainingMode, setTrainingMode] = useState<TrainingMode>('cards');
 
   const deck = decks.find(deck => deck.id === deckId);
-  const deckCards = cards.filter(card => card.deckId === deckId);
+  const deckCards = storeCards.filter(card => card.deckId === deckId);  
 
   useEffect(() => {
     updateDeckLastRepeat(decks, deckId);
@@ -73,7 +73,12 @@ const DeckTrainingPage = () => {
       ) : (
         <>
           {trainingMode === 'cards' && (
-            <FlashcardsMode deckCards={deckCards} />
+            <FlashcardsMode
+              deckCards={deckCards}
+              deckTitle={deck?.title ?? ''}
+              onExit={() => setTrainingMode('cards')}
+              deckId = {deckId}
+            />
           )}
 
           {trainingMode === 'learn' && (

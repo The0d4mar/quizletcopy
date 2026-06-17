@@ -2,15 +2,17 @@
 
 import { setCardData } from '@/store/cardDataStore';
 import { RootState } from '@/store/store';
-import { AnswerStatus, Card, QuestionSide } from '@/types/type';
+import { Card } from '@/types/type';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import TrainingResult, { TrainingMistake } from '../TrainingResult/TrainingResult';
 import {
   createLearnQuestions,
+  shuffleArray,
   updateCardDataCorrect,
   updateCardDataWrong,
 } from '../trainingUtils';
+import { AnswerStatus, QuestionSide } from '@/types/type';
 import LearnQuestion from './LearnQuestion';
 import LearnSetupModal from './LearnSetupModal';
 
@@ -20,7 +22,11 @@ interface LearnModeProps {
   onExit: () => void;
 }
 
-const LearnMode = ({ deckTitle, deckCards, onExit }: LearnModeProps) => {
+const LearnMode = ({
+  deckTitle,
+  deckCards,
+  onExit,
+}: LearnModeProps) => {
   const dispatch = useDispatch();
 
   const cardData = useSelector(
@@ -29,6 +35,7 @@ const LearnMode = ({ deckTitle, deckCards, onExit }: LearnModeProps) => {
 
   const [questionSide, setQuestionSide] = useState<QuestionSide | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [answerStatus, setAnswerStatus] = useState<AnswerStatus>('idle');
 
@@ -39,27 +46,25 @@ const LearnMode = ({ deckTitle, deckCards, onExit }: LearnModeProps) => {
 
   const questions = useMemo(() => {
     if (!questionSide) return [];
-    return createLearnQuestions(deckCards, questionSide);
+
+    return shuffleArray(
+      createLearnQuestions(deckCards, questionSide)
+    );
   }, [deckCards, questionSide]);
 
   const currentQuestion = questions[currentIndex];
 
-  const resetTraining = () => {
-    setCurrentIndex(0);
-    setSelectedAnswer(null);
-    setAnswerStatus('idle');
-    setIsFinished(false);
-    setCorrectCount(0);
-    setWrongCount(0);
-    setMistakes([]);
-  };
-
   const selectAnswer = (answer: string) => {
-    if (!currentQuestion || answerStatus !== 'idle') return;
+    if (answerStatus !== 'idle') return;
 
     setSelectedAnswer(answer);
+  };
 
-    const isCorrect = answer === currentQuestion.correctAnswer;
+  const checkAnswer = () => {
+    if (!currentQuestion || !selectedAnswer) return;
+
+    const isCorrect =
+      selectedAnswer === currentQuestion.correctAnswer;
 
     if (isCorrect) {
       const updatedCardData = updateCardDataCorrect(
@@ -70,26 +75,28 @@ const LearnMode = ({ deckTitle, deckCards, onExit }: LearnModeProps) => {
       dispatch(setCardData(updatedCardData));
       setCorrectCount(prev => prev + 1);
       setAnswerStatus('correct');
-    } else {
-      const updatedCardData = updateCardDataWrong(
-        cardData,
-        currentQuestion.card.id
-      );
 
-      dispatch(setCardData(updatedCardData));
-
-      setWrongCount(prev => prev + 1);
-      setMistakes(prev => [
-        ...prev,
-        {
-          card: currentQuestion.card,
-          selectedAnswer: answer,
-          correctAnswer: currentQuestion.correctAnswer,
-        },
-      ]);
-
-      setAnswerStatus('wrong');
+      return;
     }
+
+    const updatedCardData = updateCardDataWrong(
+      cardData,
+      currentQuestion.card.id
+    );
+
+    dispatch(setCardData(updatedCardData));
+
+    setWrongCount(prev => prev + 1);
+    setMistakes(prev => [
+      ...prev,
+      {
+        card: currentQuestion.card,
+        selectedAnswer,
+        correctAnswer: currentQuestion.correctAnswer,
+      },
+    ]);
+
+    setAnswerStatus('wrong');
   };
 
   const nextQuestion = () => {
@@ -101,6 +108,16 @@ const LearnMode = ({ deckTitle, deckCards, onExit }: LearnModeProps) => {
     setSelectedAnswer(null);
     setAnswerStatus('idle');
     setCurrentIndex(prev => prev + 1);
+  };
+
+  const resetTraining = () => {
+    setCurrentIndex(0);
+    setSelectedAnswer(null);
+    setAnswerStatus('idle');
+    setIsFinished(false);
+    setCorrectCount(0);
+    setWrongCount(0);
+    setMistakes([]);
   };
 
   if (!questionSide) {
@@ -136,6 +153,7 @@ const LearnMode = ({ deckTitle, deckCards, onExit }: LearnModeProps) => {
           selectedAnswer={selectedAnswer}
           answerStatus={answerStatus}
           onSelectAnswer={selectAnswer}
+          onCheckAnswer={checkAnswer}
           onNext={nextQuestion}
         />
       )}

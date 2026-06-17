@@ -117,7 +117,7 @@ export type SortType = 'created' | 'updated' | 'viewed';
 
 export type GroupedLibraryItems = Record<string, LibraryItem[]>;
 
-
+export type FlashcardFrontSide = 'original' | 'translation';
 
 export type TrainingMode = 'cards' | 'learn' | 'test';
 
@@ -140,6 +140,7 @@ export type MatchQuestionData = {
   type: 'match';
   id: string;
   cards: Card[];
+  shuffledCards: Card[];
 };
 
 export type WriteQuestionData = {
@@ -153,3 +154,10 @@ export type TestQuestionData =
   | LearnQuestionData
   | MatchQuestionData
   | WriteQuestionData;
+
+
+export type TrainingMistake = {
+  card: Card;
+  selectedAnswer: string;
+  correctAnswer: string;
+};

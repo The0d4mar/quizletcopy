@@ -6,6 +6,7 @@ interface TestSetupModalProps {
   deckTitle: string;
   maxQuestions: number;
   questionsCount: number;
+  questionSide: QuestionSide;
   questionTypes: TestQuestionType[];
   onQuestionsCountChange: (value: number) => void;
   onQuestionTypesChange: (value: TestQuestionType[]) => void;
@@ -24,6 +25,7 @@ const TestSetupModal = ({
   deckTitle,
   maxQuestions,
   questionsCount,
+  questionSide,
   questionTypes,
   onQuestionsCountChange,
   onQuestionTypesChange,
@@ -78,7 +80,7 @@ const TestSetupModal = ({
             max={maxQuestions}
             value={questionsCount}
             onChange={e => onQuestionsCountChange(Number(e.target.value))}
-            className="w-[90px] rounded-[var(--radius-card)] bg-[var(--color-surface-light)] px-4 py-3 font-bold outline-none"
+            className="w-[90px] rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface-light)] px-4 py-3 font-bold outline-none focus:ring-2 focus:ring-[var(--color-focus)]"
           />
         </div>
 
@@ -89,7 +91,10 @@ const TestSetupModal = ({
             <button
               type="button"
               onClick={() => onSelectSide('original')}
-              className="app-card text-left font-bold"
+              className={`
+                training-answer
+                ${questionSide === 'original' ? 'training-answer-selected' : ''}
+              `}
             >
               Термин → определение
             </button>
@@ -97,7 +102,10 @@ const TestSetupModal = ({
             <button
               type="button"
               onClick={() => onSelectSide('translation')}
-              className="app-card text-left font-bold"
+              className={`
+                training-answer
+                ${questionSide === 'translation' ? 'training-answer-selected' : ''}
+              `}
             >
               Определение → термин
             </button>

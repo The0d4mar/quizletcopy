@@ -1,8 +1,6 @@
 'use client'
 
-import { LearnQuestionData, AnswerStatus } from "@/types/type";
-
-
+import { LearnQuestionData, AnswerStatus } from '@/types/type';
 
 interface LearnQuestionProps {
   question: LearnQuestionData;
@@ -11,6 +9,7 @@ interface LearnQuestionProps {
   selectedAnswer: string | null;
   answerStatus: AnswerStatus;
   onSelectAnswer: (answer: string) => void;
+  onCheckAnswer: () => void;
   onNext: () => void;
 }
 
@@ -21,23 +20,28 @@ const LearnQuestion = ({
   selectedAnswer,
   answerStatus,
   onSelectAnswer,
+  onCheckAnswer,
   onNext,
 }: LearnQuestionProps) => {
-    const getAnswerClass = (
-        answerStatus: AnswerStatus,
-        isSelected: boolean,
-        isCorrect: boolean
-        ) => {
-        if (answerStatus !== 'idle' && isCorrect) {
-            return 'border-[var(--color-success)] text-[var(--color-success)]';
-        }
+  const getAnswerClass = (
+    isSelected: boolean,
+    isCorrect: boolean
+  ) => {
+    if (answerStatus === 'idle' && isSelected) {
+      return 'training-answer-selected';
+    }
 
-        if (answerStatus === 'wrong' && isSelected && !isCorrect) {
-            return 'border-[var(--color-danger)] text-[var(--color-danger)]';
-        }
+    if (answerStatus !== 'idle' && isCorrect) {
+      return 'training-answer-correct';
+    }
 
-        return '';
-        };
+    if (answerStatus === 'wrong' && isSelected && !isCorrect) {
+      return 'training-answer-wrong';
+    }
+
+    return '';
+  };
+
   return (
     <div className="app-card w-full max-w-[960px]">
       <div className="mb-[var(--block-gap)] flex items-center justify-between">
@@ -65,37 +69,50 @@ const LearnQuestion = ({
 
           return (
             <button
-                key={answer}
-                type="button"
-                disabled={answerStatus !== 'idle'}
-                onClick={() => onSelectAnswer(answer)}
-                className={`
-                    app-card
-                    min-h-[72px]
-                    text-left
-                    text-[var(--font-size-md)]
-                    font-bold
-                    hover:border-[var(--color-border-hover)]
-                    ${getAnswerClass(answerStatus, isSelected, isCorrect)}
-                `}
-                >
-                | {answer} |
-                </button>
+              key={answer}
+              type="button"
+              disabled={answerStatus !== 'idle'}
+              onClick={() => onSelectAnswer(answer)}
+              className={`
+                training-answer
+                ${getAnswerClass(isSelected, isCorrect)}
+              `}
+            >
+              {answer}
+            </button>
           );
         })}
       </div>
 
-      {answerStatus !== 'idle' && (
-        <div className="mt-[var(--block-gap)] flex justify-end">
+      <div className="mt-[var(--block-gap)] flex justify-end">
+        {answerStatus === 'idle' ? (
+          <button
+            type="button"
+            disabled={!selectedAnswer}
+            onClick={onCheckAnswer}
+            className="
+              custom-btn
+              rounded-[var(--radius-button)]
+              bg-[var(--color-focus)]
+              disabled:opacity-40
+            "
+          >
+            Проверить
+          </button>
+        ) : (
           <button
             type="button"
             onClick={onNext}
-            className="custom-btn rounded-[var(--radius-button)] bg-[var(--color-focus)]"
+            className="
+              custom-btn
+              rounded-[var(--radius-button)]
+              bg-[var(--color-focus)]
+            "
           >
             Далее
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

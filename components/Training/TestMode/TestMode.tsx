@@ -2,10 +2,10 @@
 
 import { setCardData } from '@/store/cardDataStore';
 import { RootState } from '@/store/store';
-import { Card } from '@/types/type';
+import { Card, TrainingMistake } from '@/types/type';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import TrainingResult, { TrainingMistake } from '../TrainingResult/TrainingResult';
+import TrainingResult from '../TrainingResult/TrainingResult';
 import {
   createTestQuestions,
   normalizeAnswer,
@@ -218,12 +218,36 @@ const TestMode = ({
     setStarted(false);
   };
 
+  const selectChoiceAnswer = (
+    index: number,
+    answer: string
+  ) => {
+    const question = questions[index];
+
+    if (!question || question.type !== 'choice') return;
+
+    const questionId = getQuestionId(index);
+
+    if (answersState[questionId]?.status !== 'idle' && answersState[questionId]) {
+      return;
+    }
+
+    setAnswersState(prev => ({
+      ...prev,
+      [questionId]: {
+        selectedAnswer: answer,
+        status: 'idle',
+      },
+    }));
+  };
+
   if (!started) {
     return (
       <TestSetupModal
         deckTitle={deckTitle}
         maxQuestions={deckCards.length}
         questionsCount={questionsCount}
+        questionSide={questionSide}
         questionTypes={questionTypes}
         onQuestionsCountChange={setQuestionsCount}
         onQuestionTypesChange={setQuestionTypes}
@@ -243,9 +267,47 @@ const TestMode = ({
         mistakes={mistakes}
         onRestart={restartTest}
         onExit={onExit}
+        pageFlag = {false}
       />
     );
   }
+
+  const checkChoiceAnswer = (index: number) => {
+    const question = questions[index];
+
+    if (!question || question.type !== 'choice') return;
+
+    const questionId = getQuestionId(index);
+    const selectedAnswer = answersState[questionId]?.selectedAnswer;
+
+    if (!selectedAnswer) return;
+
+    const isCorrect = selectedAnswer === question.correctAnswer;
+
+    setAnswersState(prev => ({
+      ...prev,
+      [questionId]: {
+        selectedAnswer,
+        status: isCorrect ? 'correct' : 'wrong',
+      },
+    }));
+
+    if (isCorrect) {
+      saveCorrect(question.card.id);
+      return;
+    }
+
+    saveWrong(question.card.id);
+
+    setMistakes(prev => [
+      ...prev,
+      {
+        card: question.card,
+        selectedAnswer,
+        correctAnswer: question.correctAnswer,
+      },
+    ]);
+  };
 
   const answeredCount = Object.keys(answersState).length;
 
@@ -274,7 +336,8 @@ const TestMode = ({
               total={questions.length}
               selectedAnswer={answerState?.selectedAnswer ?? null}
               answerStatus={answerState?.status ?? 'idle'}
-              onSelectAnswer={answer => answerChoice(index, answer)}
+              onSelectAnswer={answer => selectChoiceAnswer(index, answer)}
+              onCheckAnswer={() => checkChoiceAnswer(index)}
             />
           );
         }

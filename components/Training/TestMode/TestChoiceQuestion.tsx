@@ -9,6 +9,7 @@ interface TestChoiceQuestionProps {
   selectedAnswer: string | null;
   answerStatus: AnswerStatus;
   onSelectAnswer: (answer: string) => void;
+  onCheckAnswer: () => void;
 }
 
 const TestChoiceQuestion = ({
@@ -18,7 +19,27 @@ const TestChoiceQuestion = ({
   selectedAnswer,
   answerStatus,
   onSelectAnswer,
+  onCheckAnswer,
 }: TestChoiceQuestionProps) => {
+  const getAnswerClass = (
+    isSelected: boolean,
+    isCorrect: boolean
+  ) => {
+    if (answerStatus === 'idle' && isSelected) {
+      return 'training-answer-selected';
+    }
+
+    if (answerStatus !== 'idle' && isCorrect) {
+      return 'training-answer-correct';
+    }
+
+    if (answerStatus === 'wrong' && isSelected && !isCorrect) {
+      return 'training-answer-wrong';
+    }
+
+    return '';
+  };
+
   return (
     <div className="app-card w-full">
       <div className="mb-[var(--block-gap)] flex items-center justify-between">
@@ -51,17 +72,8 @@ const TestChoiceQuestion = ({
               disabled={answerStatus !== 'idle'}
               onClick={() => onSelectAnswer(answer)}
               className={`
-                app-card min-h-[72px] text-left text-[var(--font-size-md)] font-bold
-                ${
-                  answerStatus !== 'idle' && isCorrect
-                    ? 'border-[var(--color-success)] text-[var(--color-success)]'
-                    : ''
-                }
-                ${
-                  answerStatus === 'wrong' && isSelected && !isCorrect
-                    ? 'border-[var(--color-danger)] text-[var(--color-danger)]'
-                    : ''
-                }
+                training-answer
+                ${getAnswerClass(isSelected, isCorrect)}
               `}
             >
               | {answer} |
@@ -69,6 +81,19 @@ const TestChoiceQuestion = ({
           );
         })}
       </div>
+
+      {answerStatus === 'idle' && (
+        <div className="mt-[var(--block-gap)] flex justify-end">
+          <button
+            type="button"
+            disabled={!selectedAnswer}
+            onClick={onCheckAnswer}
+            className="custom-btn rounded-[var(--radius-button)] bg-[var(--color-focus)] disabled:opacity-40"
+          >
+            Проверить
+          </button>
+        </div>
+      )}
     </div>
   );
 };

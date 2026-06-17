@@ -1,12 +1,13 @@
 'use client'
 
-import { Shuffle } from 'lucide-react';
+import { Settings, Shuffle } from 'lucide-react';
 
 interface FlashcardsToolbarProps {
   repeatTracking: boolean;
   shuffled: boolean;
   onToggleRepeatTracking: () => void;
   onToggleShuffle: () => void;
+  onOpenSettings: () => void;
 }
 
 const FlashcardsToolbar = ({
@@ -14,6 +15,7 @@ const FlashcardsToolbar = ({
   shuffled,
   onToggleRepeatTracking,
   onToggleShuffle,
+  onOpenSettings,
 }: FlashcardsToolbarProps) => {
   return (
     <div className="mb-[var(--item-gap)] flex items-center justify-between gap-4">
@@ -37,16 +39,26 @@ const FlashcardsToolbar = ({
         </button>
       </label>
 
-      <button
-        type="button"
-        onClick={onToggleShuffle}
-        className={`
-          custom-btn rounded-[var(--radius-button)]
-          ${shuffled ? 'border-[var(--color-focus)] bg-[var(--color-surface-light)]' : ''}
-        `}
-      >
-        <Shuffle size={18} />
-      </button>
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={onToggleShuffle}
+          className={`
+            custom-btn rounded-[var(--radius-button)]
+            ${shuffled ? 'border-[var(--color-focus)] bg-[var(--color-surface-light)]' : ''}
+          `}
+        >
+          <Shuffle size={18} />
+        </button>
+
+        <button
+          type="button"
+          onClick={onOpenSettings}
+          className="custom-btn rounded-[var(--radius-button)]"
+        >
+          <Settings size={18} />
+        </button>
+      </div>
     </div>
   );
 };
