@@ -1,6 +1,6 @@
 'use client'
 
-import { QuestionSide } from "@/types/type";
+import { QuestionSide } from "@/types/types.type";
 
 
 interface LearnSetupModalProps {
@@ -15,15 +15,15 @@ const LearnSetupModal = ({
   onClose,
 }: LearnSetupModalProps) => {
   return (
-    <div className="app-modal-overlay">
-      <div className="app-modal">
-        <div className="mb-[var(--block-gap)] flex items-start justify-between">
+    <div className="modalOverlay">
+      <div className="modal">
+        <div className="mb-[var(--gapXl)] flex items-start justify-between">
           <div>
-            <p className="font-bold text-[var(--color-text-muted)]">
+            <p className="font-bold text-[var(--colorTextMuted)]">
               {deckTitle}
             </p>
 
-            <h2 className="text-[var(--font-size-xl)] font-bold">
+            <h2 className="text-[var(--fontSizeXl)] font-bold">
               Настройте заучивание
             </h2>
           </div>
@@ -31,17 +31,17 @@ const LearnSetupModal = ({
           <button
             type="button"
             onClick={onClose}
-            className="custom-btn rounded-[var(--radius-button)]"
+            className="button rounded-[var(--radiusPill)]"
           >
             ×
           </button>
         </div>
 
-        <div className="grid gap-[var(--item-gap)] md:grid-cols-2">
+        <div className="grid gap-[var(--gapMd)] md:grid-cols-2">
           <button
             type="button"
             onClick={() => onSelectSide('original')}
-            className="app-card text-left font-bold"
+            className="card text-left font-bold"
           >
             Показывать термин
           </button>
@@ -49,7 +49,7 @@ const LearnSetupModal = ({
           <button
             type="button"
             onClick={() => onSelectSide('translation')}
-            className="app-card text-left font-bold"
+            className="card text-left font-bold"
           >
             Показывать определение
           </button>

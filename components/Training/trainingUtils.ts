@@ -1,4 +1,4 @@
-import { Card } from '@/types/type';
+import { Card } from '@/types/types.type';
 import {
   CardData,
   LearnQuestionData,
@@ -7,7 +7,7 @@ import {
   TestQuestionData,
   TestQuestionType,
   WriteQuestionData,
-} from '@/types/type';
+} from '@/types/types.type';
 
 export const shuffleArray = <T,>(array: T[]): T[] => {
   return [...array].sort(() => Math.random() - 0.5);

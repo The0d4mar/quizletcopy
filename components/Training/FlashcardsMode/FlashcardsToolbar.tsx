@@ -18,16 +18,16 @@ const FlashcardsToolbar = ({
   onOpenSettings,
 }: FlashcardsToolbarProps) => {
   return (
-    <div className="mb-[var(--item-gap)] flex items-center justify-between gap-4">
-      <label className="flex items-center gap-3 font-bold text-[var(--color-text-muted)]">
+    <div className="mb-[var(--gapMd)] flex items-center justify-between gap-4">
+      <label className="flex items-center gap-3 font-bold text-[var(--colorTextMuted)]">
         <span>Отслеживать прогресс</span>
 
         <button
           type="button"
           onClick={onToggleRepeatTracking}
           className={`
-            relative h-6 w-11 rounded-[var(--radius-button)] transition
-            ${repeatTracking ? 'bg-[var(--color-focus)]' : 'bg-[var(--color-surface-light)]'}
+            relative h-6 w-11 rounded-[var(--radiusPill)] transition
+            ${repeatTracking ? 'bg-[var(--colorFocus)]' : 'bg-[var(--colorSurfaceLight)]'}
           `}
         >
           <span
@@ -43,10 +43,8 @@ const FlashcardsToolbar = ({
         <button
           type="button"
           onClick={onToggleShuffle}
-          className={`
-            custom-btn rounded-[var(--radius-button)]
-            ${shuffled ? 'border-[var(--color-focus)] bg-[var(--color-surface-light)]' : ''}
-          `}
+          aria-pressed={shuffled}
+          className={`button buttonPill ${shuffled ? 'buttonPrimary' : 'buttonSurface'}`}
         >
           <Shuffle size={18} />
         </button>
@@ -54,7 +52,7 @@ const FlashcardsToolbar = ({
         <button
           type="button"
           onClick={onOpenSettings}
-          className="custom-btn rounded-[var(--radius-button)]"
+          className="button rounded-[var(--radiusPill)]"
         >
           <Settings size={18} />
         </button>

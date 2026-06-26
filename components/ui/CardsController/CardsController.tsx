@@ -1,6 +1,5 @@
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import React from 'react';
-import {FC} from 'react';
 import CardsControllerBtn from '../CardsControllerBtn/CardsControllerBtn';
 
 interface CardsControllerProps {
@@ -12,9 +11,9 @@ interface CardsControllerProps {
     deckCardsLength: number;
 }
 
-const CardsController: FC<CardsControllerProps> = ({ goToPrevCard, goToNextCard, isFirstCard, isLastCard, currentIndex, deckCardsLength }) => {
+const CardsController = ({ goToPrevCard, goToNextCard, isFirstCard, isLastCard, currentIndex, deckCardsLength }: CardsControllerProps) => {
   return (
-    <div className='text-center flex items-center justify-center gap-4 mb-[var(--item-gap)] mt-[var(--item-gap)]'>
+    <div className='text-center flex items-center justify-center gap-4 mb-[var(--gapMd)] mt-[var(--gapMd)]'>
         
         <CardsControllerBtn
             onClick={goToPrevCard}

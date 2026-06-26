@@ -25,7 +25,7 @@ interface DropdownMenuProps {
   windowFlag?: string;
 } 
 
-const DropdownMenu: React.FC<DropdownMenuProps> = ({ localId, windowFlag = 'openedDeck' }) => {
+const DropdownMenu = ({ localId, windowFlag = 'openedDeck' }: DropdownMenuProps) => {
     const sendedDeckId = localId;
     const hideFlag = useSelector((state: RootState) => state.modal.state) 
     const folders = useSelector((state: RootState) => state.folders.folders);
@@ -129,9 +129,9 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ localId, windowFlag = 'open
           w-[220px]
           overflow-hidden
           rounded-2xl
-          border border-[var(--color-border-strong)]
-          shadow-[var(--shadow-modal)]
-          bg-[var(--color-bg)]
+          border border-[var(--colorBorderStrong)]
+          shadow-[var(--shadowModal)]
+          bg-[var(--colorBg)]
           absolute
           right-[0]
           mt-3

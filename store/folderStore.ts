@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Folder } from '@/types/type';
+import { Folder } from '@/types/types.type';
 import { loadFolders, saveFolders } from '@/storage';
 
 interface FoldersState {

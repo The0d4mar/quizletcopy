@@ -1,20 +1,14 @@
-import { SideBarChapProps } from '@/types/type';
-import React, {FC} from 'react';
+import { SideBarChapProps } from '@/types/types.type';
+import React from 'react';
 import AddFolderBtn from '../ui/AddFolderBtn/AddFolderBtn';
 import FolderList from '../ui/FoldersList/FolderList';
 import Link from 'next/link';
 
 
 
-const SideBarChap:FC<SideBarChapProps> = ({id, title, headers, icons, ways }) => {
+const SideBarChap = ({id, title, headers, icons, ways }: SideBarChapProps) => {
 
-  const localway = ways.length == 0 ? [] : ways;
-
-  if(localway.length == 0 ) {
-    for(let head of headers) {
-      localway.push('/');
-    }
-  }
+  const localway = ways.length === 0 ? headers.map(() => '/') : ways;
 
 
 
@@ -30,9 +24,7 @@ const SideBarChap:FC<SideBarChapProps> = ({id, title, headers, icons, ways }) =>
         {headers.map((header, index) => (
             <Link className='
             
-            flex items-center gap-2 px-[var(--padding-x-card)] py-[var(--padding-y-card)] rounded-[var(--radius-card)]
-            transition-all duration-300 ease-in-out
-            hover:bg-[var(--color-hover)]
+            sideNavButton
             
             ' key={index}
             href = {localway[index]}>

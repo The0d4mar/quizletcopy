@@ -1,7 +1,7 @@
 'use client'
 
 import { X } from 'lucide-react';
-import { Card, CardData, Deck, FlashcardFrontSide } from '@/types/type';
+import { Card, CardData, Deck, FlashcardFrontSide } from '@/types/types.type';
 
 interface FlashcardsSettingsModalProps {
   frontSide: FlashcardFrontSide;
@@ -20,35 +20,35 @@ const FlashcardsSettingsModal = ({
   
 }: FlashcardsSettingsModalProps) => {
   return (
-    <div className="app-modal-overlay">
-      <div className="app-modal">
-        <div className="mb-[var(--block-gap)] flex items-start justify-between">
-          <h2 className="text-[var(--font-size-xl)] font-bold">
+    <div className="modalOverlay">
+      <div className="modal">
+        <div className="mb-[var(--gapXl)] flex items-start justify-between">
+          <h2 className="text-[var(--fontSizeXl)] font-bold">
             Параметры
           </h2>
 
           <button
             type="button"
             onClick={onClose}
-            className="custom-btn rounded-[var(--radius-button)]"
+            className="button rounded-[var(--radiusPill)]"
           >
             <X size={22} />
           </button>
         </div>
 
-        <div className="flex flex-col gap-[var(--block-gap)]">
+        <div className="flex flex-col gap-[var(--gapXl)]">
           <div>
             <p className="mb-3 font-bold">
               Лицевая сторона
             </p>
 
-            <div className="grid gap-[var(--item-gap)] md:grid-cols-2">
+            <div className="grid gap-[var(--gapMd)] md:grid-cols-2">
               <button
                 type="button"
                 onClick={() => onChangeFrontSide('original')}
                 className={`
-                  training-answer
-                  ${frontSide === 'original' ? 'training-answer-selected' : ''}
+                  trainingAnswer
+                  ${frontSide === 'original' ? 'trainingAnswerSelected' : ''}
                 `}
               >
                 Оригинал
@@ -58,15 +58,15 @@ const FlashcardsSettingsModal = ({
                 type="button"
                 onClick={() => onChangeFrontSide('translation')}
                 className={`
-                  training-answer
-                  ${frontSide === 'translation' ? 'training-answer-selected' : ''}
+                  trainingAnswer
+                  ${frontSide === 'translation' ? 'trainingAnswerSelected' : ''}
                 `}
               >
                 Определение
               </button>
             </div>
           </div>
-          <div className="mt-[var(--block-gap)]">
+          <div className="mt-[var(--gapXl)]">
             <button
               type="button"
               onClick={onCleanCardsData}
@@ -74,9 +74,9 @@ const FlashcardsSettingsModal = ({
                 w-full
                 text-left
                 font-bold
-                custom-btn
+                button
                 border
-                border-[var(--color-danger)]
+                border-[var(--colorDanger)]
                 transition
                 hover:opacity-80
               "
@@ -85,7 +85,7 @@ const FlashcardsSettingsModal = ({
             </button>
           </div>
 
-          <div className="h-px bg-[var(--color-border)]" />
+          <div className="h-px bg-[var(--colorBorder)]" />
 
           <button
             type="button"
@@ -93,7 +93,7 @@ const FlashcardsSettingsModal = ({
             className="
               w-fit
               font-bold
-              text-[var(--color-danger)]
+              text-[var(--colorDanger)]
               transition
               hover:text-red-300
             "

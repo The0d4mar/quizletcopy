@@ -1,19 +1,13 @@
 'use client'
 
-import { Card } from '@/types/type';
-
-export type TrainingMistake = {
-  card: Card;
-  selectedAnswer: string;
-  correctAnswer: string;
-};
+import { TrainingMistake } from '@/types/types.type';
 
 interface TrainingResultProps {
   deckTitle: string;
   correctCount: number;
   wrongCount: number;
   mistakes: TrainingMistake[];
-  pageFlag: boolean;
+  pageFlag?: boolean;
   onRestart: () => void;
   onExit: () => void;
 }
@@ -25,7 +19,7 @@ const TrainingResult = ({
   mistakes,
   onRestart,
   onExit,
-  pageFlag,
+  pageFlag = false,
 }: TrainingResultProps) => {
   const totalAnswers = correctCount + wrongCount;
 
@@ -40,21 +34,21 @@ const TrainingResult = ({
   const chartStyle = {
     background: `
       conic-gradient(
-        var(--color-success) 0% ${correctPercent}%,
-        var(--color-warning) ${correctPercent}% ${correctPercent + wrongPercent}%,
+        var(--colorSuccess) 0% ${correctPercent}%,
+        var(--colorWarning) ${correctPercent}% ${correctPercent + wrongPercent}%,
         rgba(255,255,255,0.08) ${correctPercent + wrongPercent}% 100%
       )
     `,
   };
 
   return (
-    <section className="training-result">
-      <div className="training-result-header">
-        <p className="training-result-deck-title">
+    <section className="trainingResult">
+      <div className="trainingResultHeader">
+        <p className="trainingResultDeckTitle">
           {deckTitle}
         </p>
 
-        <h2 className="training-result-title">
+        <h2 className="trainingResultTitle">
           {successRate >= 80
             ? 'Отлично, продолжайте в том же духе!'
             : successRate >= 50
@@ -63,40 +57,40 @@ const TrainingResult = ({
         </h2>
       </div>
 
-      <div className="training-result-card app-card">
-        <div className="training-result-chart" style={chartStyle}>
-          <div className="training-result-chart-inner">
+      <div className="trainingResultCard appCard">
+        <div className="trainingResultChart" style={chartStyle}>
+          <div className="trainingResultChartInner">
             {successRate}%
           </div>
         </div>
 
-        <div className="training-result-stats">
-          <div className="training-result-row training-result-success">
+        <div className="trainingResultStats">
+          <div className="trainingResultRow trainingResultSuccess">
             <span>✓ Правильно</span>
-            <div className="training-result-count">{correctCount}</div>
+            <div className="trainingResultCount">{correctCount}</div>
           </div>
 
-          <div className="training-result-row training-result-wrong">
+          <div className="trainingResultRow trainingResultWrong">
             <span>✕ Неправильно</span>
-            <div className="training-result-count">{wrongCount}</div>
+            <div className="trainingResultCount">{wrongCount}</div>
           </div>
         </div>
       </div>
 
       {mistakes.length > 0 && (
         <div className="training-result-mistakes">
-          <h3 className="mb-4 text-[var(--font-size-lg)] font-bold">
+          <h3 className="mb-4 text-[var(--fontSizeLg)] font-bold">
             Ошибки
           </h3>
 
-          <div className="flex flex-col gap-[var(--item-gap)]">
+          <div className="flex flex-col gap-[var(--gapMd)]">
             {mistakes.map(mistake => (
               <div
                 key={mistake.card.id}
-                className="app-card grid gap-4 md:grid-cols-2"
+                className="card grid gap-4 md:grid-cols-2"
               >
                 <div>
-                  <p className="mb-2 text-[var(--color-text-muted)] font-bold">
+                  <p className="mb-2 text-[var(--colorTextMuted)] font-bold">
                     Термин
                   </p>
 
@@ -106,15 +100,15 @@ const TrainingResult = ({
                 </div>
 
                 <div>
-                  <p className="mb-2 text-[var(--color-text-muted)] font-bold">
+                  <p className="mb-2 text-[var(--colorTextMuted)] font-bold">
                     Правильный ответ
                   </p>
 
-                  <p className="font-bold text-[var(--color-success)]">
+                  <p className="font-bold text-[var(--colorSuccess)]">
                     | {mistake.correctAnswer} |
                   </p>
 
-                  <p className="mt-2 text-[var(--color-danger)]">
+                  <p className="mt-2 text-[var(--colorDanger)]">
                     Ваш ответ: {mistake.selectedAnswer}
                   </p>
                 </div>
@@ -124,11 +118,11 @@ const TrainingResult = ({
         </div>
       )}
 
-      <div className="training-result-actions">
+      <div className="trainingResultActions">
         <button
           type="button"
           onClick={onRestart}
-          className="custom-btn"
+          className="button"
         >
           Повторить
         </button>
@@ -136,7 +130,7 @@ const TrainingResult = ({
           <button
             type="button"
             onClick={onExit}
-            className="custom-btn training-result-back-btn"
+            className="button trainingResultBackBtn"
           >
             Вернуться к карточкам
           </button>

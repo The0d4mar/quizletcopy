@@ -5,7 +5,7 @@ import { folderModal } from '@/store/addFolderStore';
 import { X } from 'lucide-react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Folder } from '@/types/type';
+import { Folder } from '@/types/types.type';
 import { saveFolders } from '@/storage';
 import { addFolder } from '@/store/folderStore';
 
@@ -81,7 +81,7 @@ const AddFolder = () => {
           <button
             type="button"
             onClick={createFolder}
-            className="rounded-[var(--radius-card)] border border-white px-[var(--padding-x-card)] py-[var(--padding-y-card)] transition hover:bg-white hover:text-black"
+            className="button"
           >
             Добавить
           </button>

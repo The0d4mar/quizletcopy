@@ -5,7 +5,7 @@ import DropDownDeckMenu from '@/components/ui/DropDownDeck/DropDownDeckMenu';
 import { updateDeckLastRepeat } from '@/api/localFunc';
 import { loadCards } from '@/storage';
 import { RootState } from '@/store/store';
-import { Card, TrainingMode } from '@/types/type';
+import { Card, TrainingMode } from '@/types/types.type';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -38,23 +38,23 @@ const DeckTrainingPage = () => {
   };
 
   return (
-    <section className="custom-main-section">
+    <section className="mainSection">
       <ConnectDecksModal
         sendedDeckId={deckId}
         onConnected={refreshCards}
       />
 
-      <div className="mb-[var(--block-gap)] flex justify-start">
+      <div className="mb-[var(--gapXl)] flex justify-start">
         <Link
           href="/"
-          className="text-[var(--color-text-muted)] transition hover:text-[var(--color-text)]"
+          className="custom-btn-back custom-btn-back:hover"
         >
           На главную
         </Link>
       </div>
 
-      <div className="mb-[var(--block-gap)] flex items-center justify-between">
-        <h1 className="max-w-[520px] truncate text-[24px] font-bold leading-[var(--line-height-tight)]">
+      <div className="mb-[var(--gapXl)] flex items-center justify-between">
+        <h1 className="max-w-[520px] truncate text-[24px] font-bold leading-[var(--lineHeightTight)]">
           {deck?.title}
         </h1>
 
@@ -67,7 +67,7 @@ const DeckTrainingPage = () => {
       />
 
       {deckCards.length === 0 ? (
-        <p className="app-card text-[var(--color-text-muted)]">
+        <p className="card text-[var(--colorTextMuted)]">
           В этой колоде пока нет карточек
         </p>
       ) : (
@@ -98,7 +98,7 @@ const DeckTrainingPage = () => {
           )}
           {trainingMode === 'cards' && (
             <>
-                <DeckStats deckCards={deckCards} />
+                <DeckStats deckId={deckId} deckCards={deckCards} />
             </>
         )}
         </>

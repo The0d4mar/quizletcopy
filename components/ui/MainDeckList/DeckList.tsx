@@ -3,8 +3,7 @@
 import DeckCard from '../Card/DeckCard';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { FC } from 'react';
-import { Folder } from '@/types/type';
+import { Folder } from '@/types/types.type';
 
 interface DeckListProps {
   currentFolder?: Folder,
@@ -13,7 +12,7 @@ interface DeckListProps {
 }
 
 
-const DeckList :FC<DeckListProps> = ({currentFolder  = [], folderId = 'NaFolder', searchValue = ''}) => {
+const DeckList = ({ currentFolder, folderId = 'NaFolder', searchValue = '' }: DeckListProps) => {
 
   const decksList = useSelector((state: RootState) => state.deckStore.decks)
   let filteredDecks = decksList;

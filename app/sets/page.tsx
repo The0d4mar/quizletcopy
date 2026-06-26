@@ -5,7 +5,7 @@ import LibraryGroup from '@/components/ui/LibraryGroup/LibraryGroup';
 import LibrarySearch from '@/components/ui/LibrarySearch/LibrarySearch';
 import { createLibraryItems, filterLibraryItems, groupLibraryItems,  } from '@/api/localFunc';
 import { loadCards, loadDecks, loadFolders } from '@/storage';
-import { Card, Deck, EntityFilter, Folder, SortType } from '@/types/type';
+import { Card, Deck, EntityFilter, Folder, SortType } from '@/types/types.type';
 import { useMemo, useState } from 'react';
 
 const SetsPage = () => {
@@ -39,13 +39,13 @@ const SetsPage = () => {
   );
 
   return (
-    <section className="custom-main-section">
-      <div className="mb-[var(--margin-b-elems)]">
-        <h1 className="mb-[var(--margin-b-elems)] text-[var(--font-size-page-title)] font-bold leading-[var(--line-height-tight)]">
+    <section className="mainSection">
+      <div className="mb-[var(--marginButtom)]">
+        <h1 className="mb-[var(--marginButtom)] text-[var(--fontSizePageTitle)] font-bold leading-[var(--lineHeightTight)]">
           Ваша библиотека
         </h1>
 
-        <div className="mb-[var(--margin-b-elems)] flex flex-col gap-[var(--block-gap)] lg:flex-row lg:items-end lg:justify-between">
+        <div className="mb-[var(--marginButtom)] flex flex-col gap-[var(--gapXl)] lg:flex-row lg:items-end lg:justify-between">
           <LibraryControls
             entityFilter={entityFilter}
             sortType={sortType}
@@ -60,11 +60,11 @@ const SetsPage = () => {
         </div>
 
         {filteredItems.length === 0 ? (
-          <div className="px-[var(--padding-x-card)] py-[var(--padding-y-card)] text-[var(--color-text-muted)]">
+          <div className="px-[var(--paddingCardX)] py-[var(--paddingCardY)] text-[var(--colorTextMuted)]">
             Ничего не найдено
           </div>
         ) : (
-          <div className="flex flex-col gap-[var(--section-gap)]">
+          <div className="flex flex-col gap-[var(--gapSection)]">
             {Object.entries(groupedItems).map(([groupTitle, items]) => (
               <LibraryGroup
                 key={groupTitle}

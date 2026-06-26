@@ -4,7 +4,6 @@ import { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import {FC} from 'react';
 
 interface Label {
     label: string,
@@ -19,7 +18,7 @@ interface DropDownMenuBtnProps {
     item: Label,
 }
 
-const DropDownMenuBtn: FC<DropDownMenuBtnProps> = ({item}) => {
+const DropDownMenuBtn = ({item}: DropDownMenuBtnProps) => {
     const router = useRouter();
     function call(e: React.MouseEvent<HTMLAnchorElement>) {
         e.preventDefault();
@@ -37,7 +36,7 @@ const DropDownMenuBtn: FC<DropDownMenuBtnProps> = ({item}) => {
             w-full
             items-center
             gap-4
-            px-[var(--padding-x-card)] py-[var(--padding-y-card)]
+            px-[var(--paddingCardX)] py-[var(--paddingCardY)]
             text-left
             text-[15px]
             font-semibold
@@ -52,7 +51,7 @@ const DropDownMenuBtn: FC<DropDownMenuBtnProps> = ({item}) => {
 
             ${
             item.danger
-                ? 'text-[--color-base] hover:bg-[var(--color-danger)]'
+                ? 'text-[var(--colorText)] hover:bg-[var(--colorDanger)]'
                 : ''
             }
         `}

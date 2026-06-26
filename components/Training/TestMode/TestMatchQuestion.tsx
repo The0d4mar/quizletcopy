@@ -2,7 +2,7 @@
 
 import { X } from 'lucide-react';
 import { useState } from 'react';
-import { AnswerStatus, MatchQuestionData } from '@/types/type';
+import { AnswerStatus, MatchQuestionData } from '@/types/types.type';
 
 interface TestMatchQuestionProps {
   question: MatchQuestionData;
@@ -75,27 +75,27 @@ const TestMatchQuestion = ({
   };
 
   return (
-    <div className="app-card w-full">
-      <div className="mb-[var(--block-gap)] flex items-center justify-between">
-        <p className="font-bold text-[var(--color-text-muted)]">
+    <div className="card w-full">
+      <div className="mb-[var(--gapXl)] flex items-center justify-between">
+        <p className="font-bold text-[var(--colorTextMuted)]">
           Сопоставление
         </p>
 
-        <p className="text-[var(--color-text-muted)]">
+        <p className="text-[var(--colorTextMuted)]">
           {index + 1} из {total}
         </p>
       </div>
 
-      <p className="mb-[var(--item-gap)] font-bold">
+      <p className="mb-[var(--gapMd)] font-bold">
         Нажмите определение,
         подходящее термину
       </p>
 
-      <div className="mb-[var(--block-gap)] h-px bg-[var(--color-border)]" />
+      <div className="mb-[var(--gapXl)] h-px bg-[var(--colorBorder)]" />
 
-      <div className="grid gap-[var(--block-gap)] md:grid-cols-[1fr_0.75fr]">
+      <div className="grid gap-[var(--gapXl)] md:grid-cols-[1fr_0.75fr]">
         {/* ЛЕВАЯ ЧАСТЬ — СЛОТЫ */}
-        <div className="flex flex-col gap-[var(--item-gap)]">
+        <div className="flex flex-col gap-[var(--gapMd)]">
           {terms.map(card => {
             const matchedTranslationId =
               matches[card.id];
@@ -138,31 +138,31 @@ const TestMatchQuestion = ({
                     handleTermClick(card.id)
                   }
                   className={`
-                    training-match-slot
+                    trainingMatchSlot
                     ${
                       isSelected
-                        ? 'training-match-slot-selected'
+                        ? 'trainingMatchSlotSelected'
                         : ''
                     }
                     ${
                       matchedTranslation
-                        ? 'training-match-slot-filled'
+                        ? 'trainingMatchSlotFilled'
                         : ''
                     }
                     ${
                       isCorrect
-                        ? 'training-match-slot-correct'
+                        ? 'trainingMatchSlotCorrect'
                         : ''
                     }
                     ${
                       isWrong
-                        ? 'training-match-slot-wrong'
+                        ? 'trainingMatchSlotWrong'
                         : ''
                     }
                   `}
                 >
                   {matchedTranslation ? (
-                    <div className="training-match-filled-content">
+                    <div className="trainingMatchFilledContent">
                       <span
                       role="button"
                       tabIndex={0}
@@ -170,18 +170,18 @@ const TestMatchQuestion = ({
                         e.stopPropagation();
                         removeMatch(card.id);
                       }}
-                      className="training-match-remove-btn"
+                      className="trainingMatchRemoveBtn"
                     >
                       <X size={18} />
                     </span>
-                    <span className="training-match-filled-text">
+                    <span className="trainingMatchFilledText">
                       {matchedTranslation.translation}
                     </span>
 
                     
                   </div>
                   ) : isSelected ? (
-                    <span className='training-math-filled-answer'>
+                    <span className='trainingMatchFilledAnswer'>
                       Выберите из списка ниже
                     </span>
                   ) : (
@@ -195,12 +195,12 @@ const TestMatchQuestion = ({
                   }
                   className={`
                     cursor-pointer
-                    text-[var(--font-size-md)]
+                    text-[var(--fontSizeMd)]
                     font-bold
                     transition
                     ${
                       isSelected
-                        ? 'text-[var(--color-focus)]'
+                        ? 'text-[var(--colorFocus)]'
                         : ''
                     }
                   `}
@@ -213,7 +213,7 @@ const TestMatchQuestion = ({
         </div>
 
         {/* ПРАВАЯ ЧАСТЬ — ВАРИАНТЫ */}
-        <div className="flex flex-col gap-[var(--item-gap)]">
+        <div className="flex flex-col gap-[var(--gapMd)]">
           {translations.map(card => {
             const isUsed =
               Object.values(matches).includes(
@@ -235,10 +235,10 @@ const TestMatchQuestion = ({
                   )
                 }
                 className={`
-                  training-match-option
+                  trainingMatchOption
                   ${
                     selectedTermId
-                      ? 'hover:border-[var(--color-focus)]'
+                      ? 'hover:border-[var(--colorFocus)]'
                       : ''
                   }
                   disabled:opacity-40
@@ -252,7 +252,7 @@ const TestMatchQuestion = ({
       </div>
 
       {answerStatus === 'idle' && (
-        <div className="mt-[var(--block-gap)] flex justify-end">
+        <div className="mt-[var(--gapXl)] flex justify-end">
           <button
             type="button"
             disabled={
@@ -261,9 +261,9 @@ const TestMatchQuestion = ({
             }
             onClick={checkMatches}
             className="
-              custom-btn
-              rounded-[var(--radius-button)]
-              bg-[var(--color-focus)]
+              button
+              rounded-[var(--radiusPill)]
+              bg-[var(--colorFocus)]
               disabled:opacity-40
             "
           >

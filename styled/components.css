@@ -1,324 +1,738 @@
-.custom-main-section {
+/* Base */
+
+.appRoot {
+  min-height: 100vh;
+  background: var(--colorBg);
+  color: var(--colorText);
+  font-family: var(--fontFamilyBase);
+}
+
+.appMain {
+  position: relative;
+  display: flex;
+  flex: 1;
+  width: 100%;
+  padding-inline: var(--spacingPageX);
+  gap: var(--gapSection);
+}
+
+.mainSection {
   position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
   width: 100%;
+  min-width: 0;
 }
 
-/*"border-1 rounded-[var(--radius-card)] flex justify-center items-center px-[var(--padding-x-card)] py-[var(--padding-y-card)]"*/
+.pageTitle {
+  font-size: var(--fontSizePageTitle);
+  line-height: var(--lineHeightTight);
+  font-weight: var(--fontWeightBold);
+}
 
-.custom-btn {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
-  display: flex;
-  justify-content: center;
+.sectionTitle {
+  font-size: var(--fontSizeLg);
+  font-weight: var(--fontWeightBold);
+}
+
+.mutedText {
+  color: var(--colorTextMuted);
+}
+
+.softText {
+  color: var(--colorTextSoft);
+}
+
+/* Buttons */
+
+.button {
+  display: inline-flex;
   align-items: center;
-  padding: var(--padding-y-button) var(--padding-x-button);
-  transition: var(--transition-base);
-  gap:8px;
+  justify-content: center;
+  gap: var(--gapSm);
+
+  border: 1px solid var(--colorBorder);
+  border-radius: var(--radiusCard);
+
+  background: transparent;
+  color: var(--colorText);
+
+  padding: var(--paddingButtonY) var(--paddingButtonX);
+
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightSemiBold);
+
+  cursor: pointer;
+
+  transition:
+    border-color var(--transitionBase),
+    background var(--transitionBase),
+    color var(--transitionBase),
+    opacity var(--transitionBase),
+    transform var(--transitionFast);
 }
-.custom-btn:hover{
-  transition: var(--transition-base);
-  border-color: var(--color-border-hover);
 
+.button:hover:not(:disabled) {
+  border-color: var(--colorBorderHover);
+  background: rgba(255, 255, 255, 0.04);
 }
 
-/*inline-flex w-fit gap-5 items-center border border-[var(--color-border)] rounded-[var(--radius-card)] px-[var(--padding-x-card)] py-[var(--padding-y-card)]*/
+.button:active:not(:disabled) {
+  transform: translateY(1px);
+}
 
-.custom-deck{
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.buttonPill {
+  border-radius: var(--radiusPill);
+}
+
+.buttonPrimary {
+  border-color: transparent;
+  background: var(--colorFocus);
+  color: var(--colorText);
+}
+
+.buttonPrimary:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.buttonGhost {
+  border-color: transparent;
+  background: transparent;
+}
+
+.buttonSurface {
+  background: var(--colorSurfaceMuted);
+}
+
+.buttonDanger {
+  border-color: var(--colorDanger);
+  color: var(--colorDanger);
+}
+
+.buttonDanger:hover:not(:disabled) {
+  background: var(--colorDangerSoft);
+}
+
+.buttonSuccess {
+  border-color: var(--colorSuccess);
+  color: var(--colorSuccess);
+}
+
+.buttonSuccess:hover:not(:disabled) {
+  background: var(--colorSuccessSoft);
+}
+
+.iconButton {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: var(--radiusPill);
+}
+
+.sideNavButton{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: var(--paddingButtonY) var(--paddingButtonX);
+  border-radius: var(--radiusCard);
+  transition: 0.3s ease-in-out;
+  border: 1px solid transparent;
+
+}
+.sideNavButton:hover{
+  background-color: var(--colorBgSoft);
+  border: 1px solid var(--colorBorder);
+  transition: 0.3s ease-in-out;
+}
+/*  block
+              w-[200px]
+              truncate
+              rounded-[var(--radiusCard)]
+              border
+              border-[var(--colorBorder)]
+              px-[var(--paddingCardX)]
+              py-[var(--paddingCardY)]
+              shrink-0 */
+
+.folderListBtn{
+  border-radius: var(--radiusCard);
+  border: 1px solid var(--colorBorder);
+  padding: var(--paddingButtonY) var(--paddingButtonX);
+  flex-shrink: 0;
+}
+/* Cards */
+
+.card {
+  border: 1px solid var(--colorBorder);
+  border-radius: var(--radiusCard);
+  background: var(--colorSurfaceLight);
+  color: var(--colorText);
+  padding: var(--paddingCardY) var(--paddingCardX);
+
+  transition:
+    border-color var(--transitionBase),
+    background var(--transitionBase),
+    box-shadow var(--transitionBase);
+}
+
+.card:hover {
+  border-color: var(--colorBorderHover);
+}
+
+.cardFlat {
+  background: transparent;
+}
+
+.cardMuted {
+  background: var(--colorSurfaceMuted);
+}
+
+.cardElevated {
+  background: var(--colorSurfaceElevated);
+  box-shadow: var(--shadowCard);
+}
+
+.cardInteractive {
+  cursor: pointer;
+}
+
+.cardInteractive:hover {
+  background: var(--colorSurfaceElevated);
+}
+
+/* Deck */
+
+.deckCard {
   display: inline-flex;
   width: fit-content;
-  gap: 20px;
+  max-width: 100%;
   align-items: center;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
-  padding: var(--padding-y-button) var(--padding-x-button);
+  gap: var(--gapLg);
+
+  border: 1px solid var(--colorBorder);
+  border-radius: var(--radiusCard);
+
+  padding: var(--paddingCardY) var(--paddingCardX);
+
+  color: var(--colorText);
+  text-decoration: none;
+
+  transition:
+    border-color var(--transitionBase),
+    background var(--transitionBase);
 }
 
-.custom-deck-info{
+.deckCard:hover {
+  border-color: var(--colorBorderHover);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.deckCardInfo {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 20px;
-  color: var(--color-text-muted);
+  gap: var(--gapLg);
+  color: var(--colorTextMuted);
+  font-size: var(--fontSizeSm);
 }
 
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border) transparent;
+/* Inputs */
+
+.input {
+  width: 100%;
+  position: relative;
+  border: 1px solid var(--colorBorder);
+  border-radius: var(--radiusCard);
+
+  background: var(--colorBgSoft);
+  color: var(--colorText);
+
+  padding: var(--paddingInputY) var(--paddingInputX);
+
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightSemiBold);
+
+  outline: none;
+
+  transition:
+    border-color var(--transitionBase),
+    box-shadow var(--transitionBase),
+    background var(--transitionBase);
 }
 
-/* Chrome, Edge, Safari */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
+.input::placeholder {
+  color: var(--colorTextDisabled);
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: 999px;
+.input:focus {
+  border-color: var(--colorFocus);
+  box-shadow: 0 0 0 3px var(--colorFocusSoft);
+}
+/* absolute
+            left-0
+            top-[calc(100%+12px)]
+            z-50
+            w-full
+            overflow-hidden
+            rounded-[var(--radiusCard)]
+            border
+            border-[var(--colorBorder)]
+            bg-black
+            shadow-[0_20px_50px_rgba(0,0,0,0.45)] */
+.inputSearh{
+  position: absolute;
+  left: 0;
+  top: calc(100% + 12px);
+  z-index: 50;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radiusCard);
+  border: 1px solid var(--colorBorder);
+  background-color: var(--colorBg);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.45);
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 999px;
-  transition: background 0.2s ease;
+.textarea {
+  min-height: 96px;
+  resize: vertical;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: var(--color-hover);
+.inputError {
+  border-color: var(--colorDanger);
 }
 
-.app-card {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
-  background: var(--color-surface-light);
-  color: var(--color-text);
-  padding: var(--padding-y-card) var(--padding-x-card);
-  transition: border-color var(--transition-base), background var(--transition-base);
+.inputSuccess {
+  border-color: var(--colorSuccess);
 }
 
-.app-card:hover {
-  border-color: var(--color-border-hover);
-}
+/* Modal */
 
-.app-modal-overlay {
+.modalOverlay {
   position: fixed;
   inset: 0;
   z-index: 50;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   background: rgba(0, 0, 0, 0.6);
-  padding: var(--spacing-page-x);
+  padding: var(--spacingPageX);
 }
 
-.app-modal {
+.modal {
   width: 100%;
   max-width: 560px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-bg-soft);
-  color: var(--color-text);
-  padding: var(--padding-modal);
-  box-shadow: var(--shadow-modal);
+
+  border: 1px solid var(--colorBorder);
+  border-radius: var(--radiusLg);
+
+  background: var(--colorBgSoft);
+  color: var(--colorText);
+
+  padding: var(--paddingModal);
+  box-shadow: var(--shadowModal);
 }
 
-.training-answer {
+.modalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gapLg);
+  margin-bottom: var(--gapXl);
+}
+
+.modalTitle {
+  font-size: var(--fontSizeXl);
+  font-weight: var(--fontWeightBold);
+}
+
+/* Lists */
+
+.listColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gapMd);
+}
+
+.listRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gapMd);
+}
+
+.divider {
   width: 100%;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
+  height: 1px;
+  background: var(--colorBorder);
+}
+
+/* Scroll */
+
+.scrollArea {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--colorBorder) transparent;
+}
+
+.scrollArea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollArea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollArea::-webkit-scrollbar-thumb {
+  background: var(--colorBorder);
+  border-radius: var(--radiusPill);
+}
+
+.scrollArea::-webkit-scrollbar-thumb:hover {
+  background: var(--colorBorderHover);
+}
+
+/* Training answer */
+
+.trainingAnswer {
+  width: 100%;
+
+  border: 1px solid var(--colorBorder);
+  border-radius: var(--radiusCard);
 
   background: transparent;
-  color: var(--color-text);
+  color: var(--colorText);
 
-  padding:
-    var(--padding-y-card)
-    var(--padding-x-card);
+  padding: var(--paddingCardY) var(--paddingCardX);
 
-  font-size: var(--font-size-base);
-  font-weight: 500;
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightMedium);
   text-align: left;
 
+  cursor: pointer;
+
   transition:
-    border-color var(--transition-base),
-    background var(--transition-base),
-    transform var(--transition-fast),
-    color var(--transition-base),
-    font-weight var(--transition-base),
-    box-shadow var(--transition-base);
+    border-color var(--transitionBase),
+    background var(--transitionBase),
+    color var(--transitionBase),
+    box-shadow var(--transitionBase),
+    transform var(--transitionFast);
 }
 
-.training-answer:hover {
-  border-color: var(--color-border-hover);
-  background: rgba(255,255,255,0.03);
+.trainingAnswer:hover:not(:disabled) {
+  border-color: var(--colorBorderHover);
+  background: rgba(255, 255, 255, 0.04);
 }
 
-/* ВЫБРАННЫЙ ОТВЕТ */
-.training-answer-selected {
-  border-color: var(--color-border-strong);
-  background: rgba(255,255,255,0.05);
+.trainingAnswer:disabled {
+  cursor: not-allowed;
+}
 
-  font-weight: 700;
-
+.trainingAnswerSelected {
+  border-color: var(--colorBorderStrong);
+  background: rgba(255, 255, 255, 0.06);
+  font-weight: var(--fontWeightBold);
   box-shadow:
-    0 0 0 1px rgba(255,255,255,0.12),
-    0 8px 24px rgba(255,255,255,0.06);
-
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 8px 24px rgba(255, 255, 255, 0.06);
   transform: translateY(-1px);
 }
 
-/* Правильный */
-.training-answer-correct {
-  border-color: var(--color-success);
-  background: rgba(34, 197, 94, 0.12);
-  color: var(--color-text);
-  font-weight: 700;
+.trainingAnswerCorrect {
+  border-color: var(--colorSuccess);
+  background: var(--colorSuccessSoft);
+  color: var(--colorSuccess);
+  font-weight: var(--fontWeightBold);
 }
 
-/* Неправильный */
-.training-answer-wrong {
-  border-color: var(--color-danger);
-  background: rgba(239, 68, 68, 0.12);
-  color: var(--color-text);
-  font-weight: 700;
+.trainingAnswerWrong {
+  border-color: var(--colorDanger);
+  background: var(--colorDangerSoft);
+  color: var(--colorDanger);
+  font-weight: var(--fontWeightBold);
 }
 
+/* Training result */
 
-.training-result {
+.trainingResult {
   width: 100%;
   max-width: 1100px;
   margin: 0 auto;
 }
 
-.training-result-header {
-  margin-bottom: var(--block-gap);
+.trainingResultHeader {
+  margin-bottom: var(--gapXl);
   text-align: center;
 }
 
-.training-result-deck-title {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-md);
-  margin-bottom: 8px;
+.trainingResultDeckTitle {
+  color: var(--colorTextMuted);
+  font-size: var(--fontSizeMd);
+  margin-bottom: var(--gapSm);
 }
 
-.training-result-title {
-  font-size: var(--font-size-page-title);
-  font-weight: 700;
+.trainingResultTitle {
+  font-size: var(--fontSizePageTitle);
+  font-weight: var(--fontWeightBold);
+  line-height: var(--lineHeightTight);
 }
 
-.training-result-card {
+.trainingResultCard {
   display: flex;
   align-items: center;
   gap: 48px;
-  padding: var(--padding-modal);
-  margin-bottom: var(--block-gap);
+
+  padding: var(--paddingModal);
+  margin-bottom: var(--gapXl);
 }
 
-.training-result-chart {
+.trainingResultChart {
   width: 160px;
   height: 160px;
+
   border-radius: 50%;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   flex-shrink: 0;
 }
 
-.training-result-chart-inner {
+.trainingResultChartInner {
   width: 112px;
   height: 112px;
+
   border-radius: 50%;
-  background: var(--color-surface);
+  background: var(--colorSurface);
+
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--font-size-lg);
-  font-weight: 700;
-  color: var(--color-text);
+
+  font-size: var(--fontSizeLg);
+  font-weight: var(--fontWeightBold);
+  color: var(--colorText);
 }
 
-.training-result-stats {
+.trainingResultStats {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--gapLg);
 }
 
-.training-result-row {
+.trainingResultRow {
   display: flex;
   align-items: center;
-  gap: 18px;
-  font-size: var(--font-size-lg);
-  font-weight: 700;
+  gap: var(--gapLg);
+
+  font-size: var(--fontSizeLg);
+  font-weight: var(--fontWeightBold);
 }
 
-.training-result-success {
-  color: var(--color-success);
+.trainingResultSuccess {
+  color: var(--colorSuccess);
 }
 
-.training-result-wrong {
-  color: var(--color-warning);
+.trainingResultWrong {
+  color: var(--colorWarning);
 }
 
-.training-result-count {
+.trainingResultCount {
   min-width: 52px;
   height: 40px;
-  border-radius: var(--radius-button);
+
+  border: 1px solid currentColor;
+  border-radius: var(--radiusPill);
+
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid currentColor;
-  font-weight: 700;
+
+  font-weight: var(--fontWeightBold);
 }
 
-.training-result-actions {
+.trainingResultActions {
   display: flex;
   justify-content: center;
-  gap: var(--item-gap);
+  gap: var(--gapMd);
 }
 
-.training-result-back-btn {
-  background: var(--color-focus);
-  border-color: transparent;
+/* Match */
+
+.trainingMatchSlot {
+  min-height: 64px;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  border: 1px dashed var(--colorBorderStrong);
+  border-radius: var(--radiusCard);
+
+  background: var(--colorBgSoft);
+  color: var(--colorTextMuted);
+
+  padding: var(--paddingCardY) var(--paddingCardX);
+
+  font-weight: var(--fontWeightBold);
+  text-align: left;
+
+  transition:
+    border-color var(--transitionBase),
+    background var(--transitionBase),
+    color var(--transitionBase),
+    box-shadow var(--transitionBase);
 }
 
-@media (max-width: 768px) {
-  .training-result-card {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .training-result-row {
-    justify-content: center;
-  }
-
-  .training-result-actions {
-    flex-direction: column;
-  }
+.trainingMatchSlotSelected {
+  border-style: solid;
+  border-color: var(--colorFocus);
+  color: var(--colorFocus);
+  box-shadow: 0 0 0 1px var(--colorFocus);
 }
 
-.training-match-filled-content {
+.trainingMatchSlotFilled {
+  border-style: solid;
+  border-color: var(--colorBorderStrong);
+  background: var(--colorSurfaceMuted);
+  color: var(--colorText);
+}
+
+.trainingMatchSlotCorrect {
+  border-style: solid;
+  border-color: var(--colorSuccess);
+  color: var(--colorSuccess);
+}
+
+.trainingMatchSlotWrong {
+  border-style: solid;
+  border-color: var(--colorDanger);
+  color: var(--colorDanger);
+}
+
+.trainingMatchOption {
+  border: 1px solid var(--colorBorder);
+  border-radius: var(--radiusCard);
+
+  background: transparent;
+  color: var(--colorText);
+
+  padding: var(--paddingCardY) var(--paddingCardX);
+
+  text-align: left;
+  font-weight: var(--fontWeightBold);
+
+  cursor: pointer;
+
+  transition:
+    border-color var(--transitionBase),
+    background var(--transitionBase),
+    color var(--transitionBase),
+    box-shadow var(--transitionBase);
+}
+
+.trainingMatchOption:hover:not(:disabled) {
+  border-color: var(--colorBorderHover);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.trainingMatchOptionSelected {
+  border-color: var(--colorFocus);
+  color: var(--colorFocus);
+  box-shadow: 0 0 0 1px var(--colorFocus);
+}
+
+.trainingMatchFilledContent {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-button);
-  padding: 6px 12px;
+  gap: var(--gapMd);
 
   width: 100%;
   min-width: 0;
 }
 
-.training-match-filled-text {
+.trainingMatchFilledText {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.training-match-remove-btn {
+.trainingMatchRemoveBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
   flex-shrink: 0;
 
-  color: var(--color-text-muted);
-  transition: color var(--transition-base);
+  color: var(--colorTextMuted);
+
+  transition: color var(--transitionBase);
 }
 
-.training-match-remove-btn:hover {
-  color: var(--color-danger);
+.trainingMatchRemoveBtn:hover {
+  color: var(--colorDanger);
 }
 
-.training-math-filled-answer{
+/* Responsive */
+
+@media (max-width: 1024px) {
+  :root {
+    --sideBarWidth: 220px;
+  }
+
+  .appMain {
+    gap: var(--gapXl);
+  }
+}
+
+@media (max-width: 768px) {
+  .appMain {
+    flex-direction: column;
+  }
+
+  .deckCard {
+    width: 100%;
+  }
+
+  .deckCardInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--gapXs);
+  }
+
+  .trainingResultCard {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .trainingResultRow {
+    justify-content: center;
+  }
+
+  .trainingResultActions {
+    flex-direction: column;
+  }
+}
+/* Старые стили: уникальные селекторы */
+.trainingResultBackBtn {
+  background: var(--colorFocus);
+  border-color: transparent;
+}
+
+.trainingMatchFilledAnswer {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-focus);
   position: relative;
-  border-radius: var(--radius-card);
+  border-radius: var(--radiusCard);
+  background-color: var(--colorFocus);
   padding: 6px 12px;
 }

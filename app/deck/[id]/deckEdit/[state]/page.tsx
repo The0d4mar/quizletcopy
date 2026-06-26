@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Card, Deck} from '@/types/type';
+import { Card, Deck} from '@/types/types.type';
 import Link from 'next/link';
 import { Plus, ChevronLeft } from 'lucide-react';
 import { addNewCard, basicDeckName, delCenDeck } from '@/api/localFunc';
@@ -13,7 +13,7 @@ import { RootState } from '@/store/store';
 import { delDecks, pushDeck, setDecks } from '@/store/deckStore';
 import { setUpdatedCards } from '@/store/cardStore';
 
-export default function EditDeckPage() {
+const EditDeckPage = () => {
   const params = useParams<{ id: string, state: string }>();
   const router = useRouter();
 
@@ -34,6 +34,7 @@ const currentDeck: Deck =
     public: false,
     createdBy: 'User',
     lastRepeat: new Date().toISOString(),
+    isStatsOpen: true,
   };
 
 const stater = params.state;
@@ -45,6 +46,7 @@ const stater = params.state;
   const [deckDescription, setDeckDescription] = useState(
     () => currentDeck?.description ?? ''
   );
+  const [isPublic, setIsPublic] = useState(() => currentDeck.public);
 
 
   const normalizeWord = (value: string) => value.trim().toLowerCase();
@@ -128,9 +130,10 @@ const stater = params.state;
         description: deckDescription,
         createdAt: currentDeck.createdAt,
         updatedAt: currentDeck.updatedAt,
-        public: currentDeck.public,
+        public: isPublic,
         createdBy: currentDeck.createdBy,
         lastRepeat: currentDeck.lastRepeat,
+        isStatsOpen: currentDeck.isStatsOpen,
         };
     dispatch(delDecks(deckId))
     dispatch(pushDeck(newDeck))
@@ -159,12 +162,12 @@ const stater = params.state;
                 Назад к модулю
             </Link> 
           :
-           <button className="font-light font-normal text-[var(--color-text-disabled)] underline underline-offset-3 hover:text-[var(--color-text)]" onClick={e => cancelDeckCreation(e)}>Cancel</button>
+           <button className="font-light font-normal text-[var(--colorTextDisabled)] underline underline-offset-3 transition-all duration-0.3 hover:text-[var(--color-text)]" onClick={e => cancelDeckCreation(e)}>Cancel</button>
           }
           <div className = "flex items-center gap-5">
             {stater == 'state%3DcreateNewDeck' ?
 
-            <button className="px-6 py-3 text-sm font-bold text-white border border-[var(--color-border)] rounded-full transition hover:border-[var(--color-border-hover)]" onClick={ e => saveChanges(e, 0)}>
+            <button className="px-[var(--paddingButtonX)] py-[var(--paddingButtonY)] text-sm font-bold text-white border border-[var(--colorBorder)] rounded-full transition hover:border-[var(--colorBorderHover)]" onClick={ e => saveChanges(e, 0)}>
                 Создать и закрыть
             </button>
 
@@ -173,7 +176,7 @@ const stater = params.state;
 
             <button
               onClick={e => saveChanges(e, 1)}
-              className="rounded-full bg-transparent border border-[var(--color-border)]  px-[var(--padding-x-card)] py-[var(--padding-y-card)] text-sm font-bold text-[var(--color-success)] transition hover:bg-[var(--color-success)] hover:text-white"
+              className="px-[var(--paddingButtonX)] py-[var(--paddingButtonY)] text-sm font-bold text-white border border-[var(--colorBorder)] rounded-full transition hover:border-[var(--colorBorderHover)] transition hover:bg-[var(--colorSuccess)] hover:text-white"
             >
               
               {stater == 'state%3DcreateNewDeck' ? "Открыть модуль": "Внести изменения"}
@@ -183,25 +186,40 @@ const stater = params.state;
 
 
         <div className="mb-8 space-y-3">
-          <label className="block rounded-[var(--radius-lg)] bg-[var(--color-hover)] px-[var(--padding-x-card)] py-[var(--padding-y-card)]">
-            <span className="mb-1 block text-xs font-bold text-slate-300">
+          <label className="block rounded-[var(--radiusLg)] bg-[var(--colorSurfaceMuted)] px-[var(--paddingCardX)] py-[var(--paddingCardY)] border border-[var(--colorBorder)]">
+            <span className="mb-1 block text-xs font-bold text-[var(--colorTextMuted)]">
               Название
             </span>
             <EditDeckComp
                   original={deckTitle}
                   updateCardfunc={updateDeckTitle}
                   placeholder="Название колоды"
-                  className="w-full bg-transparent text-lg font-bold text-white outline-none"
+                  className="w-full bg-transparent text-lg font-bold text-white outline-none "
                   spanFlag={false}
                 />
 
           </label>
 
+          <div className="listRow cardWithoutBg cardFlat">
+            <span className="fontSizeMd">Публичная колода</span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={isPublic}
+              aria-label="Публичная колода"
+              onClick={() => setIsPublic(previousValue => !previousValue)}
+              className={`relative inline-flex h-6 w-11 shrink-0 rounded-[var(--radiusPill)] transition-colors ${isPublic ? 'bg-[var(--colorFocus)]' : 'bg-[var(--colorSurfaceLight)]'}`}
+            >
+              <span
+                className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-transform ${isPublic ? 'translate-x-6' : 'translate-x-1'}`}
+              />
+            </button>
+          </div>
           <textarea
             value={deckDescription}
             onChange={e => setDeckDescription(e.target.value)}
             placeholder="Добавьте описание..."
-            className="min-h-[70px] w-full resize-none rounded-[var(--radius-lg)] bg-[var(--color-hover)] px-[var(--padding-x-card)] py-[var(--padding-y-card)] font-semibold text-white outline-none placeholder:text-[var(--color-text-muted)]"
+            className="min-h-[70px] w-full resize-none rounded-[var(--radiusLg)] bg-[var(--colorSurfaceMuted)] border border-[var(--colorBorder)] px-[var(--paddingCardX)] py-[var(--paddingCardY)] font-semibold text-white outline-none placeholder:text-[var(--colorTextMuted)]"
           />
         </div>
 
@@ -227,7 +245,7 @@ const stater = params.state;
         <div className="mt-6 flex items-center gap-4 justify-center">
           <button
             onClick={addCard}
-            className="!rounded-full custom-btn bg-[var(--color-border-hover)] text-sm font-bold"
+            className="button"
           >
             <Plus size={18} />
             Добавить карточку
@@ -238,4 +256,6 @@ const stater = params.state;
       </div>
     </section>
   );
-}
+};
+
+export default EditDeckPage;

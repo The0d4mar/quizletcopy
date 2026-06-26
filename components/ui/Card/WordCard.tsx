@@ -2,18 +2,14 @@
 
 import { useState } from 'react';
 import './WordCardStyle.css';
+import { WordCardProps } from '@/types/types.type';
 
-type WordCardProps = {
-  original: string;
-  translation: string;
-  flipped?: boolean;
-};
 
-export function WordCard({
+const WordCard = ({
   original,
   translation,
   flipped = false,
-}: WordCardProps) {
+}: WordCardProps) => {
   const [isFlipped, setIsFlipped] = useState(flipped);
 
   return (
@@ -33,4 +29,6 @@ export function WordCard({
       </div>
     </button>
   );
-}
+};
+
+export { WordCard };

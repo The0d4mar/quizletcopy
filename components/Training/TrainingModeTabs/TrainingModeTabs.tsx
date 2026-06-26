@@ -1,6 +1,6 @@
 'use client'
 
-import { TrainingMode } from "@/types/type";
+import { TrainingMode } from "@/types/types.type";
 
 
 
@@ -20,18 +20,18 @@ const TrainingModeTabs = ({
   onChangeMode,
 }: TrainingModeTabsProps) => {
   return (
-    <div className="mb-[var(--block-gap)] flex flex-wrap gap-[var(--item-gap)]">
+    <div className="mb-[var(--gapXl)] flex flex-wrap gap-[var(--gapMd)]">
       {tabs.map(tab => (
         <button
           key={tab.value}
           type="button"
           onClick={() => onChangeMode(tab.value)}
           className={`
-            custom-btn rounded-[var(--radius-button)]
+            button rounded-[var(--radiusPill)]
             ${
               currentMode === tab.value
-                ? 'border-[var(--color-focus)] bg-[var(--color-surface-light)]'
-                : 'bg-[var(--color-hover)]'
+                ? 'border-[var(--colorFocus)] bg-[var(--colorSurfaceLight)]'
+                : 'bg-[var(--colorSurfaceMuted)]'
             }
           `}
         >

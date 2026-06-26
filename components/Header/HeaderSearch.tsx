@@ -1,14 +1,14 @@
 'use client'
 
 import { RootState } from '@/store/store';
-import { SearchResult } from '@/types/type';
+import { SearchResult } from '@/types/types.type';
 import { Search, FolderIcon, IdCardLanyard, Languages } from 'lucide-react';
 import Link from 'next/link';
-import { FC, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 
-const HeaderSearch: FC = () => {
+const HeaderSearch = () => {
   const [searchValue, setSearchValue] = useState('');
 
   const decks = useSelector((state: RootState) => state.deckStore.decks);
@@ -83,50 +83,25 @@ const HeaderSearch: FC = () => {
         onChange={e => setSearchValue(e.target.value)}
         placeholder="Поиск вопроса"
         className="
-          relative
-          z-10
-          w-full
-          rounded-[var(--radius-card)]
-          border
-          border-[var(--color-border)]
-          bg-black
-          py-2
-          pl-10
-          pr-6
-          transition-all
-          duration-300
-          ease-in-out
-          placeholder:text-white/40
-          focus:outline-none
-          focus:ring-2
-          focus:ring-[var(--color-focus)]
+          input
+
         "
       />
 
-      <Search className="absolute left-0 top-1/2 z-20 translate-x-1/2 -translate-y-1/2" />
+      <Search className="absolute left-100 top-1/2 z-20 translate-x-1/2 -translate-y-1/2" />
 
       {searchValue.trim() && (
         <div
           className="
-            absolute
-            left-0
-            top-[calc(100%+12px)]
-            z-50
-            w-full
-            overflow-hidden
-            rounded-[var(--radius-card)]
-            border
-            border-[var(--color-border)]
-            bg-black
-            shadow-[0_20px_50px_rgba(0,0,0,0.45)]
+            inputSearh
           "
         >
           {results.length === 0 ? (
-            <div className="px-[var(--padding-x-card)] py-[var(--padding-y-card)] text-white/60">
+            <div className="px-[var(--paddingCardX)] py-[var(--paddingCardY)] text-white/60">
               Ничего не найдено
             </div>
           ) : (
-            <div className="flex max-h-[360px] flex-col overflow-y-auto custom-scrollbar">
+            <div className="flex max-h-[360px] flex-col overflow-y-auto scrollArea">
               {results.map(result => (
                 <Link
                   key={`${result.type}-${result.id}`}
@@ -136,13 +111,13 @@ const HeaderSearch: FC = () => {
                     flex
                     items-center
                     gap-3
-                    px-[var(--padding-x-card)]
-                    py-[var(--padding-y-card)]
+                    px-[var(--paddingCardX)]
+                    py-[var(--paddingCardY)]
                     transition
-                    hover:bg-[var(--color-hover)]
+                    hover:bg-[var(--colorBgSoft)]
                   "
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-card)] bg-[var(--color-hover)]">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radiusCard)] bg-[var(--colorBgSoft)]">
                     {getIcon(result.type)}
                   </span>
 

@@ -1,8 +1,8 @@
 import { Smile } from 'lucide-react';
-import React, {FC} from 'react';
+import React from 'react';
 
 
-const HeaderToMain:FC = () => {
+const HeaderToMain = () => {
   return (
     <button>
       <Smile/>

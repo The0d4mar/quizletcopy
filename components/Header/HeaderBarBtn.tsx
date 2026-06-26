@@ -1,8 +1,8 @@
 import { Menu } from 'lucide-react';
-import React, {FC} from 'react';
+import React from 'react';
 
 
-const HeaderBarBtn:FC = () => {
+const HeaderBarBtn = () => {
   return (
     <button>
       <Menu/>

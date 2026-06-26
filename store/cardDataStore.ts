@@ -1,10 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CardData } from '@/types/type';
+import { CardData, CardDataState } from '@/types/types.type';
 import { saveCardData, loadCardData } from '@/storage';
 
-type CardDataState = {
-  cardData: CardData[];
-};
 
 const initialState: CardDataState = {
   cardData: typeof window !== 'undefined' ? loadCardData() : [],

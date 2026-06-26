@@ -2,15 +2,17 @@
 import DeckList from "@/components/ui/MainDeckList/DeckList";
 import AddDeckBtn from "@/components/ui/AddDeckBtn/AddDeckBtn";
 
-export default function Home() {
+const Home = () => {
 
 
   return (
-    <section className="custom-main-section">
-      <div className="flex mb-[var(--margin-b-elems)]">
+    <section className="mainSection">
+      <div className="flex mb-[var(--marginButtom)]">
         <AddDeckBtn/>
       </div>
       <DeckList/>
     </section>
   );
-}
+};
+
+export default Home;

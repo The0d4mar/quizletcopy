@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, Deck, Folder, StorageSchema, CardData } from "./types/type";
+import { Card, Deck, Folder, StorageSchema, CardData } from "./types/types.type";
 
 
 export const STORAGE_KEY = "quiz-app-data";

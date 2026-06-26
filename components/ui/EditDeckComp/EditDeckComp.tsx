@@ -1,5 +1,4 @@
 import React from 'react';
-import {FC} from 'react';
 
 interface EditDeckCompProps {
 
@@ -12,7 +11,7 @@ interface EditDeckCompProps {
     spanFlag?: boolean;
 }
 
-const EditDeckComp: FC<EditDeckCompProps> = ({original, updateCardfunc, id = crypto.randomUUID(), placeholder, className, spanFlag = true}) => {
+const EditDeckComp = ({original, updateCardfunc, id = crypto.randomUUID(), placeholder, className, spanFlag = true}: EditDeckCompProps) => {
   return (
     <div>
         <input
@@ -21,7 +20,7 @@ const EditDeckComp: FC<EditDeckCompProps> = ({original, updateCardfunc, id = cry
         placeholder={placeholder}
         className={className || ""}
         />
-        {spanFlag ? <span className="mt-3 block text-xs font-bold uppercase text-slate-300">
+        {spanFlag ? <span className="mt-3 block text-xs font-bold uppercase text-[var(--colorTextMuted)]">
         {placeholder}
         </span> : null}
     </div>

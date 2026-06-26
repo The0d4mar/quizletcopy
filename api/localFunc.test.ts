@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { addNewCard, basicDeckName, connectedDecks, createLibraryItems, delCenDeck, delConnectedCards, delFolder, filterLibraryItems, getGroupTitle, getSortDate, groupLibraryItems, isSameDay, isThisWeek, removeDeckFromFolders, updateDeckLastRepeat } from './localFunc';
-import { Card, Deck, Folder, LibraryItem } from '@/types/type';
+import { Card, Deck, Folder, LibraryItem } from '@/types/types.type';
 
 describe('cardFunctions', () => {
   it('создает новую карточку при получении id колоды', () => {

@@ -4,9 +4,9 @@ import { loadDecks, loadFolders, saveFolders } from '@/storage';
 import { addDeckFolderFlag } from '@/store/AddDeckToFolderStore';
 import { setFolders } from '@/store/folderStore';
 import { RootState } from '@/store/store';
-import { Deck, Folder } from '@/types/type';
+import { Deck, Folder } from '@/types/types.type';
 import { X } from 'lucide-react';
-import { FC, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface AddDeckToFolderProps {
@@ -14,9 +14,9 @@ interface AddDeckToFolderProps {
 
 }
 
-const AddDeckToFolder: FC<AddDeckToFolderProps> = ({
+const AddDeckToFolder = ({
   folderId,
-}) => {
+}: AddDeckToFolderProps) => {
   const [selectedDeckIds, setSelectedDeckIds] = useState<string[]>([]);
   const addDeckToFolderFlag = useSelector(
     (state: RootState) => state.adddecktofolderflag.state
@@ -74,7 +74,7 @@ const AddDeckToFolder: FC<AddDeckToFolderProps> = ({
   return (
     <div className={`${!addDeckToFolderFlag ? 'hidden' : 'fixed'
     } inset-0 z-50 flex items-center justify-center bg-black/50`}>
-      <div className="w-full max-w-lg rounded-2xl border border-[var(--color-border)] bg-black p-6 text-white">
+      <div className="w-full max-w-lg rounded-2xl border border-[var(--colorBorder)] bg-black p-6 text-white">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-xl font-semibold">
             Добавить модули в папку
@@ -83,21 +83,21 @@ const AddDeckToFolder: FC<AddDeckToFolderProps> = ({
           <button
             type="button"
             onClick={handleClose}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--color-border)] transition hover:bg-white hover:text-black"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--colorBorder)] transition hover:bg-white hover:text-black"
           >
             <X size={18} />
           </button>
         </div>
 
         {availableDecks.length === 0 ? (
-          <div className="rounded-[var(--radius-card)] border border-[var(--color-border)] px-[var(--padding-x-card)] py-[var(--padding-y-card)] text-white/60">
+          <div className="rounded-[var(--radiusCard)] border border-[var(--colorBorder)] px-[var(--paddingCardX)] py-[var(--paddingCardY)] text-white/60">
             Нет доступных модулей для добавления
           </div>
         ) : (
           <ul className="mb-6 flex max-h-[320px] flex-col gap-3 overflow-y-auto">
             {availableDecks.map(deck => (
               <li key={deck.id}>
-                <label className="flex cursor-pointer items-center gap-4 rounded-[var(--radius-card)] border border-[var(--color-border)] px-[var(--padding-x-card)] py-[var(--padding-y-card)] transition hover:bg-[var(--color-hover)]">
+                <label className="flex cursor-pointer items-center gap-4 rounded-[var(--radiusCard)] border border-[var(--colorBorder)] px-[var(--paddingCardX)] py-[var(--paddingCardY)] transition hover:bg-[var(--colorSurfaceMuted)]">
                   <input
                     type="checkbox"
                     checked={selectedDeckIds.includes(deck.id)}
@@ -124,7 +124,7 @@ const AddDeckToFolder: FC<AddDeckToFolderProps> = ({
           <button
             type="button"
             onClick={handleClose}
-            className="rounded-[var(--radius-card)] border border-[var(--color-border)] px-[var(--padding-x-card)] py-[var(--padding-y-card)] transition hover:bg-white hover:text-black"
+            className="rounded-[var(--radiusCard)] border border-[var(--colorBorder)] px-[var(--paddingCardX)] py-[var(--paddingCardY)] transition hover:bg-white hover:text-black"
           >
             Отмена
           </button>
@@ -134,10 +134,10 @@ const AddDeckToFolder: FC<AddDeckToFolderProps> = ({
             onClick={handleAddDecks}
             disabled={selectedDeckIds.length === 0}
             className="
-              rounded-[var(--radius-card)]
-              border border-[var(--color-border)]
-              px-[var(--padding-x-card)]
-              py-[var(--padding-y-card)]
+              rounded-[var(--radiusCard)]
+              border border-[var(--colorBorder)]
+              px-[var(--paddingCardX)]
+              py-[var(--paddingCardY)]
               transition
               hover:bg-white
               hover:text-black

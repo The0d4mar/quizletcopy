@@ -16,7 +16,7 @@ const AddDeckBtn = () => {
   return (
     <button
           onClick={addDeck}
-          className="custom-btn custom-btn:hover"
+          className="button button:hover:not(:disabled)"
     >
           Добавить колоду
     </button>

@@ -1,85 +1,97 @@
 :root {
   /* Colors */
-  --color-bg: #050505;
-  --color-bg-soft: #090909;
+  --colorBg: #050505;
+  --colorBgSoft: #090909;
 
-  --color-surface: #111111;
-  --color-surface-light: #1f1f1f;
-  --color-surface-muted: #171717;
+  --colorSurface: #111111;
+  --colorSurfaceLight: #1f1f1f;
+  --colorSurfaceMuted: #171717;
+  --colorSurfaceElevated: #242424;
 
-  --color-text: #ffffff;
-  --color-text-muted: #a3a3a3;
-  --color-text-soft: rgba(255, 255, 255, 0.72);
-  --color-text-disabled: rgba(255, 255, 255, 0.36);
+  --colorText: #ffffff;
+  --colorTextMuted: #a3a3a3;
+  --colorTextSoft: rgba(255, 255, 255, 0.72);
+  --colorTextDisabled: rgba(255, 255, 255, 0.36);
 
-  --color-border: rgba(255, 255, 255, 0.22);
-  --color-border-strong: rgba(255, 255, 255, 0.42);
-  --color-border-hover: #8a8888;
+  --colorBorder: rgba(255, 255, 255, 0.22);
+  --colorBorderStrong: rgba(255, 255, 255, 0.42);
+  --colorBorderHover: rgba(255, 255, 255, 0.68);
 
-  --color-focus: #3b82f6;
-  --color-hover: #171717;
+  --colorFocus: #2c5ba5;
+  --colorFocusSoft: rgba(59, 130, 246, 0.16);
 
-  --color-danger: #ef4444;
-  --color-danger-soft: rgba(239, 68, 68, 0.14);
+  --colorSuccess: #2ca85a;
+  --colorSuccessSoft: rgba(34, 197, 94, 0.14);
 
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-info: #3b82f6;
+  --colorDanger: #ac2f2f;
+  --colorDangerSoft: rgba(239, 68, 68, 0.14);
+
+  --colorWarning: #ac7d2c;
+  --colorWarningSoft: rgba(245, 158, 11, 0.14);
 
   /* Radius */
-  --radius-xs: 6px;
-  --radius-sm: 10px;
-  --radius-card: 16px;
-  --radius-lg: 24px;
-  --radius-xl: 32px;
-  --radius-button: 999px;
+  --radiusXs: 6px;
+  --radiusSm: 10px;
+  --radiusMd: 14px;
+  --radiusCard: 16px;
+  --radiusLg: 24px;
+  --radiusXl: 32px;
+  --radiusPill: 999px;
 
   /* Layout */
-  --layout-max-width: 1280px;
-  --sidebar-width: 260px;
-  --header-height: 72px;
+  --layoutMaxWidth: 1280px;
+  --sideBarWidth: 260px;
+  --headerHeight: 72px;
 
-  /* Adaptive page spacing */
-  --spacing-page-x: clamp(16px, 3vw, 32px);
-  --spacing-page-y: clamp(20px, 4vw, 40px);
+  /* Spacing */
+  --spacingPageX: clamp(16px, 3vw, 32px);
+  --spacingPageY: clamp(20px, 4vw, 40px);
 
-  --section-gap: clamp(32px, 5vw, 64px);
-  --block-gap: clamp(20px, 3vw, 36px);
-  --item-gap: 12px;
+  --gapXs: 6px;
+  --gapSm: 10px;
+  --gapMd: 14px;
+  --gapLg: 20px;
+  --gapXl: 32px;
+  --gapSection: clamp(32px, 5vw, 64px);
 
-  /* Component padding */
-  --padding-x-card: clamp(14px, 2vw, 20px);
-  --padding-y-card: clamp(10px, 1.5vw, 16px);
+  /* Padding */
+  --paddingCardX: clamp(14px, 2vw, 20px);
+  --paddingCardY: clamp(10px, 1.5vw, 16px);
 
-  --padding-x-input: 18px;
-  --padding-y-input: 13px;
+  --paddingButtonX: 18px;
+  --paddingButtonY: 11px;
 
-  --padding-x-button: 16px;
-  --padding-y-button: 11px;
+  --paddingInputX: 18px;
+  --paddingInputY: 13px;
 
-  --padding-modal: clamp(20px, 4vw, 32px);
+  --paddingModal: clamp(20px, 4vw, 32px);
 
-  /*Component margin*/
+  /* Margin */
+  --marginButtom: 40px;
 
-  --margin-b-elems : 40px;
+  /* Font */
+  --fontFamilyBase: Arial, Helvetica, sans-serif;
 
+  --fontSizeXs: 12px;
+  --fontSizeSm: 14px;
+  --fontSizeBase: 16px;
+  --fontSizeMd: 18px;
+  --fontSizeLg: 22px;
+  --fontSizeXl: 28px;
+  --fontSizePageTitle: clamp(30px, 5vw, 44px);
 
-  /* Typography */
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-base: 16px;
-  --font-size-md: 18px;
-  --font-size-lg: 22px;
-  --font-size-xl: 28px;
-  --font-size-page-title: clamp(30px, 5vw, 44px);
+  --lineHeightTight: 1.1;
+  --lineHeightBase: 1.5;
 
-  --line-height-tight: 1.1;
-  --line-height-base: 1.5;
+  --fontWeightRegular: 400;
+  --fontWeightMedium: 500;
+  --fontWeightSemiBold: 600;
+  --fontWeightBold: 700;
 
   /* Effects */
-  --shadow-card: 0 14px 40px rgba(0, 0, 0, 0.28);
-  --shadow-modal: 0 24px 80px rgba(0, 0, 0, 0.55);
+  --shadowCard: 0 14px 40px rgba(0, 0, 0, 0.28);
+  --shadowModal: 0 24px 80px rgba(0, 0, 0, 0.55);
 
-  --transition-fast: 150ms ease;
-  --transition-base: 250ms ease;
+  --transitionFast: 150ms ease;
+  --transitionBase: 250ms ease;
 }

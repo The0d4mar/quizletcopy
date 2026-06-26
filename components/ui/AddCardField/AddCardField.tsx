@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import EditDeckComp from '../EditDeckComp/EditDeckComp';
 import { Trash2 } from 'lucide-react';
 
@@ -14,7 +14,7 @@ interface AddCardFieldProps {
   translationError?: boolean;
 }
 
-const AddCardField: FC<AddCardFieldProps> = ({
+const AddCardField = ({
   id,
   original,
   translation,
@@ -24,11 +24,11 @@ const AddCardField: FC<AddCardFieldProps> = ({
   index,
   originalError = false,
   translationError = false,
-}) => {
+}: AddCardFieldProps) => {
   return (
     <div
       key={id}
-      className="rounded-2xl bg-[var(--color-hover)] px-6 py-5"
+      className="rounded-2xl bg-[var(--colorSurface)] px-6 py-5 border border-[var(--colorBorder)]"
     >
       <div className="mb-6 flex items-center justify-between">
         <span className="font-bold text-slate-200">
@@ -37,7 +37,7 @@ const AddCardField: FC<AddCardFieldProps> = ({
 
         <button
           onClick={() => deleteCard(id)}
-          className="rounded-lg p-2 text-slate-300 transition hover:bg-slate-600 hover:text-white"
+          className="rounded-lg p-2 bg-[var(--colorBg)] text-[var(--colorTextMuted)] transition hover:bg-[var(--colorDanger)] hover:text-white"
         >
           <Trash2 size={18} />
         </button>
@@ -52,7 +52,7 @@ const AddCardField: FC<AddCardFieldProps> = ({
             spanFlag = {false}
             placeholder="Термин"
             className={`
-              w-full rounded-lg bg-[var(--color-bg)] px-4 py-4 text-lg font-bold text-white outline-none
+              w-full rounded-lg bg-[var(--colorBg)] px-4 py-4 text-lg font-bold text-white outline-none
               border
               ${originalError ? 'border-red-500' : 'border-transparent'}
             `}
@@ -61,7 +61,7 @@ const AddCardField: FC<AddCardFieldProps> = ({
           <span
             className={`
               mt-3 block text-xs font-bold uppercase
-              ${originalError ? 'text-red-400' : 'text-slate-300'}
+              ${originalError ? 'text-[var(--colorDanger)]' : 'text-[var(--colorTextMuted)]'}
             `}
           >
             {originalError
@@ -78,7 +78,7 @@ const AddCardField: FC<AddCardFieldProps> = ({
             placeholder="Перевод"
             spanFlag = {false}
             className={`
-              w-full rounded-lg bg-[var(--color-bg)] px-4 py-4 text-lg font-bold text-white outline-none
+              w-full rounded-lg bg-[var(--colorBg)] px-4 py-4 text-lg font-bold text-white outline-none
               border
               ${translationError ? 'border-red-500' : 'border-transparent'}
             `}
@@ -87,7 +87,7 @@ const AddCardField: FC<AddCardFieldProps> = ({
           <span
             className={`
               mt-3 block text-xs font-bold uppercase 
-              ${translationError ? 'text-red-400' : 'text-slate-300'}
+              ${translationError ? 'text-[var(--colorDanger)]' : 'text-[var(--colorTextMuted)]'}
             `}
           >
             {translationError

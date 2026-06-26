@@ -1,11 +1,10 @@
 import React from 'react';
-import {FC} from 'react';
 
 interface UserFoldersProps {
     props?: string;
 }
 
-const UserFolders: FC<UserFoldersProps> = ({props}) => {
+const UserFolders = ({props}: UserFoldersProps) => {
   return (
     <div>UserFolders</div>
   );

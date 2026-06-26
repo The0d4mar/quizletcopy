@@ -1,6 +1,6 @@
 'use client'
 
-import { LearnQuestionData, AnswerStatus } from '@/types/type';
+import { LearnQuestionData, AnswerStatus } from '@/types/types.type';
 
 interface LearnQuestionProps {
   question: LearnQuestionData;
@@ -28,41 +28,41 @@ const LearnQuestion = ({
     isCorrect: boolean
   ) => {
     if (answerStatus === 'idle' && isSelected) {
-      return 'training-answer-selected';
+      return 'trainingAnswerSelected';
     }
 
     if (answerStatus !== 'idle' && isCorrect) {
-      return 'training-answer-correct';
+      return 'trainingAnswerCorrect';
     }
 
     if (answerStatus === 'wrong' && isSelected && !isCorrect) {
-      return 'training-answer-wrong';
+      return 'trainingAnswerWrong';
     }
 
     return '';
   };
 
   return (
-    <div className="app-card w-full max-w-[960px]">
-      <div className="mb-[var(--block-gap)] flex items-center justify-between">
-        <p className="font-bold text-[var(--color-text-muted)]">
+    <div className="card w-full max-w-[960px]">
+      <div className="mb-[var(--gapXl)] flex items-center justify-between">
+        <p className="font-bold text-[var(--colorTextMuted)]">
           Вопрос
         </p>
 
-        <p className="text-[var(--color-text-muted)]">
+        <p className="text-[var(--colorTextMuted)]">
           {index + 1} из {total}
         </p>
       </div>
 
-      <h2 className="mb-[var(--block-gap)] text-[var(--font-size-xl)] font-bold">
+      <h2 className="mb-[var(--gapXl)] text-[var(--fontSizeXl)] font-bold">
         | {question.question} |
       </h2>
 
-      <p className="mb-[var(--item-gap)] font-bold">
+      <p className="mb-[var(--gapMd)] font-bold">
         Выберите ответ
       </p>
 
-      <div className="grid gap-[var(--item-gap)] md:grid-cols-2">
+      <div className="grid gap-[var(--gapMd)] md:grid-cols-2">
         {question.answers.map(answer => {
           const isSelected = selectedAnswer === answer;
           const isCorrect = answer === question.correctAnswer;
@@ -74,7 +74,7 @@ const LearnQuestion = ({
               disabled={answerStatus !== 'idle'}
               onClick={() => onSelectAnswer(answer)}
               className={`
-                training-answer
+                trainingAnswer
                 ${getAnswerClass(isSelected, isCorrect)}
               `}
             >
@@ -84,16 +84,16 @@ const LearnQuestion = ({
         })}
       </div>
 
-      <div className="mt-[var(--block-gap)] flex justify-end">
+      <div className="mt-[var(--gapXl)] flex justify-end">
         {answerStatus === 'idle' ? (
           <button
             type="button"
             disabled={!selectedAnswer}
             onClick={onCheckAnswer}
             className="
-              custom-btn
-              rounded-[var(--radius-button)]
-              bg-[var(--color-focus)]
+              button
+              rounded-[var(--radiusPill)]
+              bg-[var(--colorFocus)]
               disabled:opacity-40
             "
           >
@@ -104,9 +104,9 @@ const LearnQuestion = ({
             type="button"
             onClick={onNext}
             className="
-              custom-btn
-              rounded-[var(--radius-button)]
-              bg-[var(--color-focus)]
+              button
+              rounded-[var(--radiusPill)]
+              bg-[var(--colorFocus)]
             "
           >
             Далее

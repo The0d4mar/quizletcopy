@@ -1,4 +1,4 @@
-export default function Loading() {
+const Loading = () => {
   return (
     <div className="min-h-screen text-white">
       
@@ -38,4 +38,6 @@ export default function Loading() {
       </main>
     </div>
   );
-}
+};
+
+export default Loading;

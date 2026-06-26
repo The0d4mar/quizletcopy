@@ -1,6 +1,8 @@
 import DeckTrainingPage from "@/components/Training/DeckTrainingPage/DeckTrainingPage";
 
 
-export default function Page() {
+const Page = () => {
   return <DeckTrainingPage />;
-}
+};
+
+export default Page;

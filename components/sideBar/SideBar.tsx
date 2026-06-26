@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React from 'react';
 import SideBarChap from './SideBarChap';
 import { sideNavData } from '@/api/DataBlock';
 
@@ -6,7 +6,7 @@ import { sideNavData } from '@/api/DataBlock';
 
 
 
-const SideBar:FC = () => {
+const SideBar = () => {
   const innerSideNav = sideNavData;
 
   return (
@@ -22,7 +22,7 @@ const SideBar:FC = () => {
           />
 
           {index !== array.length - 1 && (
-            <div className='relative w-full h-0.5 bg-[var(--color-border)] rounded-2xl' />
+            <div className='relative w-full h-0.5 bg-[var(--colorBorder)] rounded-2xl' />
           )}
         </React.Fragment>
       ))}

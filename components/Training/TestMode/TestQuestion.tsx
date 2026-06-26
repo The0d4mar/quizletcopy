@@ -1,6 +1,6 @@
 'use client'
 
-import { LearnQuestionData, AnswerStatus } from "@/types/type";
+import { LearnQuestionData, AnswerStatus } from "@/types/types.type";
 
 
 interface TestQuestionProps {
@@ -21,26 +21,26 @@ const TestQuestion = ({
   onSelectAnswer,
 }: TestQuestionProps) => {
   return (
-    <div className="app-card w-full">
-      <div className="mb-[var(--block-gap)] flex items-center justify-between">
-        <p className="font-bold text-[var(--color-text-muted)]">
+    <div className="card w-full">
+      <div className="mb-[var(--gapXl)] flex items-center justify-between">
+        <p className="font-bold text-[var(--colorTextMuted)]">
           Определения
         </p>
 
-        <p className="text-[var(--color-text-muted)]">
+        <p className="text-[var(--colorTextMuted)]">
           {index + 1} из {total}
         </p>
       </div>
 
-      <h2 className="mb-[var(--block-gap)] text-[var(--font-size-xl)] font-bold">
+      <h2 className="mb-[var(--gapXl)] text-[var(--fontSizeXl)] font-bold">
         | {question.question} |
       </h2>
 
-      <p className="mb-[var(--item-gap)] font-bold">
+      <p className="mb-[var(--gapMd)] font-bold">
         Выберите ответ
       </p>
 
-      <div className="grid gap-[var(--item-gap)] md:grid-cols-2">
+      <div className="grid gap-[var(--gapMd)] md:grid-cols-2">
         {question.answers.map(answer => {
           const isSelected = selectedAnswer === answer;
           const isCorrect = answer === question.correctAnswer;
@@ -52,15 +52,15 @@ const TestQuestion = ({
               disabled={answerStatus !== 'idle'}
               onClick={() => onSelectAnswer(answer)}
               className={`
-                app-card text-left font-bold
+                card text-left font-bold
                 ${
                   answerStatus !== 'idle' && isCorrect
-                    ? 'border-[var(--color-success)] text-[var(--color-success)]'
+                    ? 'border-[var(--colorSuccess)] text-[var(--colorSuccess)]'
                     : ''
                 }
                 ${
                   answerStatus === 'wrong' && isSelected && !isCorrect
-                    ? 'border-[var(--color-danger)] text-[var(--color-danger)]'
+                    ? 'border-[var(--colorDanger)] text-[var(--colorDanger)]'
                     : ''
                 }
               `}

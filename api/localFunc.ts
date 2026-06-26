@@ -1,6 +1,6 @@
 
-import { Card, CardData, Deck, Folder, MatchQuestionData } from "@/types/type";
-import { LibraryItem, SortType, GroupedLibraryItems, EntityFilter } from '@/types/type';
+import { Card, CardData, Deck, Folder, MatchQuestionData } from "@/types/types.type";
+import { LibraryItem, SortType, GroupedLibraryItems, EntityFilter } from '@/types/types.type';
 import { monthNames } from "./DataBlock";
 import { getRandomInt, shuffleArray } from "@/components/Training/trainingUtils";
 

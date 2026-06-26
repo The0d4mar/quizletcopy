@@ -2,17 +2,15 @@
 import SideBar from "@/components/sideBar/SideBar";
 import "./globals.css";
 import Header from "@/components/Header/Header";
-import { AppProvider } from "./provider/AppProvider";
 import { ReduxProvider } from "./provider/ReduxProvider";
 import AddFolder from "@/components/ui/AddFolder/AddFolder";
+import { ChildrenProps } from "@/types/types.type";
 
 
 
-export default function RootLayout({
+const RootLayout = ({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<ChildrenProps>) => {
   return (
     
     <html
@@ -37,4 +35,6 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

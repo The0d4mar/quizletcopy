@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import DeckCard from './DeckCard';
-import { Deck } from '@/types/type';
+import { Deck } from '@/types/types.type';
 import { describe, expect, it } from 'vitest';
 
 describe('DeckCard', () => {

@@ -14,7 +14,7 @@ interface DropDownDeckMenuProps {
   windowFlag?: string;
 } 
 
-const DropDownDeckMenu: React.FC<DropDownDeckMenuProps> = ( { localId, windowFlag = 'openedDeck' } ) => {
+const DropDownDeckMenu = ( { localId, windowFlag = 'openedDeck' } : DropDownDeckMenuProps) => {
   const sendedFlag = windowFlag;
   const [dropDownFlag, setDropDownFlag] = useState(false);
 
@@ -69,6 +69,7 @@ const DropDownDeckMenu: React.FC<DropDownDeckMenuProps> = ( { localId, windowFla
           justify-center
           rounded-full
           border
+          bg-[var(--colorBg)]
         "
         onClick={changeDropDownFlag}
       >

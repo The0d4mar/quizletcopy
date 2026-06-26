@@ -1,20 +1,20 @@
 
-import { Deck, DeckCardProps } from '@/types/type';
+import { Deck, DeckCardProps } from '@/types/types.type';
 import { IdCardLanyard} from 'lucide-react';
 import Link from 'next/link';
-import React, {FC} from 'react';
+import React from 'react';
 
 
 
-const DeckCard:FC<DeckCardProps> = ({deck, cardsCount}) => {
+const DeckCard = ({deck, cardsCount}: DeckCardProps) => {
   return (
-    <Link className="custom-deck" href = {`/deck/${deck.id}`}>
+    <Link className="deckCard" href = {`/deck/${deck.id}`}>
         <div>
             <IdCardLanyard size={48}/>
         </div>
         <div className='flex flex-col justify-start'>
             <h2>{deck.title}</h2>
-            <div className='custom-deck-info'>
+            <div className='deckCardInfo'>
                 <p>Автор: {deck.createdBy}</p>
                 <p>Карточек: {cardsCount}</p>
             </div>

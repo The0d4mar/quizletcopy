@@ -1,6 +1,6 @@
 'use client'
 
-import { QuestionSide, TestQuestionType } from '@/types/type';
+import { QuestionSide, TestQuestionType } from '@/types/types.type';
 
 interface TestSetupModalProps {
   deckTitle: string;
@@ -47,15 +47,15 @@ const TestSetupModal = ({
   };
 
   return (
-    <div className="app-modal-overlay">
-      <div className="app-modal">
-        <div className="mb-[var(--block-gap)] flex items-start justify-between">
+    <div className="modalOverlay">
+      <div className="modal">
+        <div className="mb-[var(--gapXl)] flex items-start justify-between">
           <div>
-            <p className="font-bold text-[var(--color-text-muted)]">
+            <p className="font-bold text-[var(--colorTextMuted)]">
               {deckTitle}
             </p>
 
-            <h2 className="text-[var(--font-size-xl)] font-bold">
+            <h2 className="text-[var(--fontSizeXl)] font-bold">
               Настройте свой тест
             </h2>
           </div>
@@ -63,13 +63,13 @@ const TestSetupModal = ({
           <button
             type="button"
             onClick={onClose}
-            className="custom-btn rounded-[var(--radius-button)]"
+            className="button rounded-[var(--radiusPill)]"
           >
             ×
           </button>
         </div>
 
-        <div className="mb-[var(--block-gap)] flex items-center justify-between">
+        <div className="mb-[var(--gapXl)] flex items-center justify-between">
           <p className="font-bold">
             Вопросы максимум {maxQuestions}
           </p>
@@ -80,20 +80,20 @@ const TestSetupModal = ({
             max={maxQuestions}
             value={questionsCount}
             onChange={e => onQuestionsCountChange(Number(e.target.value))}
-            className="w-[90px] rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface-light)] px-4 py-3 font-bold outline-none focus:ring-2 focus:ring-[var(--color-focus)]"
+            className="w-[90px] rounded-[var(--radiusCard)] border border-[var(--colorBorder)] bg-[var(--colorSurfaceLight)] px-4 py-3 font-bold outline-none focus:ring-2 focus:ring-[var(--colorFocus)]"
           />
         </div>
 
-        <div className="mb-[var(--block-gap)]">
+        <div className="mb-[var(--gapXl)]">
           <p className="mb-3 font-bold">Ответ</p>
 
-          <div className="grid gap-[var(--item-gap)] md:grid-cols-2">
+          <div className="grid gap-[var(--gapMd)] md:grid-cols-2">
             <button
               type="button"
               onClick={() => onSelectSide('original')}
               className={`
-                training-answer
-                ${questionSide === 'original' ? 'training-answer-selected' : ''}
+                trainingAnswer
+                ${questionSide === 'original' ? 'trainingAnswerSelected' : ''}
               `}
             >
               Термин → определение
@@ -103,8 +103,8 @@ const TestSetupModal = ({
               type="button"
               onClick={() => onSelectSide('translation')}
               className={`
-                training-answer
-                ${questionSide === 'translation' ? 'training-answer-selected' : ''}
+                trainingAnswer
+                ${questionSide === 'translation' ? 'trainingAnswerSelected' : ''}
               `}
             >
               Определение → термин
@@ -112,7 +112,7 @@ const TestSetupModal = ({
           </div>
         </div>
 
-        <div className="mb-[var(--block-gap)] flex flex-col gap-4">
+        <div className="mb-[var(--gapXl)] flex flex-col gap-4">
           {testTypes.map(type => {
             const checked = questionTypes.includes(type.value);
 
@@ -127,8 +127,8 @@ const TestSetupModal = ({
 
                 <span
                   className={`
-                    relative h-6 w-11 rounded-[var(--radius-button)] transition
-                    ${checked ? 'bg-[var(--color-focus)]' : 'bg-[var(--color-surface-light)]'}
+                    relative h-6 w-11 rounded-[var(--radiusPill)] transition
+                    ${checked ? 'bg-[var(--colorFocus)]' : 'bg-[var(--colorSurfaceLight)]'}
                   `}
                 >
                   <span
@@ -147,7 +147,7 @@ const TestSetupModal = ({
           <button
             type="button"
             onClick={onStart}
-            className="custom-btn rounded-[var(--radius-button)] bg-[var(--color-focus)]"
+            className="button rounded-[var(--radiusPill)] bg-[var(--colorFocus)]"
           >
             Начать тест
           </button>

@@ -1,6 +1,6 @@
 'use client'
 
-import { EntityFilter, SortType } from '@/types/type';
+import { EntityFilter, SortType } from '@/types/types.type';
 import { ChevronDown } from 'lucide-react';
 
 interface LibraryControlsProps {
@@ -23,18 +23,18 @@ const LibraryControls = ({
   onSortTypeChange,
 }: LibraryControlsProps) => {
   return (
-    <div className="mb-[var(--margin-b-elems)] flex flex-col gap-[var(--block-gap)]">
-      <div className="flex flex-wrap items-center gap-[var(--item-gap)]">
+    <div className="mb-[var(--marginButtom)] flex flex-col gap-[var(--gapXl)]">
+      <div className="flex flex-wrap items-center gap-[var(--gapMd)]">
         {filterItems.map(item => (
           <button
             key={item.value}
             onClick={() => onEntityFilterChange(item.value)}
             className={`
-              custom-btn rounded-[var(--radius-button)]
+              button rounded-[var(--radiusPill)]
               ${
                 entityFilter === item.value
-                  ? 'border-[var(--color-border-strong)]'
-                  : 'bg-[var(--color-hover)] border-transparent'
+                  ? 'border-[var(--colorBorderStrong)]'
+                  : 'bg-[var(--colorSurfaceMuted)] border-transparent'
               }
             `}
           >
@@ -48,25 +48,25 @@ const LibraryControls = ({
           onChange={e => onSortTypeChange(e.target.value as SortType)}
           className="
             appearance-none
-            rounded-[var(--radius-button)]
+            rounded-[var(--radiusPill)]
             border
-            border-[var(--color-border)]
-            bg-[var(--color-hover)]
+            border-[var(--colorBorder)]
+            bg-[var(--colorSurfaceMuted)]
             px-[22px]
             py-[14px]
             pr-[52px]
-            text-[var(--font-size-sm)]
+            text-[var(--fontSizeSm)]
             font-semibold
-            text-[var(--color-text)]
+            text-[var(--colorText)]
             outline-none
             transition-all
             duration-200
-            hover:border-[var(--color-border-hover)]
-            hover:bg-[var(--color-surface-light)]
-            focus:border-[var(--color-focus)]
+            hover:border-[var(--colorBorderHover)]
+            hover:bg-[var(--colorSurfaceLight)]
+            focus:border-[var(--colorFocus)]
             focus:ring-4
             focus:ring-[color:rgba(59,130,246,0.15)]
-            shadow-[var(--shadow-card)]
+            shadow-[var(--shadowCard)]
             cursor-pointer
           "
         >
@@ -91,7 +91,7 @@ const LibraryControls = ({
             right-[18px]
             top-1/2
             -translate-y-1/2
-            text-[var(--color-text-muted)]
+            text-[var(--colorTextMuted)]
             transition-transform
           "
         />

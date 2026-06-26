@@ -6,7 +6,6 @@ import { modalState } from '@/store/modalStore';
 import { RootState } from '@/store/store';
 import { Cross, X } from 'lucide-react';
 import React from 'react';
-import {FC} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface ConnectDecksModalProps {
@@ -14,10 +13,10 @@ interface ConnectDecksModalProps {
   onConnected: () => void;
 }
 
-const ConnectDecksModal: FC<ConnectDecksModalProps> = ({
+const ConnectDecksModal = ({
   sendedDeckId,
   onConnected,
-}) => {
+}: ConnectDecksModalProps) => {
   const decks = useSelector((state: RootState) => state.deckStore.decks);
   const cards = useSelector((state: RootState) => state.cardStore.cards);
   const hideFlag = useSelector((state: RootState) => state.modal.state);

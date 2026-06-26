@@ -8,13 +8,13 @@ import { addDeckFolderFlag } from '@/store/AddDeckToFolderStore';
 import { foldernameflag } from '@/store/EditFolderName';
 import { setFolders } from '@/store/folderStore';
 import { RootState } from '@/store/store';
-import { Card, Deck } from '@/types/type';
+import { Card, Deck } from '@/types/types.type';
 import { FolderIcon, Plus, Search } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-export default function FolderPage() {
+const FolderPage = () => {
   const params = useParams<{ id: string }>();
 
   const folderId = params.id;
@@ -90,7 +90,7 @@ export default function FolderPage() {
   if (!currentFolder) {
     return (
       <section className="flex min-h-[60vh] w-full items-center justify-center">
-        <div className="rounded-[var(--radius-card)] border border-[var(--color-border)] px-[var(--padding-x-card)] py-[var(--padding-y-card)]">
+        <div className="rounded-[var(--radiusCard)] border border-[var(--colorBorder)] px-[var(--paddingCardX)] py-[var(--paddingCardY)]">
           Папка не найдена
         </div>
       </section>
@@ -103,7 +103,7 @@ export default function FolderPage() {
 
       <div className="mb-10 flex items-center justify-between">
         <div className="flex items-center gap-5">
-          <div className="flex h-20 w-20 items-center justify-center rounded-[var(--radius-card)] bg-[var(--color-hover)]">
+          <div className="flex h-20 w-20 items-center justify-center rounded-[var(--radiusCard)] bg-[var(--colorSurfaceMuted)]">
             <FolderIcon size={44} />
           </div>
 
@@ -119,18 +119,18 @@ export default function FolderPage() {
                   value={folderName}
                   onChange={e => setFolderName(e.target.value)}
                   placeholder="Введите название папки"
-                  className="w-full rounded-[var(--radius-card)] bg-[var(--color-hover)] px-5 py-4 pr-12 font-semibold outline-none placeholder:text-white/40"
+                  className="w-full rounded-[var(--radiusCard)] bg-[var(--colorSurfaceMuted)] px-5 py-4 pr-12 font-semibold outline-none placeholder:text-white/40"
                 />
 
                 <button
-                  className="flex items-center justify-center rounded-xl border px-[var(--padding-x-card)] py-[var(--padding-y-card)]"
+                  className="flex items-center justify-center rounded-xl border px-[var(--paddingCardX)] py-[var(--paddingCardY)]"
                   onClick={changeFolderName}
                 >
                   Изменить
                 </button>
 
                 <button
-                  className="flex items-center justify-center rounded-xl border border-red-500 px-[var(--padding-x-card)] py-[var(--padding-y-card)] text-red-500"
+                  className="flex items-center justify-center rounded-xl border border-red-500 px-[var(--paddingCardX)] py-[var(--paddingCardY)] text-red-500"
                   onClick={cancelChangeFolderName}
                 >
                   Отменить
@@ -152,7 +152,7 @@ export default function FolderPage() {
             value={searchValue}
             onChange={e => setSearchValue(e.target.value)}
             placeholder="Поиск по этой папке"
-            className="w-full rounded-[var(--radius-card)] bg-[var(--color-hover)] px-5 py-4 pr-12 font-semibold outline-none placeholder:text-white/40"
+            className="w-full rounded-[var(--radiusCard)] bg-[var(--colorSurfaceMuted)] px-5 py-4 pr-12 font-semibold outline-none placeholder:text-white/40"
           />
 
           <Search
@@ -163,7 +163,7 @@ export default function FolderPage() {
       </div>
 
       {filteredDecks.length === 0 ? (
-        <div className="px-[var(--padding-x-card)] py-[var(--padding-y-card)] text-white/60">
+        <div className="px-[var(--paddingCardX)] py-[var(--paddingCardY)] text-white/60">
           В этой папке пока нет колод
         </div>
       ) : (
@@ -174,7 +174,7 @@ export default function FolderPage() {
         />
       )}
 
-      <div className="fixed bottom-8 left-1/2 flex -translate-x-1/2 gap-4 rounded-full bg-[var(--color-hover)] p-3">
+      <div className="fixed bottom-8 left-1/2 flex -translate-x-1/2 gap-4 rounded-full bg-[var(--colorSurfaceMuted)] p-3">
         <button
           onClick={() =>
             dispatch(addDeckFolderFlag(true))
@@ -187,4 +187,6 @@ export default function FolderPage() {
       </div>
     </section>
   );
-}
+};
+
+export default FolderPage;

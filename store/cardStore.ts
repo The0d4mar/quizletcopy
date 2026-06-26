@@ -1,5 +1,5 @@
 import { loadCards, loadDecks, saveCards, saveDecks } from "@/storage";
-import { Card, Deck } from "@/types/type"
+import { Card, Deck } from "@/types/types.type"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { act } from "react";
 import { useSelector } from "react-redux";

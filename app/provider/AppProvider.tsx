@@ -1,19 +1,14 @@
 'use client'
 
 import { createContext, useContext, useState } from 'react';
+import { AppContextType, ChildrenProps } from '@/types/types.type';
 
-type AppContextType = {
-  theme: string;
-  setTheme: React.Dispatch<React.SetStateAction<string>>;
-};
 
 const AppContext = createContext<AppContextType | null>(null);
 
-export function AppProvider({
+const AppProvider = ({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: ChildrenProps) => {
   const [theme, setTheme] = useState('dark');
 
   return (
@@ -21,9 +16,9 @@ export function AppProvider({
       {children}
     </AppContext.Provider>
   );
-}
+};
 
-export function useAppContext() {
+const useAppContext = () => {
   const context = useContext(AppContext);
 
   if (!context) {
@@ -33,4 +28,6 @@ export function useAppContext() {
   }
 
   return context;
-}
+};
+
+export { AppProvider, useAppContext };

@@ -1,23 +1,20 @@
 'use client'
 
-import { setUpdatedCards } from '@/store/cardStore';
+import { setUpdatedCards } from '@/store/cardStore'; 
+import{ changeDeck } from '@/store/deckStore';
 import { RootState } from '@/store/store';
-import { Card } from '@/types/type';
+import { Card, DeckStatsGroup } from '@/types/types.type';
 import { Pencil, Star, Volume2 } from 'lucide-react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface DeckStatsProps {
+  deckId: string;
   deckCards: Card[];
 }
 
-type DeckStatsGroup = {
-  title: string;
-  description: string;
-  cards: Card[];
-};
 
-const DeckStats = ({ deckCards }: DeckStatsProps) => {
+const DeckStats = ({ deckId, deckCards }: DeckStatsProps) => {
   const dispatch = useDispatch();
 
   const allCards = useSelector(
@@ -27,6 +24,20 @@ const DeckStats = ({ deckCards }: DeckStatsProps) => {
   const cardData = useSelector(
     (state: RootState) => state.cardDataStore.cardData
   );
+
+  const deck = useSelector((state: RootState) =>
+    state.deckStore.decks.find(item => item.id === deckId)
+  );
+  const isStatsOpen = deck?.isStatsOpen ?? true;
+
+  const toggleStats = () => {
+    if (!deck) return;
+
+    dispatch(changeDeck({
+      ...deck,
+      isStatsOpen: !isStatsOpen,
+    }));
+  };
 
   const [editingCardId, setEditingCardId] = useState<string | null>(null);
   const [editOriginal, setEditOriginal] = useState('');
@@ -110,45 +121,48 @@ const DeckStats = ({ deckCards }: DeckStatsProps) => {
   ];
 
   return (
-    <section className="mt-[var(--section-gap)]">
-      <div className="mb-[var(--block-gap)] flex items-center justify-between">
+    <section className="mt-[var(--gapSection)]">
+      <div className="mb-[var(--gapXl)] flex items-center justify-between">
         <div>
-          <h2 className="text-[var(--font-size-lg)] font-bold">
+          <h2 className="text-[var(--fontSizeLg)] font-bold">
             Термины в модуле ({deckCards.length})
           </h2>
 
-          <p className="mt-2 text-[var(--color-text-muted)]">
+          <p className="mt-2 text-[var(--colorTextMuted)]">
             Статистика повторений и сложные слова
           </p>
         </div>
 
         <button
           type="button"
-          className="custom-btn rounded-[var(--radius-button)]"
+          onClick={toggleStats}
+          aria-expanded={isStatsOpen}
+          className="button rounded-[var(--radiusPill)]"
         >
-          Ваша статистика
+          {isStatsOpen ? 'Скрыть статистику' : 'Показать статистику'}
         </button>
       </div>
 
-      <div className="flex flex-col gap-[var(--section-gap)]">
+      {isStatsOpen && (
+        <div className="flex flex-col gap-[var(--gapSection)]">
         {groups.map(group => (
           <div key={group.title}>
-            <div className="mb-[var(--block-gap)]">
-              <h3 className="text-[var(--font-size-md)] font-bold">
+            <div className="mb-[var(--gapXl)]">
+              <h3 className="text-[var(--fontSizeMd)] font-bold">
                 {group.title}
               </h3>
 
-              <p className="mt-2 text-[var(--color-text-muted)]">
+              <p className="mt-2 text-[var(--colorTextMuted)]">
                 {group.description}
               </p>
             </div>
 
             {group.cards.length === 0 ? (
-              <div className="app-card text-[var(--color-text-muted)]">
+              <div className="card text-[var(--colorTextMuted)]">
                 В этом разделе пока нет слов
               </div>
             ) : (
-              <div className="flex flex-col gap-[var(--item-gap)]">
+              <div className="flex flex-col gap-[var(--gapMd)]">
                 {group.cards.map(card => {
                   const data = getCardData(card.id);
                   const lastRepeat = data?.lastRepeat?.at(-1);
@@ -157,12 +171,12 @@ const DeckStats = ({ deckCards }: DeckStatsProps) => {
                   return (
                     <div
                       key={card.id}
-                      className="app-card grid gap-4 md:grid-cols-[1fr_1fr_auto]"
+                      className="card grid gap-4 md:grid-cols-[1fr_1fr_auto]"
                     >
                       {isEditing ? (
                         <>
                           <div>
-                            <p className="mb-2 text-[var(--color-text-muted)] font-bold">
+                            <p className="mb-2 text-[var(--colorTextMuted)] font-bold">
                               Термин
                             </p>
 
@@ -171,22 +185,22 @@ const DeckStats = ({ deckCards }: DeckStatsProps) => {
                               onChange={e => setEditOriginal(e.target.value)}
                               className="
                                 w-full
-                                rounded-[var(--radius-card)]
+                                rounded-[var(--radiusCard)]
                                 border
-                                border-[var(--color-border)]
-                                bg-[var(--color-bg-soft)]
-                                px-[var(--padding-x-input)]
-                                py-[var(--padding-y-input)]
+                                border-[var(--colorBorder)]
+                                bg-[var(--colorBgSoft)]
+                                px-[var(--paddingInputX)]
+                                py-[var(--paddingInputY)]
                                 font-bold
                                 outline-none
                                 focus:ring-2
-                                focus:ring-[var(--color-focus)]
+                                focus:ring-[var(--colorFocus)]
                               "
                             />
                           </div>
 
                           <div>
-                            <p className="mb-2 text-[var(--color-text-muted)] font-bold">
+                            <p className="mb-2 text-[var(--colorTextMuted)] font-bold">
                               Перевод
                             </p>
 
@@ -195,16 +209,16 @@ const DeckStats = ({ deckCards }: DeckStatsProps) => {
                               onChange={e => setEditTranslation(e.target.value)}
                               className="
                                 w-full
-                                rounded-[var(--radius-card)]
+                                rounded-[var(--radiusCard)]
                                 border
-                                border-[var(--color-border)]
-                                bg-[var(--color-bg-soft)]
-                                px-[var(--padding-x-input)]
-                                py-[var(--padding-y-input)]
+                                border-[var(--colorBorder)]
+                                bg-[var(--colorBgSoft)]
+                                px-[var(--paddingInputX)]
+                                py-[var(--paddingInputY)]
                                 font-bold
                                 outline-none
                                 focus:ring-2
-                                focus:ring-[var(--color-focus)]
+                                focus:ring-[var(--colorFocus)]
                               "
                             />
                           </div>
@@ -213,7 +227,7 @@ const DeckStats = ({ deckCards }: DeckStatsProps) => {
                             <button
                               type="button"
                               onClick={() => saveEditCard(card.id)}
-                              className="custom-btn rounded-[var(--radius-button)] bg-[var(--color-focus)]"
+                              className="button rounded-[var(--radiusPill)] bg-[var(--colorFocus)]"
                             >
                               Изменить
                             </button>
@@ -221,7 +235,7 @@ const DeckStats = ({ deckCards }: DeckStatsProps) => {
                             <button
                               type="button"
                               onClick={cancelEditCard}
-                              className="custom-btn rounded-[var(--radius-button)] border-[var(--color-danger)] text-[var(--color-danger)]"
+                              className="button rounded-[var(--radiusPill)] border-[var(--colorDanger)] text-[var(--colorDanger)]"
                             >
                               Отменить
                             </button>
@@ -230,23 +244,23 @@ const DeckStats = ({ deckCards }: DeckStatsProps) => {
                       ) : (
                         <>
                           <div>
-                            <p className="text-[var(--font-size-md)] font-bold">
+                            <p className="text-[var(--fontSizeMd)] font-bold">
                               | {card.original} |
                             </p>
                           </div>
 
                           <div>
-                            <p className="text-[var(--font-size-md)] font-bold">
+                            <p className="text-[var(--fontSizeMd)] font-bold">
                               | {card.translation} |
                             </p>
 
-                            <p className="mt-2 text-[var(--font-size-sm)] text-[var(--color-text-muted)]">
+                            <p className="mt-2 text-[var(--fontSizeSm)] text-[var(--colorTextMuted)]">
                               Успешно: {data?.numOfRepeats ?? 0} · Ошибок:{' '}
                               {data?.wrongRepeats ?? 0}
                             </p>
 
                             {lastRepeat && (
-                              <p className="text-[var(--font-size-sm)] text-[var(--color-text-muted)]">
+                              <p className="text-[var(--fontSizeSm)] text-[var(--colorTextMuted)]">
                                 Последнее повторение:{' '}
                                 {new Date(lastRepeat).toLocaleDateString()}
                               </p>
@@ -273,7 +287,8 @@ const DeckStats = ({ deckCards }: DeckStatsProps) => {
             )}
           </div>
         ))}
-      </div>
+        </div>
+      )}
     </section>
   );
 };

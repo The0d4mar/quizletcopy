@@ -2,17 +2,17 @@
 
 import { setCardData } from '@/store/cardDataStore';
 import { RootState } from '@/store/store';
-import { Card } from '@/types/type';
+import { Card, TrainingMistake } from '@/types/types.type';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import TrainingResult, { TrainingMistake } from '../TrainingResult/TrainingResult';
+import TrainingResult from '../TrainingResult/TrainingResult';
 import {
   createLearnQuestions,
   shuffleArray,
   updateCardDataCorrect,
   updateCardDataWrong,
 } from '../trainingUtils';
-import { AnswerStatus, QuestionSide } from '@/types/type';
+import { AnswerStatus, QuestionSide } from '@/types/types.type';
 import LearnQuestion from './LearnQuestion';
 import LearnSetupModal from './LearnSetupModal';
 

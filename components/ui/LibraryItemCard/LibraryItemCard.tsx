@@ -1,4 +1,4 @@
-import { LibraryItem } from '@/types/type';
+import { LibraryItem } from '@/types/types.type';
 import { FolderIcon, IdCardLanyard } from 'lucide-react';
 import Link from 'next/link';
 
@@ -15,17 +15,17 @@ const LibraryItemCard = ({ item }: LibraryItemCardProps) => {
         w-full
         items-center
         gap-4
-        rounded-[var(--radius-card)]
+        rounded-[var(--radiusCard)]
         border
-        border-[var(--color-border)]
-        bg-[var(--color-hover)]
-        px-[var(--padding-x-card)]
-        py-[var(--padding-y-card)]
+        border-[var(--colorBorder)]
+        bg-[var(--colorSurfaceMuted)]
+        px-[var(--paddingCardX)]
+        py-[var(--paddingCardY)]
         transition
-        hover:border-[var(--color-border-hover)]
+        hover:border-[var(--colorBorderHover)]
       "
     >
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-card)] bg-[var(--color-surface)]">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radiusCard)] bg-[var(--colorSurface)]">
         {item.type === 'deck' ? (
           <IdCardLanyard size={24} />
         ) : (
@@ -34,11 +34,11 @@ const LibraryItemCard = ({ item }: LibraryItemCardProps) => {
       </div>
 
       <div className="min-w-0">
-        <h3 className="max-w-[520px] truncate text-[var(--font-size-md)] font-bold">
+        <h3 className="max-w-[520px] truncate text-[var(--fontSizeMd)] font-bold">
           {item.title}
         </h3>
 
-        <p className="text-[var(--font-size-sm)] font-semibold text-[var(--color-text-muted)]">
+        <p className="text-[var(--fontSizeSm)] font-semibold text-[var(--colorTextMuted)]">
           {item.type === 'deck'
             ? `${item.cardsCount} карточек · Модуль`
             : `${item.modulesCount} модулей · Папка`}

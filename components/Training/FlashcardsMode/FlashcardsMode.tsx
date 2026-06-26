@@ -4,7 +4,7 @@ import ProgressBar from '@/components/ui/ProgressBar/ProgressBar';
 import { WordCard } from '@/components/ui/Card/WordCard';
 import { setCardData } from '@/store/cardDataStore';
 import { RootState } from '@/store/store';
-import { Card } from '@/types/type';
+import { Card } from '@/types/types.type';
 import { Check, X } from 'lucide-react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,12 +15,11 @@ import {
 } from '../trainingUtils';
 import FlashcardsToolbar from './FlashcardsToolbar';
 import CardsController from '@/components/ui/CardsController/CardsController';
-import TrainingResult, { TrainingMistake } from '../TrainingResult/TrainingResult';
+import TrainingResult from '../TrainingResult/TrainingResult';
 import FlashcardsSettingsModal from '@/components/ui/FlashcardsSettingsModal/FlashcardsSettingsModal';
-import { FlashcardFrontSide } from '@/types/type';
+import { FlashcardFrontSide, SlideDirection, TrainingMistake } from '@/types/types.type';
 import { delConnectedCardData, resetDeckCardData } from '@/api/localFunc';
 
-type SlideDirection = 'next' | 'prev';
 
 interface FlashcardsModeProps {
   deckCards: Card[];
@@ -167,8 +166,21 @@ const FlashcardsMode = ({
   };
 
   const toggleShuffle = () => {
-    setShuffled(prev => !prev);
+    if (shuffled) {
+      const currentCardId = orderedCards[currentIndex]?.id;
+      const restoredIndex = deckCards.findIndex(card => card.id === currentCardId);
 
+      setOrderedCards(deckCards);
+      setCurrentIndex(restoredIndex >= 0 ? restoredIndex : 0);
+      setPreviousIndex(null);
+      setSlideDirection('next');
+      setIsAnimating(false);
+      setShuffled(false);
+
+      return;
+    }
+
+    setShuffled(true);
     setOrderedCards(prevCards => {
       const viewedCards = prevCards.slice(0, currentIndex + 1);
       const notViewedCards = prevCards.slice(currentIndex + 1);
@@ -294,12 +306,12 @@ const FlashcardsMode = ({
         </div>
 
         {repeatTracking ? (
-          <div className="text-center flex items-center justify-center gap-4 mb-[var(--item-gap)] mt-[var(--item-gap)]">
+          <div className="text-center flex items-center justify-center gap-4 mb-[var(--gapMd)] mt-[var(--gapMd)]">
             <button
               type="button"
               onClick={handleUnknownCard}
               disabled={isAnimating}
-              className="custom-btn rounded-[var(--radius-button)] border-[var(--color-danger)] text-[var(--color-danger)]"
+              className="button rounded-[var(--radiusPill)] border-[var(--colorDanger)] text-[var(--colorDanger)]"
             >
               <X size={22} />
             </button>
@@ -312,7 +324,7 @@ const FlashcardsMode = ({
               type="button"
               onClick={handleKnownCard}
               disabled={isAnimating}
-              className="custom-btn rounded-[var(--radius-button)] border-[var(--color-success)] text-[var(--color-success)]"
+              className="button rounded-[var(--radiusPill)] border-[var(--colorSuccess)] text-[var(--colorSuccess)]"
             >
               <Check size={22} />
             </button>

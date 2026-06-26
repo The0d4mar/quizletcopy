@@ -38,8 +38,8 @@
 
 
 @theme inline {
-  --color-background: var(--color-bg);
-  --color-foreground: var(--color-text);
+  --color-background: var(--colorBg);
+  --color-foreground: var(--colorText);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -48,8 +48,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: var(--color-bg);
-    --foreground: var(--color-text);
+    --background: var(--colorBg);
+    --foreground: var(--colorText);
   }
 }
 

@@ -16,26 +16,26 @@ const LibrarySearch = ({ value, onChange }: LibrarySearchProps) => {
         placeholder="Найти карточки"
         className="
           w-full
-          rounded-[var(--radius-card)]
+          rounded-[var(--radiusCard)]
           border
-          border-[var(--color-border)]
-          bg-[var(--color-hover)]
-          px-[var(--padding-x-input)]
-          py-[var(--padding-y-input)]
+          border-[var(--colorBorder)]
+          bg-[var(--colorSurfaceMuted)]
+          px-[var(--paddingInputX)]
+          py-[var(--paddingInputY)]
           pr-12
           font-semibold
           outline-none
-          placeholder:text-[var(--color-text-disabled)]
+          placeholder:text-[var(--colorTextDisabled)]
           transition
-          hover:border-[var(--color-border-hover)]
+          hover:border-[var(--colorBorderHover)]
           focus:ring-2
-          focus:ring-[var(--color-focus)]
+          focus:ring-[var(--colorFocus)]
         "
       />
 
       <Search
         size={22}
-        className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--colorTextMuted)]"
       />
     </div>
   );

@@ -1,5 +1,5 @@
 import { loadDecks, saveDecks } from "@/storage";
-import { Deck } from "@/types/type"
+import { Deck } from "@/types/types.type"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface DeckState {

@@ -2,7 +2,7 @@
 
 import { setCardData } from '@/store/cardDataStore';
 import { RootState } from '@/store/store';
-import { Card, TrainingMistake } from '@/types/type';
+import { Card, TrainingMistake } from '@/types/types.type';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import TrainingResult from '../TrainingResult/TrainingResult';
@@ -16,7 +16,7 @@ import {
   AnswerStatus,
   QuestionSide,
   TestQuestionType,
-} from '@/types/type';
+} from '@/types/types.type';
 import TestSetupModal from './TestSetupModal';
 import TestChoiceQuestion from './TestChoiceQuestion';
 import TestWriteQuestion from './TestWriteQuestion';
@@ -312,9 +312,9 @@ const TestMode = ({
   const answeredCount = Object.keys(answersState).length;
 
   return (
-    <div className="mx-auto flex w-full max-w-[960px] flex-col gap-[var(--block-gap)]">
+    <div className="mx-auto flex w-full max-w-[960px] flex-col gap-[var(--gapXl)]">
       <div className="text-center">
-        <p className="font-bold text-[var(--color-text-muted)]">
+        <p className="font-bold text-[var(--colorTextMuted)]">
           {deckTitle}
         </p>
 
@@ -375,7 +375,7 @@ const TestMode = ({
           type="button"
           disabled={answeredCount !== questions.length}
           onClick={() => setFinished(true)}
-          className="custom-btn rounded-[var(--radius-button)] bg-[var(--color-focus)] disabled:opacity-40"
+          className="button rounded-[var(--radiusPill)] bg-[var(--colorFocus)] disabled:opacity-40"
         >
           Завершить тест
         </button>

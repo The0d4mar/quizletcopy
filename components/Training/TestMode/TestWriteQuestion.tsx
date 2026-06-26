@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react';
-import { AnswerStatus, WriteQuestionData } from '@/types/type';
+import { AnswerStatus, WriteQuestionData } from '@/types/types.type';
 
 interface TestWriteQuestionProps {
   question: WriteQuestionData;
@@ -23,22 +23,22 @@ const TestWriteQuestion = ({
   const [value, setValue] = useState('');
 
   return (
-    <div className="app-card w-full">
-      <div className="mb-[var(--block-gap)] flex items-center justify-between">
-        <p className="font-bold text-[var(--color-text-muted)]">
+    <div className="card w-full">
+      <div className="mb-[var(--gapXl)] flex items-center justify-between">
+        <p className="font-bold text-[var(--colorTextMuted)]">
           Письменный вопрос
         </p>
 
-        <p className="text-[var(--color-text-muted)]">
+        <p className="text-[var(--colorTextMuted)]">
           {index + 1} из {total}
         </p>
       </div>
 
-      <h2 className="mb-[var(--block-gap)] text-[var(--font-size-xl)] font-bold">
+      <h2 className="mb-[var(--gapXl)] text-[var(--fontSizeXl)] font-bold">
         | {question.question} |
       </h2>
 
-      <p className="mb-[var(--item-gap)] font-bold">
+      <p className="mb-[var(--gapMd)] font-bold">
         Ваш ответ
       </p>
 
@@ -48,34 +48,34 @@ const TestWriteQuestion = ({
         onChange={e => setValue(e.target.value)}
         placeholder="Введите ответ"
         className={`
-          mb-[var(--item-gap)]
+          mb-[var(--gapMd)]
           w-full
-          rounded-[var(--radius-card)]
+          rounded-[var(--radiusCard)]
           border
-          border-[var(--color-border)]
-          bg-[var(--color-bg-soft)]
-          px-[var(--padding-x-input)]
-          py-[var(--padding-y-input)]
+          border-[var(--colorBorder)]
+          bg-[var(--colorBgSoft)]
+          px-[var(--paddingInputX)]
+          py-[var(--paddingInputY)]
           font-bold
           outline-none
           transition
           focus:ring-2
-          focus:ring-[var(--color-focus)]
+          focus:ring-[var(--colorFocus)]
           ${
             answerStatus === 'correct'
-              ? 'border-[var(--color-success)] text-[var(--color-success)]'
+              ? 'border-[var(--colorSuccess)] text-[var(--colorSuccess)]'
               : ''
           }
           ${
             answerStatus === 'wrong'
-              ? 'border-[var(--color-danger)] text-[var(--color-danger)]'
+              ? 'border-[var(--colorDanger)] text-[var(--colorDanger)]'
               : ''
           }
         `}
       />
 
       {answerStatus === 'wrong' && (
-        <p className="mb-[var(--item-gap)] text-[var(--color-success)] font-bold">
+        <p className="mb-[var(--gapMd)] text-[var(--colorSuccess)] font-bold">
           Правильный ответ: {question.correctAnswer}
         </p>
       )}
@@ -85,7 +85,7 @@ const TestWriteQuestion = ({
           <button
             type="button"
             onClick={() => onSubmitAnswer(value)}
-            className="custom-btn rounded-[var(--radius-button)] bg-[var(--color-focus)]"
+            className="button rounded-[var(--radiusPill)] bg-[var(--colorFocus)]"
           >
             Проверить
           </button>
