@@ -32,7 +32,7 @@ const SetsPage = () => {
   return (
     <section className="mainSection">
       <div className="mb-[var(--marginButtom)]">
-        <h1 className="mb-[var(--marginButtom)] text-[var(--fontSizePageTitle)] font-bold leading-[var(--lineHeightTight)]">
+        <h1 className="pageTitle">
           Ваша библиотека
         </h1>
 

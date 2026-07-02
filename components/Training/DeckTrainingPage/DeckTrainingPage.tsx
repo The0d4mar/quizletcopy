@@ -51,7 +51,7 @@ const DeckTrainingPage = () => {
   const isStudyGroupStudentDeck = Boolean(joinedStudyGroup && !isOwnDeck);
   const isReadOnlyPublicDeck = Boolean(deck?.public && !isOwnDeck && !isStudyGroupStudentDeck);
   const activeTrainingMode: TrainingMode = isReadOnlyPublicDeck ? "cards" : trainingMode;
-
+  const availableModes: TrainingMode[] = isReadOnlyPublicDeck ? ["cards"] : ["cards", "learn", "test"];
 
   useEffect(() => {
     if (!deck || isReadOnlyPublicDeck || isStudyGroupStudentDeck || lastRepeatSavedForDeckId.current === deckId) return;
@@ -64,7 +64,7 @@ const DeckTrainingPage = () => {
   }, [deck, deckId, isReadOnlyPublicDeck, isStudyGroupStudentDeck, updateDeckMutation]);
 
   return (
-    <section className="mainSection">
+    <section className="mainSection deckTrainingPage">
       {!isReadOnlyPublicDeck && !isStudyGroupStudentDeck && <ConnectDecksModal sendedDeckId={deckId} onConnected={() => void cardsQuery.refetch()} />}
 
       <div className="mb-[var(--gapXl)] flex justify-start">
@@ -73,73 +73,73 @@ const DeckTrainingPage = () => {
         </Link>
       </div>
 
-      <div className="mb-[var(--gapXl)] flex items-center justify-between gap-4">
-        <div>
-          <h1 className="max-w-[520px] truncate text-[24px] font-bold leading-[var(--lineHeightTight)]">
-            {deck?.title}
-          </h1>
-
-          {isReadOnlyPublicDeck && <p className="mt-2 max-w-[680px] text-[var(--colorTextMuted)]">{labels.readOnlyNotice}</p>}
+      <div className="deckTrainingHeader">
+        <div className="min-w-0">
+          <h1 className="deckTrainingTitle">{deck?.title}</h1>
+          {isReadOnlyPublicDeck && <p className="pageSubtitle max-w-[680px]">{labels.readOnlyNotice}</p>}
         </div>
-        {isStudyGroupStudentDeck && joinedStudyGroup ? (
-          <button
-            type="button"
-            className="button border-[var(--colorDanger)] text-[var(--colorDanger)]"
-            disabled={leaveStudyGroupMutation.isPending}
-            onClick={async () => {
-              await leaveStudyGroupMutation.mutateAsync(joinedStudyGroup.id);
-              router.push("/study-groups");
-            }}
-          >
-            {labels.leaveGroup}
-          </button>
-        ) : isReadOnlyPublicDeck ? (
-          userId ? (
+
+        <div className="deckTrainingActions">
+          {isStudyGroupStudentDeck && joinedStudyGroup ? (
             <button
               type="button"
-              className="button"
-              disabled={copyPublicDeckMutation.isPending}
-              onClick={() => copyPublicDeckMutation.mutate(deckId)}
+              className="button buttonDanger"
+              disabled={leaveStudyGroupMutation.isPending}
+              onClick={async () => {
+                await leaveStudyGroupMutation.mutateAsync(joinedStudyGroup.id);
+                router.push("/study-groups");
+              }}
             >
-              {copyPublicDeckMutation.isPending ? labels.copying : labels.copy}
+              {labels.leaveGroup}
             </button>
+          ) : isReadOnlyPublicDeck ? (
+            userId ? (
+              <button
+                type="button"
+                className="button"
+                disabled={copyPublicDeckMutation.isPending}
+                onClick={() => copyPublicDeckMutation.mutate(deckId)}
+              >
+                {copyPublicDeckMutation.isPending ? labels.copying : labels.copy}
+              </button>
+            ) : (
+              <Link className="button" href={`/login?callbackUrl=/deck/${deckId}`}>
+                {labels.loginToCopy}
+              </Link>
+            )
           ) : (
-            <Link className="button" href={`/login?callbackUrl=/deck/${deckId}`}>
-              {labels.loginToCopy}
-            </Link>
-          )
-        ) : (
-          <DropDownDeckMenu localId={deckId} />
-        )}
+            <DropDownDeckMenu localId={deckId} />
+          )}
+        </div>
       </div>
 
-      <TrainingModeTabs
-        currentMode={activeTrainingMode}
-        onChangeMode={setTrainingMode}
-        availableModes={isReadOnlyPublicDeck ? ["cards"] : ["cards", "learn", "test"]}
-      />
+      <TrainingModeTabs className="trainingTabsDesktop" currentMode={activeTrainingMode} onChangeMode={setTrainingMode} availableModes={availableModes} />
 
       {deckQuery.isLoading || cardsQuery.isLoading ? (
-        <p className="card text-[var(--colorTextMuted)]">{labels.loading}</p>
+        <p className="card mutedText">{labels.loading}</p>
       ) : deckCards.length === 0 ? (
-        <p className="card text-[var(--colorTextMuted)]">{labels.empty}</p>
+        <p className="card mutedText">{labels.empty}</p>
       ) : (
         <>
           {activeTrainingMode === "cards" && (
-            <FlashcardsMode
-              deckCards={deckCards}
-              deckTitle={deck?.title ?? ""}
-              onExit={() => setTrainingMode("cards")}
-              canTrackProgress={!isReadOnlyPublicDeck}
-            />
+            <>
+              <FlashcardsMode deckCards={deckCards} deckTitle={deck?.title ?? ""} onExit={() => setTrainingMode("cards")} canTrackProgress={!isReadOnlyPublicDeck} />
+              <TrainingModeTabs className="trainingTabsMobile" currentMode={activeTrainingMode} onChangeMode={setTrainingMode} availableModes={availableModes} />
+            </>
           )}
 
           {!isReadOnlyPublicDeck && activeTrainingMode === "learn" && (
-            <LearnMode deckTitle={deck?.title ?? ""} deckCards={deckCards} onExit={() => setTrainingMode("cards")} />
+            <>
+              <LearnMode deckTitle={deck?.title ?? ""} deckCards={deckCards} onExit={() => setTrainingMode("cards")} />
+              <TrainingModeTabs className="trainingTabsMobile" currentMode={activeTrainingMode} onChangeMode={setTrainingMode} availableModes={availableModes} />
+            </>
           )}
 
           {!isReadOnlyPublicDeck && activeTrainingMode === "test" && (
-            <TestMode deckTitle={deck?.title ?? ""} deckCards={deckCards} onExit={() => setTrainingMode("cards")} />
+            <>
+              <TestMode deckTitle={deck?.title ?? ""} deckCards={deckCards} onExit={() => setTrainingMode("cards")} />
+              <TrainingModeTabs className="trainingTabsMobile" currentMode={activeTrainingMode} onChangeMode={setTrainingMode} availableModes={availableModes} />
+            </>
           )}
 
           {!isReadOnlyPublicDeck && activeTrainingMode === "cards" && <DeckStats deckId={deckId} deckCards={deckCards} />}
