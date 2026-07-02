@@ -22,6 +22,10 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       throw new ApiError(404, "Public deck not found");
     }
 
+    if (sourceDeck.ownerId === user.id) {
+      throw new ApiError(400, "You cannot copy your own deck");
+    }
+
     const deck = await prisma.deck.create({
       data: {
         title: `Copy: ${sourceDeck.title}`,

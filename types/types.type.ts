@@ -7,6 +7,7 @@ export interface Deck {
   createdAt: string;
   updatedAt: string;
   createdBy: string;
+  ownerId?: string;
   public: boolean;
   lastRepeat: string;
   isStatsOpen?: boolean;

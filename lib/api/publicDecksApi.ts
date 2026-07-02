@@ -14,6 +14,7 @@ type ApiPublicDeck = {
 };
 
 export type PublicDeck = Deck & {
+  ownerId: string;
   authorName: string;
   authorEmail: string;
   cardsCount: number;
@@ -34,17 +35,24 @@ async function readJson<T>(response: Response): Promise<T> {
   return payload as T;
 }
 
+function getAuthorName(deck: ApiPublicDeck) {
+  return deck.owner.name || deck.owner.email;
+}
+
 function mapPublicDeck(deck: ApiPublicDeck): PublicDeck {
+  const authorName = getAuthorName(deck);
+
   return {
     id: deck.id,
     title: deck.title,
     description: deck.description ?? undefined,
     createdAt: deck.createdAt,
     updatedAt: deck.updatedAt,
-    createdBy: deck.ownerId,
+    createdBy: authorName,
+    ownerId: deck.ownerId,
     public: deck.isPublic,
     lastRepeat: deck.lastRepeat ?? "",
-    authorName: deck.owner.name ?? deck.owner.email,
+    authorName,
     authorEmail: deck.owner.email,
     cardsCount: deck._count.cards,
   };

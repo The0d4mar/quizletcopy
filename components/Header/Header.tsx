@@ -28,7 +28,6 @@ const Header = ({ isSidebarCollapsed, onToggleSidebar }: HeaderProps) => {
     <header className="px-6 py-5 flex items-center justify-between gap-5">
       <div className="flex items-center justify-between">
         <HeaderBarBtn isSidebarCollapsed={isSidebarCollapsed} onToggleSidebar={onToggleSidebar} />
-        <HeaderToMain />
       </div>
 
       {isAuthenticated ? <HeaderSearch /> : <div className="flex-1" aria-hidden="true" />}

@@ -9,6 +9,7 @@ type ApiDeck = {
   createdAt: string;
   updatedAt: string;
   ownerId?: string;
+  owner?: { id: string; name: string | null; email: string };
 };
 
 type DecksResponse = { decks: ApiDeck[] };
@@ -23,6 +24,10 @@ export type UpdateDeckPayload = Partial<Pick<Deck, "title" | "description" | "pu
   id: string;
 };
 
+function getDeckAuthor(deck: ApiDeck) {
+  return deck.owner?.name || deck.owner?.email || deck.ownerId || "User";
+}
+
 function mapDeckFromApi(deck: ApiDeck): Deck {
   return {
     id: deck.id,
@@ -30,7 +35,8 @@ function mapDeckFromApi(deck: ApiDeck): Deck {
     description: deck.description ?? undefined,
     createdAt: deck.createdAt,
     updatedAt: deck.updatedAt,
-    createdBy: deck.ownerId ?? "User",
+    createdBy: getDeckAuthor(deck),
+    ownerId: deck.owner?.id ?? deck.ownerId,
     public: deck.isPublic,
     lastRepeat: deck.lastRepeat ?? "",
     isStatsOpen: true,

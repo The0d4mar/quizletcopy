@@ -41,7 +41,7 @@ const DeckTrainingPage = () => {
   const deck = deckQuery.data;
   const deckCards = cardsQuery.data ?? [];
   const userId = session?.user?.id;
-  const isOwnDeck = Boolean(deck && userId && deck.createdBy === userId);
+  const isOwnDeck = Boolean(deck && userId && deck.ownerId === userId);
   const isReadOnlyPublicDeck = Boolean(deck?.public && !isOwnDeck);
   const activeTrainingMode: TrainingMode = isReadOnlyPublicDeck ? "cards" : trainingMode;
 

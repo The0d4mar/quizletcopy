@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 const deckInclude = {
+  owner: { select: { id: true, name: true, email: true } },
   _count: { select: { cards: true } },
 } satisfies Prisma.DeckInclude;
 
