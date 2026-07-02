@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, StudyGroupMemberStatus } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
 
@@ -30,7 +30,7 @@ export function findReadableDeck(id: string, userId?: string) {
   return prisma.deck.findFirst({
     where: {
       id,
-      OR: [{ isPublic: true }, ...(userId ? [{ ownerId: userId }, { shares: { some: { userId } } }] : [])],
+      OR: [{ isPublic: true }, ...(userId ? [{ ownerId: userId }, { shares: { some: { userId } } }, { studyGroup: { members: { some: { userId, status: StudyGroupMemberStatus.APPROVED } } } }] : [])],
     },
     include: deckInclude,
   });

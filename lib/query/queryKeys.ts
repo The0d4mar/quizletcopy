@@ -6,4 +6,6 @@ export const queryKeys = {
   folders: ["folders"] as const,
   progress: ["progress"] as const,
   publicDecks: ["publicDecks"] as const,
+  studyGroups: ["studyGroups"] as const,
+  studyGroup: (groupId: string) => ["studyGroups", groupId] as const,
 };

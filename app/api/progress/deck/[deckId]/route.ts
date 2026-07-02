@@ -1,4 +1,5 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { StudyGroupMemberStatus } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
 
 import { ApiError, handleApiError } from "@/lib/api/errors";
 import { requireCurrentUser } from "@/lib/api/getCurrentUser";
@@ -18,7 +19,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     const deck = await prisma.deck.findFirst({
       where: {
         id: deckId,
-        OR: [{ ownerId: user.id }, { isPublic: true }],
+        OR: [{ ownerId: user.id }, { isPublic: true }, { studyGroup: { members: { some: { userId: user.id, status: StudyGroupMemberStatus.APPROVED } } } }],
       },
       select: { id: true },
     });

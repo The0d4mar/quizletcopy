@@ -1,4 +1,4 @@
-﻿import { Prisma } from "@prisma/client";
+import { Prisma, StudyGroupMemberStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 import { ApiError, handleApiError, parseRequestBody } from "@/lib/api/errors";
@@ -21,11 +21,11 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     const card = await prisma.card.findUnique({
       where: { id: cardId },
       include: {
-        deck: { select: { ownerId: true, isPublic: true } },
+        deck: { select: { ownerId: true, isPublic: true, studyGroup: { select: { members: { where: { userId: user.id, status: StudyGroupMemberStatus.APPROVED }, select: { id: true } } } } } },
       },
     });
 
-    if (!card || (!card.deck.isPublic && card.deck.ownerId !== user.id)) {
+    if (!card || (!card.deck.isPublic && card.deck.ownerId !== user.id && (card.deck.studyGroup?.members.length ?? 0) === 0)) {
       throw new ApiError(404, "Card not found");
     }
 

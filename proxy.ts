@@ -5,7 +5,7 @@ type AuthProxyRequest = NextRequest & {
   auth: { user?: { id?: string } } | null;
 };
 
-const protectedPathPrefixes = ["/profile", "/sets", "/deck/create", "/folders"];
+const protectedPathPrefixes = ["/profile", "/sets", "/deck/create", "/folders", "/study-groups"];
 
 export default auth((request: AuthProxyRequest) => {
   const { pathname } = request.nextUrl;

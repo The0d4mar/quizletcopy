@@ -11,6 +11,11 @@ enum DeckShareRole {
   EDITOR
 }
 
+enum StudyGroupMemberStatus {
+  PENDING
+  APPROVED
+}
+
 model User {
   id            String          @id @default(cuid())
   email         String          @unique
@@ -26,6 +31,7 @@ model User {
   folders       Folder[]
   cardProgress  CardProgress[]
   deckShares    DeckShare[]
+  studyGroupMemberships StudyGroupMember[]
 }
 
 model Account {
@@ -81,6 +87,7 @@ model Deck {
   cards   Card[]
   folders Folder[]    @relation("FolderDecks")
   shares  DeckShare[]
+  studyGroup StudyGroup?
 
   @@index([ownerId])
   @@index([isPublic])
@@ -149,4 +156,38 @@ model CardProgress {
   @@unique([userId, cardId])
   @@index([userId])
   @@index([cardId])
+}
+model StudyGroup {
+  id        String   @id @default(cuid())
+  joinCode  String   @unique @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deckId String @unique
+  deck   Deck   @relation(fields: [deckId], references: [id], onDelete: Cascade)
+
+  members StudyGroupMember[]
+
+  @@index([joinCode])
+}
+
+model StudyGroupMember {
+  id            String                 @id @default(cuid())
+  status        StudyGroupMemberStatus @default(PENDING)
+  requestedAt   DateTime               @default(now())
+  approvedAt    DateTime?
+  lastVisitedAt DateTime?
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  groupId String
+  group   StudyGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@index([userId])
+  @@index([groupId])
+  @@index([status])
 }
