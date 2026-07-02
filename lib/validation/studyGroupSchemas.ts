@@ -21,3 +21,9 @@ export const memberActionSchema = z.object({
 }).strict();
 
 export type CreateStudyGroupInput = z.infer<typeof createStudyGroupSchema>;
+export const updateStudyGroupSchema = z.object({
+  title: z.string().trim().min(1).max(120).optional(),
+  description: z.string().trim().max(2000).nullable().optional(),
+}).strict().refine((value) => Object.keys(value).length > 0, "At least one field is required");
+
+export type UpdateStudyGroupInput = z.infer<typeof updateStudyGroupSchema>;

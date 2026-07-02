@@ -8,7 +8,7 @@ export type StudyGroupMember = {
   lastVisitedAt: string | null;
   userId: string;
   user: { id: string; name: string | null; email: string; image?: string | null };
-  stats?: { numOfRepeats: number; wrongRepeats: number; lastRepeat: string | null };
+  stats?: { numOfRepeats: number; wrongRepeats: number; lastRepeat: string | null; cards: Array<{ cardId: string; original: string; translation: string; numOfRepeats: number; wrongRepeats: number; lastRepeat: string | null }> };
 };
 
 export type StudyGroupCard = {
@@ -40,6 +40,7 @@ export type StudyGroup = {
 
 export type StudyGroupsResponse = { owned: StudyGroup[]; joined: StudyGroup[] };
 export type CreateStudyGroupInput = { title: string; description?: string; cards: Array<{ original: string; translation: string }> };
+export type UpdateStudyGroupInput = { title?: string; description?: string | null };
 export type MemberAction = "approve" | "reject" | "remove" | "resetProgress";
 
 async function readJson<T>(response: Response): Promise<T> {
@@ -90,4 +91,23 @@ export async function manageStudyGroupMember(groupId: string, memberId: string, 
     body: JSON.stringify({ action }),
   });
   return readJson<{ result: unknown }>(response);
+}
+export async function updateStudyGroup(groupId: string, input: UpdateStudyGroupInput) {
+  const response = await fetch(`/api/study-groups/${groupId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+  const payload = await readJson<{ group: StudyGroup }>(response);
+  return payload.group;
+}
+
+export async function deleteStudyGroup(groupId: string) {
+  const response = await fetch(`/api/study-groups/${groupId}`, { method: "DELETE" });
+  return readJson<{ ok: boolean }>(response);
+}
+
+export async function leaveStudyGroup(groupId: string) {
+  const response = await fetch(`/api/study-groups/${groupId}/leave`, { method: "POST" });
+  return readJson<{ ok: boolean }>(response);
 }

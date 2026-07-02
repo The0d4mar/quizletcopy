@@ -1,5 +1,5 @@
 import { ApiError } from "@/lib/api/errors";
-import type { CreateStudyGroupInput } from "@/lib/validation/studyGroupSchemas";
+import type { CreateStudyGroupInput, UpdateStudyGroupInput } from "@/lib/validation/studyGroupSchemas";
 import * as studyGroupRepository from "@/repositories/studyGroupRepository";
 
 function getJoinCode(value: string) {
@@ -13,7 +13,10 @@ function getJoinCode(value: string) {
   }
 }
 
-function assertGroupOwner(group: Awaited<ReturnType<typeof studyGroupRepository.findGroupById>>, userId: string) {
+function assertGroupOwner(
+  group: Awaited<ReturnType<typeof studyGroupRepository.findGroupById>>,
+  userId: string,
+): asserts group is NonNullable<Awaited<ReturnType<typeof studyGroupRepository.findGroupById>>> {
   if (!group) throw new ApiError(404, "Study group not found");
   if (group.deck.ownerId !== userId) throw new ApiError(403, "Only group owner can manage this study group");
 }
@@ -64,13 +67,21 @@ export async function getStudyGroupForUser(groupId: string, userId: string) {
 
   const memberIds = group.members.map((member) => member.userId);
   const progress = await studyGroupRepository.findProgressForDeckMembers(group.deckId, memberIds);
-  const statsByUser = new Map<string, { numOfRepeats: number; wrongRepeats: number; lastRepeat: Date | null }>();
+  const statsByUser = new Map<string, { numOfRepeats: number; wrongRepeats: number; lastRepeat: Date | null; cards: Array<{ cardId: string; original: string; translation: string; numOfRepeats: number; wrongRepeats: number; lastRepeat: Date | null }> }>();
 
   for (const item of progress) {
-    const current = statsByUser.get(item.userId) ?? { numOfRepeats: 0, wrongRepeats: 0, lastRepeat: null };
+    const current = statsByUser.get(item.userId) ?? { numOfRepeats: 0, wrongRepeats: 0, lastRepeat: null, cards: [] };
     current.numOfRepeats += item.numOfRepeats;
     current.wrongRepeats += item.wrongRepeats;
     if (item.lastRepeat && (!current.lastRepeat || item.lastRepeat > current.lastRepeat)) current.lastRepeat = item.lastRepeat;
+    current.cards.push({
+      cardId: item.cardId,
+      original: item.card.original,
+      translation: item.card.translation,
+      numOfRepeats: item.numOfRepeats,
+      wrongRepeats: item.wrongRepeats,
+      lastRepeat: item.lastRepeat,
+    });
     statsByUser.set(item.userId, current);
   }
 
@@ -78,7 +89,7 @@ export async function getStudyGroupForUser(groupId: string, userId: string) {
     ...group,
     members: group.members.map((member) => ({
       ...member,
-      stats: statsByUser.get(member.userId) ?? { numOfRepeats: 0, wrongRepeats: 0, lastRepeat: null },
+      stats: statsByUser.get(member.userId) ?? { numOfRepeats: 0, wrongRepeats: 0, lastRepeat: null, cards: [] },
     })),
   };
 }
@@ -100,5 +111,32 @@ export async function manageStudyGroupMember(ownerId: string, groupId: string, m
   }
 
   await studyGroupRepository.deleteMember(memberId);
+  return { ok: true };
+}
+export async function updateStudyGroupForOwner(ownerId: string, groupId: string, data: UpdateStudyGroupInput) {
+  const group = await studyGroupRepository.findGroupById(groupId);
+  assertGroupOwner(group, ownerId);
+
+  await studyGroupRepository.updateGroupDeck(group.deckId, {
+    title: data.title,
+    description: data.description === undefined ? undefined : data.description,
+  });
+
+  return studyGroupRepository.findGroupById(groupId);
+}
+
+export async function deleteStudyGroupForOwner(ownerId: string, groupId: string) {
+  const group = await studyGroupRepository.findGroupById(groupId);
+  assertGroupOwner(group, ownerId);
+  await studyGroupRepository.deleteGroupDeck(group.deckId);
+  return { ok: true };
+}
+
+export async function leaveStudyGroup(userId: string, groupId: string) {
+  const group = await studyGroupRepository.findGroupById(groupId);
+  if (!group) throw new ApiError(404, "Study group not found");
+  if (group.deck.ownerId === userId) throw new ApiError(400, "Owner cannot leave own study group");
+
+  await studyGroupRepository.deleteMembershipByGroupAndUser(groupId, userId);
   return { ok: true };
 }

@@ -3,6 +3,8 @@
 import AddCardField from "@/components/ui/AddCardField/AddCardField";
 import EditDeckComp from "@/components/ui/EditDeckComp/EditDeckComp";
 import { addNewCard, basicDeckName } from "@/api/localFunc";
+import { persistCardsToApi } from "@/lib/api/cardsApi";
+import { queryKeys } from "@/lib/query/queryKeys";
 import { useDeck, useDecks, useCreateDeck, useUpdateDeck } from "@/features/decks/useDecks";
 import { setUpdatedCards } from "@/store/cardStore";
 import { useAppDispatch } from "@/store/hooks";
@@ -11,6 +13,7 @@ import { Card, Deck } from "@/types/types.type";
 import { ChevronLeft, Plus } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -50,6 +53,7 @@ interface EditDeckFormProps {
 const EditDeckForm = ({ currentDeck, deckId, isCreateMode, isRenderDeckMode, initialCards }: EditDeckFormProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
   const createDeckMutation = useCreateDeck();
   const updateDeckMutation = useUpdateDeck();
 
@@ -147,7 +151,11 @@ const EditDeckForm = ({ currentDeck, deckId, isCreateMode, isRenderDeckMode, ini
     }
 
     const updatedCards = cards.filter((card) => card.original !== "" && card.translation !== "");
+    await persistCardsToApi(updatedCards, initialCards);
     dispatch(setUpdatedCards(updatedCards));
+    queryClient.setQueryData(queryKeys.deckCards(deckId), updatedCards.filter((card) => card.deckId === deckId));
+    await queryClient.invalidateQueries({ queryKey: queryKeys.deckCards(deckId) });
+    await queryClient.invalidateQueries({ queryKey: queryKeys.cards });
 
     router.push(redirectFlag === 0 ? "/" : `/deck/${deckId}`);
   };

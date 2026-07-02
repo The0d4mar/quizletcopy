@@ -103,6 +103,20 @@ export function resetMemberProgress(deckId: string, userId: string) {
 export function findProgressForDeckMembers(deckId: string, userIds: string[]) {
   return prisma.cardProgress.findMany({
     where: { userId: { in: userIds }, card: { deckId } },
-    select: { userId: true, numOfRepeats: true, wrongRepeats: true, lastRepeat: true },
+    select: { userId: true, cardId: true, numOfRepeats: true, wrongRepeats: true, lastRepeat: true, card: { select: { id: true, original: true, translation: true } } },
   });
+}
+export function updateGroupDeck(deckId: string, data: { title?: string; description?: string | null }) {
+  return prisma.deck.update({
+    where: { id: deckId },
+    data,
+  });
+}
+
+export function deleteGroupDeck(deckId: string) {
+  return prisma.deck.delete({ where: { id: deckId } });
+}
+
+export function deleteMembershipByGroupAndUser(groupId: string, userId: string) {
+  return prisma.studyGroupMember.delete({ where: { groupId_userId: { groupId, userId } } });
 }

@@ -5,10 +5,11 @@ import DropDownDeckMenu from "@/components/ui/DropDownDeck/DropDownDeckMenu";
 import { useDeckCards } from "@/features/cards/useCards";
 import { useDeck, useUpdateDeck } from "@/features/decks/useDecks";
 import { useCopyPublicDeck } from "@/features/decks/usePublicDecks";
+import { useLeaveStudyGroup, useStudyGroups } from "@/features/studyGroups/useStudyGroups";
 import { TrainingMode } from "@/types/types.type";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import DeckStats from "../DeckStats/DeckStats";
 import FlashcardsMode from "../FlashcardsMode/FlashcardsMode";
@@ -24,10 +25,12 @@ const labels = {
   copy: "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0441\u0435\u0431\u0435",
   copying: "\u041a\u043e\u043f\u0438\u0440\u0443\u0435\u043c...",
   loginToCopy: "\u0412\u043e\u0439\u0442\u0438, \u0447\u0442\u043e\u0431\u044b \u0441\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c",
+  leaveGroup: "\u0412\u044b\u0439\u0442\u0438",
 };
 
 const DeckTrainingPage = () => {
   const params = useParams<{ id: string }>();
+  const router = useRouter();
   const deckId = params.id;
   const lastRepeatSavedForDeckId = useRef<string | null>(null);
   const [trainingMode, setTrainingMode] = useState<TrainingMode>("cards");
@@ -37,28 +40,32 @@ const DeckTrainingPage = () => {
   const cardsQuery = useDeckCards(deckId);
   const updateDeckMutation = useUpdateDeck();
   const copyPublicDeckMutation = useCopyPublicDeck();
+  const userId = session?.user?.id;
+  const studyGroupsQuery = useStudyGroups(Boolean(userId));
+  const leaveStudyGroupMutation = useLeaveStudyGroup();
 
   const deck = deckQuery.data;
   const deckCards = cardsQuery.data ?? [];
-  const userId = session?.user?.id;
   const isOwnDeck = Boolean(deck && userId && deck.ownerId === userId);
-  const isReadOnlyPublicDeck = Boolean(deck?.public && !isOwnDeck);
+  const joinedStudyGroup = studyGroupsQuery.data?.joined.find((group) => group.deckId === deckId);
+  const isStudyGroupStudentDeck = Boolean(joinedStudyGroup && !isOwnDeck);
+  const isReadOnlyPublicDeck = Boolean(deck?.public && !isOwnDeck && !isStudyGroupStudentDeck);
   const activeTrainingMode: TrainingMode = isReadOnlyPublicDeck ? "cards" : trainingMode;
 
 
   useEffect(() => {
-    if (!deck || isReadOnlyPublicDeck || lastRepeatSavedForDeckId.current === deckId) return;
+    if (!deck || isReadOnlyPublicDeck || isStudyGroupStudentDeck || lastRepeatSavedForDeckId.current === deckId) return;
 
     lastRepeatSavedForDeckId.current = deckId;
     updateDeckMutation.mutate({
       ...deck,
       lastRepeat: new Date().toISOString(),
     });
-  }, [deck, deckId, isReadOnlyPublicDeck, updateDeckMutation]);
+  }, [deck, deckId, isReadOnlyPublicDeck, isStudyGroupStudentDeck, updateDeckMutation]);
 
   return (
     <section className="mainSection">
-      {!isReadOnlyPublicDeck && <ConnectDecksModal sendedDeckId={deckId} onConnected={() => void cardsQuery.refetch()} />}
+      {!isReadOnlyPublicDeck && !isStudyGroupStudentDeck && <ConnectDecksModal sendedDeckId={deckId} onConnected={() => void cardsQuery.refetch()} />}
 
       <div className="mb-[var(--gapXl)] flex justify-start">
         <Link href="/" className="custom-btn-back custom-btn-back:hover">
@@ -74,8 +81,19 @@ const DeckTrainingPage = () => {
 
           {isReadOnlyPublicDeck && <p className="mt-2 max-w-[680px] text-[var(--colorTextMuted)]">{labels.readOnlyNotice}</p>}
         </div>
-
-        {isReadOnlyPublicDeck ? (
+        {isStudyGroupStudentDeck && joinedStudyGroup ? (
+          <button
+            type="button"
+            className="button border-[var(--colorDanger)] text-[var(--colorDanger)]"
+            disabled={leaveStudyGroupMutation.isPending}
+            onClick={async () => {
+              await leaveStudyGroupMutation.mutateAsync(joinedStudyGroup.id);
+              router.push("/study-groups");
+            }}
+          >
+            {labels.leaveGroup}
+          </button>
+        ) : isReadOnlyPublicDeck ? (
           userId ? (
             <button
               type="button"
