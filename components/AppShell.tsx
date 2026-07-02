@@ -20,10 +20,10 @@ const AppShell = ({ children }: Readonly<ChildrenProps>) => {
         onToggleSidebar={() => setIsSidebarCollapsed((value) => !value)}
       />
 
-      <main className="flex gap-15 relative w-full px-6">
+      <main className="appMain">
         <SideBar isCollapsed={isSidebarCollapsed} />
 
-        <div className="flex-1 min-w-0">
+        <div className="appContent">
           <AddFolder />
           {children}
         </div>

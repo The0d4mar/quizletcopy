@@ -32,7 +32,7 @@ const labels = {
 };
 
 function formatDate(value?: string | null) {
-  return value ? new Date(value).toLocaleString() : "-";
+  return value ? new Date(value).toLocaleString("ru-RU") : "-";
 }
 
 const StudyGroupPage = () => {
@@ -56,7 +56,7 @@ const StudyGroupPage = () => {
   }, [group]);
 
   if (groupQuery.isLoading || !group) {
-    return <section className="mainSection"><p className="card text-[var(--colorTextMuted)]">{labels.loading}</p></section>;
+    return <section className="mainSection"><p className="card mutedText">{labels.loading}</p></section>;
   }
 
   const openManage = () => {
@@ -69,74 +69,82 @@ const StudyGroupPage = () => {
   const approvedMembers = group.members.filter((member) => member.status === "APPROVED");
 
   return (
-    <section className="mainSection flex flex-col gap-8">
+    <section className="mainSection pageStack">
       {isManageOpen && (
         <div className="modalOverlay">
-          <div className="modal flex flex-col gap-4">
-            <h2 className="text-2xl font-bold">{labels.manage}</h2>
+          <div className="modal sectionBlock">
+            <h2 className="modalTitle">{labels.manage}</h2>
             <input className="input" value={title} onChange={(event) => setTitle(event.target.value)} placeholder={labels.titlePlaceholder} />
-            <textarea className="input min-h-[110px]" value={description} onChange={(event) => setDescription(event.target.value)} placeholder={labels.descriptionPlaceholder} />
-            <div className="flex flex-wrap gap-3">
+            <textarea className="input textarea" value={description} onChange={(event) => setDescription(event.target.value)} placeholder={labels.descriptionPlaceholder} />
+            <div className="actionRow">
               <button className="button" onClick={async () => { await updateGroup.mutateAsync({ title: title.trim(), description: description.trim() || null }); setIsManageOpen(false); }}>{labels.edit}</button>
-              <button className="button border-[var(--colorDanger)] text-[var(--colorDanger)]" onClick={async () => { await deleteGroup.mutateAsync(group.id); router.push("/study-groups"); }}>{labels.delete}</button>
+              <button className="button buttonDanger" onClick={async () => { await deleteGroup.mutateAsync(group.id); router.push("/study-groups"); }}>{labels.delete}</button>
               <button className="button" onClick={() => setIsManageOpen(false)}>{labels.cancel}</button>
             </div>
           </div>
         </div>
       )}
 
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-4xl font-bold">{group.deck.title}</h1>
-          {group.deck.description && <p className="mt-2 text-[var(--colorTextMuted)]">{group.deck.description}</p>}
+      <header className="pageHeader">
+        <div className="pageHeaderBody">
+          <h1 className="pageTitle">{group.deck.title}</h1>
+          {group.deck.description && <p className="pageSubtitle">{group.deck.description}</p>}
         </div>
-        <div className="flex flex-wrap gap-3">
+        <div className="pageHeaderActions">
           {isOwner && <button className="button" onClick={openManage}><MoreHorizontal size={18} />{labels.manage}</button>}
           <Link className="button" href={`/deck/${group.deckId}`}>{labels.train}</Link>
         </div>
-      </div>
+      </header>
 
       {isOwner ? (
         <>
-          <div className="card flex flex-col gap-3">
-            <p className="font-bold">{joinLink}</p>
+          <div className="card sectionBlock">
+            <p className="font-bold break-all">{joinLink}</p>
             <button className="button w-fit" type="button" onClick={() => navigator.clipboard.writeText(joinLink)}><Copy size={18} />{labels.copyLink}</button>
           </div>
 
-          <section>
-            <h2 className="mb-4 text-2xl font-bold">{labels.cards}</h2>
-            <div className="flex flex-col gap-3">{group.deck.cards.map((card) => <div className="card grid gap-4 md:grid-cols-2" key={card.id}><strong>{card.original}</strong><strong>{card.translation}</strong></div>)}</div>
+          <section className="sectionBlock">
+            <h2 className="sectionTitle">{labels.cards}</h2>
+            <div className="cardList">{group.deck.cards.map((card) => <div className="card grid gap-4 md:grid-cols-2" key={card.id}><strong>{card.original}</strong><strong>{card.translation}</strong></div>)}</div>
           </section>
 
-          <section>
-            <h2 className="mb-4 text-2xl font-bold">{labels.requests}</h2>
-            {pendingMembers.length === 0 ? <p className="card text-[var(--colorTextMuted)]">{labels.emptyRequests}</p> : pendingMembers.map((member) => (
-              <div className="card mb-3 flex items-center justify-between gap-4" key={member.id}>
-                <div><strong>{member.user.name || member.user.email}</strong><p className="text-[var(--colorTextMuted)]">{member.user.email}</p></div>
-                <div className="flex gap-3"><button className="button" onClick={() => manageMember.mutate({ memberId: member.id, action: "approve" })}><Check size={18} /></button><button className="button border-[var(--colorDanger)] text-[var(--colorDanger)]" onClick={() => manageMember.mutate({ memberId: member.id, action: "reject" })}><X size={18} /></button></div>
-              </div>
-            ))}
-          </section>
-
-          <section>
-            <h2 className="mb-4 text-2xl font-bold">{labels.members}</h2>
-            {approvedMembers.length === 0 ? <p className="card text-[var(--colorTextMuted)]">{labels.emptyMembers}</p> : approvedMembers.map((member) => {
-              const isDetailed = detailsByMember[member.id] ?? false;
-              return (
-                <div className="card mb-3 flex flex-col gap-4" key={member.id}>
-                  <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div><strong>{member.user.name || member.user.email}</strong><p className="text-[var(--colorTextMuted)]">{member.user.email}</p></div>
-                    <div className="text-[var(--colorTextMuted)]"><p>{labels.success}: {member.stats?.numOfRepeats ?? 0}</p><p>{labels.mistakes}: {member.stats?.wrongRepeats ?? 0}</p><p>{labels.lastVisit}: {formatDate(member.lastVisitedAt)}</p><p>{labels.lastRepeat}: {formatDate(member.stats?.lastRepeat)}</p></div>
-                    <div className="flex gap-3"><button className="button" onClick={() => setDetailsByMember((current) => ({ ...current, [member.id]: !isDetailed }))}>{isDetailed ? labels.summary : labels.details}</button><button className="button" onClick={() => manageMember.mutate({ memberId: member.id, action: "resetProgress" })}><RotateCcw size={18} /></button><button className="button border-[var(--colorDanger)] text-[var(--colorDanger)]" onClick={() => manageMember.mutate({ memberId: member.id, action: "remove" })}><Trash2 size={18} /></button></div>
+          <section className="sectionBlock">
+            <h2 className="sectionTitle">{labels.requests}</h2>
+            {pendingMembers.length === 0 ? <p className="card mutedText">{labels.emptyRequests}</p> : (
+              <div className="cardList">
+                {pendingMembers.map((member) => (
+                  <div className="card cardRow" key={member.id}>
+                    <div className="min-w-0"><strong>{member.user.name || member.user.email}</strong><p className="metaText truncate">{member.user.email}</p></div>
+                    <div className="actionRow"><button className="button iconButton" onClick={() => manageMember.mutate({ memberId: member.id, action: "approve" })}><Check size={18} /></button><button className="button buttonDanger iconButton" onClick={() => manageMember.mutate({ memberId: member.id, action: "reject" })}><X size={18} /></button></div>
                   </div>
-                  {isDetailed && <div className="grid gap-3">{member.stats?.cards.length ? member.stats.cards.map((card) => <div key={card.cardId} className="rounded-[var(--radiusCard)] border border-[var(--colorBorder)] p-4"><p className="font-bold">{card.original} - {card.translation}</p><p className="text-[var(--colorTextMuted)]">{labels.success}: {card.numOfRepeats} · {labels.mistakes}: {card.wrongRepeats} · {labels.lastRepeat}: {formatDate(card.lastRepeat)}</p></div>) : <p className="text-[var(--colorTextMuted)]">-</p>}</div>}
-                </div>
-              );
-            })}
+                ))}
+              </div>
+            )}
+          </section>
+
+          <section className="sectionBlock">
+            <h2 className="sectionTitle">{labels.members}</h2>
+            {approvedMembers.length === 0 ? <p className="card mutedText">{labels.emptyMembers}</p> : (
+              <div className="cardList">
+                {approvedMembers.map((member) => {
+                  const isDetailed = detailsByMember[member.id] ?? false;
+                  return (
+                    <div className="card sectionBlock" key={member.id}>
+                      <div className="cardRow">
+                        <div className="min-w-0"><strong>{member.user.name || member.user.email}</strong><p className="metaText truncate">{member.user.email}</p></div>
+                        <div className="metaText"><p>{labels.success}: {member.stats?.numOfRepeats ?? 0}</p><p>{labels.mistakes}: {member.stats?.wrongRepeats ?? 0}</p><p>{labels.lastVisit}: {formatDate(member.lastVisitedAt)}</p><p>{labels.lastRepeat}: {formatDate(member.stats?.lastRepeat)}</p></div>
+                        <div className="actionRow"><button className="button" onClick={() => setDetailsByMember((current) => ({ ...current, [member.id]: !isDetailed }))}>{isDetailed ? labels.summary : labels.details}</button><button className="button iconButton" onClick={() => manageMember.mutate({ memberId: member.id, action: "resetProgress" })}><RotateCcw size={18} /></button><button className="button buttonDanger iconButton" onClick={() => manageMember.mutate({ memberId: member.id, action: "remove" })}><Trash2 size={18} /></button></div>
+                      </div>
+                      {isDetailed && <div className="cardList">{member.stats?.cards.length ? member.stats.cards.map((card) => <div key={card.cardId} className="card cardMuted"><p className="font-bold">{card.original} - {card.translation}</p><p className="metaText">{labels.success}: {card.numOfRepeats} {"\u00b7"} {labels.mistakes}: {card.wrongRepeats} {"\u00b7"} {labels.lastRepeat}: {formatDate(card.lastRepeat)}</p></div>) : <p className="mutedText">-</p>}</div>}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </section>
         </>
       ) : (
-        <div className="card"><p className="text-[var(--colorTextMuted)]">{labels.joinedView}</p></div>
+        <div className="card"><p className="mutedText">{labels.joinedView}</p></div>
       )}
     </section>
   );

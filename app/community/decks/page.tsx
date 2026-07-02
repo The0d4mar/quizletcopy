@@ -28,8 +28,6 @@ const labels = {
   ownDeck: "\u0412\u0430\u0448\u0430 \u043a\u043e\u043b\u043e\u0434\u0430",
 };
 
-const selectClassName = "appearance-none rounded-[var(--radiusPill)] border border-[var(--colorBorder)] bg-[var(--colorSurfaceMuted)] px-[22px] py-[14px] pr-[52px] text-[var(--fontSizeSm)] font-semibold text-[var(--colorText)] outline-none transition-all duration-200 hover:border-[var(--colorBorderHover)] hover:bg-[var(--colorSurfaceLight)] focus:border-[var(--colorFocus)] focus:ring-4 focus:ring-[color:rgba(59,130,246,0.15)] shadow-[var(--shadowCard)] cursor-pointer";
-
 const CommunityDecksPage = () => {
   const { data: session } = useSession();
   const [searchValue, setSearchValue] = useState("");
@@ -41,17 +39,19 @@ const CommunityDecksPage = () => {
   const currentUserId = session?.user?.id;
 
   return (
-    <section className="mainSection flex flex-col gap-8">
-      <div>
-        <h1 className="text-4xl font-bold">{labels.title}</h1>
-        <p className="mt-2 text-[var(--colorTextMuted)]">{labels.subtitle}</p>
-      </div>
+    <section className="mainSection pageStack">
+      <header className="pageHeader">
+        <div className="pageHeaderBody">
+          <h1 className="pageTitle">{labels.title}</h1>
+          <p className="pageSubtitle">{labels.subtitle}</p>
+        </div>
+      </header>
 
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="toolbar">
         <input className="input max-w-xl" value={searchValue} onChange={(event) => setSearchValue(event.target.value)} placeholder={labels.searchPlaceholder} />
 
-        <div className="relative w-fit">
-          <select className={selectClassName} value={sort} onChange={(event) => setSort(event.target.value)} aria-label={labels.sortLabel}>
+        <div className="relative w-full sm:w-fit">
+          <select className="selectControl" value={sort} onChange={(event) => setSort(event.target.value)} aria-label={labels.sortLabel}>
             {sortOptions.map((option) => (
               <option key={option.value} value={option.value}>{option.label}</option>
             ))}
@@ -61,29 +61,29 @@ const CommunityDecksPage = () => {
       </div>
 
       {publicDecksQuery.isLoading ? (
-        <p className="card text-[var(--colorTextMuted)]">{labels.loading}</p>
+        <p className="card mutedText">{labels.loading}</p>
       ) : publicDecksQuery.error ? (
-        <p className="card text-red-400">{labels.error}</p>
+        <p className="card appError">{labels.error}</p>
       ) : decks.length === 0 ? (
-        <p className="card text-[var(--colorTextMuted)]">{labels.empty}</p>
+        <p className="card mutedText">{labels.empty}</p>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="responsiveGrid">
           {decks.map((deck) => {
             const isOwnDeck = Boolean(currentUserId && deck.ownerId === currentUserId);
 
             return (
-              <article key={deck.id} className="card flex min-h-[220px] flex-col justify-between gap-5">
+              <article key={deck.id} className="card cardInteractive flex min-h-[220px] flex-col justify-between gap-5">
                 <div>
                   <div className="mb-3 flex items-start justify-between gap-3">
-                    <h2 className="text-2xl font-bold">{deck.title}</h2>
-                    <span className="rounded-full border border-[var(--colorBorder)] px-3 py-1 text-sm text-[var(--colorTextMuted)]">{deck.cardsCount} {labels.cards}</span>
+                    <h2 className="sectionTitle min-w-0 truncate">{deck.title}</h2>
+                    <span className="badge">{deck.cardsCount} {labels.cards}</span>
                   </div>
 
-                  {deck.description && <p className="text-[var(--colorTextMuted)]">{deck.description}</p>}
-                  <p className="mt-4 text-sm text-[var(--colorTextMuted)]">{labels.author}: {deck.authorName}</p>
+                  {deck.description && <p className="mutedText line-clamp-3">{deck.description}</p>}
+                  <p className="metaText mt-4">{labels.author}: {deck.authorName}</p>
                 </div>
 
-                <div className="flex flex-wrap gap-3">
+                <div className="actionRow">
                   <Link className="button" href={`/deck/${deck.id}`}>{labels.open}</Link>
                   {isOwnDeck ? (
                     <span className="button pointer-events-none opacity-70">{labels.ownDeck}</span>

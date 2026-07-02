@@ -67,95 +67,53 @@ const FolderPage = () => {
   };
 
   if (foldersQuery.isLoading || decksQuery.isLoading) {
-    return (
-      <section className="flex min-h-[60vh] w-full items-center justify-center">
-        <div className="rounded-[var(--radiusCard)] border border-[var(--colorBorder)] px-[var(--paddingCardX)] py-[var(--paddingCardY)]">
-          {labels.loading}
-        </div>
-      </section>
-    );
+    return <section className="mainSection"><p className="card mutedText">{labels.loading}</p></section>;
   }
 
   if (!currentFolder) {
-    return (
-      <section className="flex min-h-[60vh] w-full items-center justify-center">
-        <div className="rounded-[var(--radiusCard)] border border-[var(--colorBorder)] px-[var(--paddingCardX)] py-[var(--paddingCardY)]">
-          {labels.notFound}
-        </div>
-      </section>
-    );
+    return <section className="mainSection"><p className="card mutedText">{labels.notFound}</p></section>;
   }
 
   return (
-    <section className="relative flex-1 w-full">
+    <section className="mainSection pageStack">
       <AddDeckToFolder folderId={currentFolder.id} />
 
-      <div className="mb-10 flex items-center justify-between">
-        <div className="flex items-center gap-5">
-          <div className="flex h-20 w-20 items-center justify-center rounded-[var(--radiusCard)] bg-[var(--colorSurfaceMuted)]">
-            <FolderIcon size={44} />
-          </div>
-
-          <div className="flex items-start justify-between">
+      <header className="pageHeader">
+        <div className="cardIdentity">
+          <span className="cardIconBox"><FolderIcon size={34} /></span>
+          <div className="min-w-0">
             {!changeFolderNameFlag ? (
-              <h1 className="max-w-[700px] truncate text-4xl font-bold">{currentFolder.title}</h1>
+              <h1 className="pageTitle truncate">{currentFolder.title}</h1>
             ) : (
-              <div className="flex items-center gap-4">
-                <input
-                  ref={folderNameInputRef}
-                  defaultValue={currentFolder.title}
-                  placeholder={labels.folderNamePlaceholder}
-                  className="w-full rounded-[var(--radiusCard)] bg-[var(--colorSurfaceMuted)] px-5 py-4 pr-12 font-semibold outline-none placeholder:text-white/40"
-                />
-
-                <button
-                  className="flex items-center justify-center rounded-xl border px-[var(--paddingCardX)] py-[var(--paddingCardY)]"
-                  onClick={changeFolderName}
-                  disabled={updateFolderMutation.isPending}
-                >
-                  {updateFolderMutation.isPending ? labels.saving : labels.save}
-                </button>
-
-                <button
-                  className="flex items-center justify-center rounded-xl border border-red-500 px-[var(--paddingCardX)] py-[var(--paddingCardY)] text-red-500"
-                  onClick={cancelChangeFolderName}
-                >
-                  {labels.cancel}
-                </button>
+              <div className="actionRow">
+                <input ref={folderNameInputRef} defaultValue={currentFolder.title} placeholder={labels.folderNamePlaceholder} className="input" />
+                <button className="button" onClick={changeFolderName} disabled={updateFolderMutation.isPending}>{updateFolderMutation.isPending ? labels.saving : labels.save}</button>
+                <button className="button buttonDanger" onClick={cancelChangeFolderName}>{labels.cancel}</button>
               </div>
             )}
           </div>
         </div>
 
-        <DropDownDeckMenu localId={folderId} windowFlag="folder" />
-      </div>
+        <div className="pageHeaderActions">
+          <DropDownDeckMenu localId={folderId} windowFlag="folder" />
+        </div>
+      </header>
 
-      <div className="mb-10 flex items-center justify-between">
+      <div className="toolbar">
         <div className="relative w-full max-w-md">
-          <input
-            value={searchValue}
-            onChange={(event) => setSearchValue(event.target.value)}
-            placeholder={labels.searchPlaceholder}
-            className="w-full rounded-[var(--radiusCard)] bg-[var(--colorSurfaceMuted)] px-5 py-4 pr-12 font-semibold outline-none placeholder:text-white/40"
-          />
-
-          <Search size={22} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70" />
+          <input value={searchValue} onChange={(event) => setSearchValue(event.target.value)} placeholder={labels.searchPlaceholder} className="input pr-12" />
+          <Search size={22} className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--colorTextMuted)]" />
         </div>
       </div>
 
       {filteredDecks.length === 0 ? (
-        <div className="px-[var(--paddingCardX)] py-[var(--paddingCardY)] text-white/60">
-          {labels.empty}
-        </div>
+        <p className="card mutedText">{labels.empty}</p>
       ) : (
         <DeckList currentFolder={currentFolder} folderId={currentFolder.id} searchValue={searchValue} />
       )}
 
-      <div className="fixed bottom-8 left-1/2 flex -translate-x-1/2 gap-4 rounded-full bg-[var(--colorSurfaceMuted)] p-3">
-        <button
-          onClick={() => dispatch(addDeckFolderFlag(true))}
-          className="flex items-center gap-2 rounded-full bg-blue-600 px-10 py-3 font-bold text-white"
-        >
+      <div className="floatingActionBar">
+        <button onClick={() => dispatch(addDeckFolderFlag(true))} className="button buttonPrimary buttonPill">
           <Plus size={20} />
           {labels.addDeck}
         </button>

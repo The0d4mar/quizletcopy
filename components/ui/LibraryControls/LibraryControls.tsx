@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import { EntityFilter, SortType } from '@/types/types.type';
-import { ChevronDown } from 'lucide-react';
+import { EntityFilter, SortType } from "@/types/types.type";
+import { ChevronDown } from "lucide-react";
 
 interface LibraryControlsProps {
   entityFilter: EntityFilter;
@@ -11,9 +11,15 @@ interface LibraryControlsProps {
 }
 
 const filterItems: { label: string; value: EntityFilter }[] = [
-  { label: 'Все', value: 'all' },
-  { label: 'Модули', value: 'decks' },
-  { label: 'Папки', value: 'folders' },
+  { label: "\u0412\u0441\u0435", value: "all" },
+  { label: "\u041c\u043e\u0434\u0443\u043b\u0438", value: "decks" },
+  { label: "\u041f\u0430\u043f\u043a\u0438", value: "folders" },
+];
+
+const sortOptions: { label: string; value: SortType }[] = [
+  { label: "\u041d\u0435\u0434\u0430\u0432\u043d\u043e \u0441\u043e\u0437\u0434\u0430\u043d\u043d\u044b\u0435", value: "created" },
+  { label: "\u041d\u0435\u0434\u0430\u0432\u043d\u043e \u0438\u0437\u043c\u0435\u043d\u0451\u043d\u043d\u044b\u0435", value: "updated" },
+  { label: "\u041d\u0435\u0434\u0430\u0432\u043d\u043e \u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u043d\u043d\u044b\u0435", value: "viewed" },
 ];
 
 const LibraryControls = ({
@@ -23,78 +29,29 @@ const LibraryControls = ({
   onSortTypeChange,
 }: LibraryControlsProps) => {
   return (
-    <div className="mb-[var(--marginButtom)] flex flex-col gap-[var(--gapXl)]">
-      <div className="flex flex-wrap items-center gap-[var(--gapMd)]">
-        {filterItems.map(item => (
+    <div className="toolbar">
+      <div className="actionRow">
+        {filterItems.map((item) => (
           <button
             key={item.value}
             onClick={() => onEntityFilterChange(item.value)}
-            className={`
-              button rounded-[var(--radiusPill)]
-              ${
-                entityFilter === item.value
-                  ? 'border-[var(--colorBorderStrong)]'
-                  : 'bg-[var(--colorSurfaceMuted)] border-transparent'
-              }
-            `}
+            className={`button buttonPill ${entityFilter === item.value ? "border-[var(--colorBorderStrong)]" : "buttonSurface border-transparent"}`}
           >
             {item.label}
           </button>
         ))}
       </div>
-      <div className="relative w-fit">
+
+      <div className="relative w-full sm:w-fit">
         <select
           value={sortType}
-          onChange={e => onSortTypeChange(e.target.value as SortType)}
-          className="
-            appearance-none
-            rounded-[var(--radiusPill)]
-            border
-            border-[var(--colorBorder)]
-            bg-[var(--colorSurfaceMuted)]
-            px-[22px]
-            py-[14px]
-            pr-[52px]
-            text-[var(--fontSizeSm)]
-            font-semibold
-            text-[var(--colorText)]
-            outline-none
-            transition-all
-            duration-200
-            hover:border-[var(--colorBorderHover)]
-            hover:bg-[var(--colorSurfaceLight)]
-            focus:border-[var(--colorFocus)]
-            focus:ring-4
-            focus:ring-[color:rgba(59,130,246,0.15)]
-            shadow-[var(--shadowCard)]
-            cursor-pointer
-          "
+          onChange={(event) => onSortTypeChange(event.target.value as SortType)}
+          className="selectControl"
         >
-          <option value="created">
-            Недавно созданные
-          </option>
-
-          <option value="updated">
-            Недавно измененные
-          </option>
-
-          <option value="viewed">
-            Недавно просмотренные
-          </option>
+          {sortOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
         </select>
 
-        <ChevronDown
-          size={18}
-          className="
-            pointer-events-none
-            absolute
-            right-[18px]
-            top-1/2
-            -translate-y-1/2
-            text-[var(--colorTextMuted)]
-            transition-transform
-          "
-        />
+        <ChevronDown size={18} className="pointer-events-none absolute right-[18px] top-1/2 -translate-y-1/2 text-[var(--colorTextMuted)]" />
       </div>
     </div>
   );

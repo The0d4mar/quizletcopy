@@ -4,6 +4,15 @@ import { auth } from "@/auth";
 import LogoutButton from "@/features/auth/LogoutButton";
 import { prisma } from "@/lib/prisma";
 
+const labels = {
+  title: "\u041b\u0438\u0447\u043d\u044b\u0439 \u043a\u0430\u0431\u0438\u043d\u0435\u0442",
+  decks: "\u041c\u043e\u0438 \u043a\u043e\u043b\u043e\u0434\u044b",
+  folders: "\u041c\u043e\u0438 \u043f\u0430\u043f\u043a\u0438",
+  studied: "\u0418\u0437\u0443\u0447\u0435\u043d\u043e \u043a\u0430\u0440\u0442\u043e\u0447\u0435\u043a",
+  recent: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0435 \u043e\u0431\u043d\u043e\u0432\u043b\u0451\u043d\u043d\u044b\u0435 \u043a\u043e\u043b\u043e\u0434\u044b",
+  empty: "\u0423 \u0442\u0435\u0431\u044f \u043f\u043e\u043a\u0430 \u043d\u0435\u0442 \u043a\u043e\u043b\u043e\u0434.",
+};
+
 const ProfilePage = async () => {
   const session = await auth();
 
@@ -24,46 +33,48 @@ const ProfilePage = async () => {
   ]);
 
   return (
-    <section className="mainSection flex flex-col gap-8">
-      <div className="flex items-start justify-between gap-6">
-        <div>
-          <h1 className="text-4xl font-bold">Личный кабинет</h1>
-          <p className="mt-2 text-[var(--colorTextMuted)]">{session.user.email}</p>
+    <section className="mainSection pageStack">
+      <header className="pageHeader">
+        <div className="pageHeaderBody">
+          <h1 className="pageTitle">{labels.title}</h1>
+          <p className="pageSubtitle">{session.user.email}</p>
         </div>
 
-        <LogoutButton />
+        <div className="pageHeaderActions">
+          <LogoutButton />
+        </div>
+      </header>
+
+      <div className="statsGrid">
+        <div className="card">
+          <p className="metaText">{labels.decks}</p>
+          <p className="statValue">{decksCount}</p>
+        </div>
+        <div className="card">
+          <p className="metaText">{labels.folders}</p>
+          <p className="statValue">{foldersCount}</p>
+        </div>
+        <div className="card">
+          <p className="metaText">{labels.studied}</p>
+          <p className="statValue">{progressCount}</p>
+        </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <div className="card">
-          <p className="text-[var(--colorTextMuted)]">Мои колоды</p>
-          <p className="mt-2 text-3xl font-bold">{decksCount}</p>
-        </div>
-        <div className="card">
-          <p className="text-[var(--colorTextMuted)]">Мои папки</p>
-          <p className="mt-2 text-3xl font-bold">{foldersCount}</p>
-        </div>
-        <div className="card">
-          <p className="text-[var(--colorTextMuted)]">Изучено карточек</p>
-          <p className="mt-2 text-3xl font-bold">{progressCount}</p>
-        </div>
-      </div>
-
-      <div>
-        <h2 className="mb-4 text-2xl font-bold">Последние обновлённые колоды</h2>
+      <section className="sectionBlock">
+        <h2 className="sectionTitle">{labels.recent}</h2>
         {recentDecks.length === 0 ? (
-          <p className="card text-[var(--colorTextMuted)]">У тебя пока нет колод.</p>
+          <p className="card mutedText">{labels.empty}</p>
         ) : (
-          <div className="flex flex-col gap-3">
+          <div className="cardList">
             {recentDecks.map((deck) => (
-              <div key={deck.id} className="card flex items-center justify-between">
-                <span>{deck.title}</span>
-                <span className="text-sm text-[var(--colorTextMuted)]">{deck.updatedAt.toLocaleDateString("ru-RU")}</span>
+              <div key={deck.id} className="card cardRow">
+                <span className="font-semibold truncate">{deck.title}</span>
+                <span className="metaText">{deck.updatedAt.toLocaleDateString("ru-RU")}</span>
               </div>
             ))}
           </div>
         )}
-      </div>
+      </section>
     </section>
   );
 };

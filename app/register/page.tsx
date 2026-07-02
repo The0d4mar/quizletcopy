@@ -45,11 +45,11 @@ const RegisterPage = () => {
   };
 
   return (
-    <section className="mainSection flex min-h-[70vh] items-center justify-center">
-      <form onSubmit={handleSubmit} className="flex w-full max-w-md flex-col gap-5 rounded-[var(--radiusCard)] border border-[var(--colorBorder)] p-8">
+    <section className="mainSection authPage">
+      <form onSubmit={handleSubmit} className="authCard">
         <div>
-          <h1 className="text-3xl font-bold">{labels.title}</h1>
-          <p className="mt-2 text-[var(--colorTextMuted)]">{labels.subtitle}</p>
+          <h1 className="pageTitle">{labels.title}</h1>
+          <p className="pageSubtitle">{labels.subtitle}</p>
         </div>
 
         <input className="input" type="text" value={name} onChange={(event) => setName(event.target.value)} placeholder={labels.name} />
@@ -76,7 +76,7 @@ const RegisterPage = () => {
           </button>
         </div>
 
-        {error && <p className="text-sm text-red-400">{error}</p>}
+        {error && <p className="appError">{error}</p>}
 
         <button className="button" type="submit" disabled={isPending}>
           {isPending ? labels.creating : labels.create}

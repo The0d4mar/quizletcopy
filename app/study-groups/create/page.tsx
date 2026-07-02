@@ -13,6 +13,8 @@ const labels = {
   back: "\u041d\u0430\u0437\u0430\u0434 \u043a \u0443\u0447\u0435\u0431\u043d\u044b\u043c \u0433\u0440\u0443\u043f\u043f\u0430\u043c",
   save: "\u0421\u043e\u0437\u0434\u0430\u0442\u044c \u0433\u0440\u0443\u043f\u043f\u0443",
   saving: "\u0421\u043e\u0437\u0434\u0430\u0451\u043c...",
+  pageTitle: "\u041d\u043e\u0432\u0430\u044f \u0443\u0447\u0435\u0431\u043d\u0430\u044f \u0433\u0440\u0443\u043f\u043f\u0430",
+  pageSubtitle: "\u0421\u043e\u0437\u0434\u0430\u0439\u0442\u0435 \u043a\u043e\u043b\u043e\u0434\u0443 \u0434\u043b\u044f \u0433\u0440\u0443\u043f\u043f\u044b. \u041f\u0443\u0431\u043b\u0438\u043a\u0430\u0446\u0438\u044f \u0437\u0434\u0435\u0441\u044c \u043d\u0435 \u043d\u0443\u0436\u043d\u0430: \u0434\u043e\u0441\u0442\u0443\u043f \u0431\u0443\u0434\u0435\u0442 \u043f\u043e \u0441\u0441\u044b\u043b\u043a\u0435 \u0438 \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u0438\u044e.",
   title: "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435",
   titlePlaceholder: "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u0443\u0447\u0435\u0431\u043d\u043e\u0439 \u0433\u0440\u0443\u043f\u043f\u044b",
   descriptionPlaceholder: "\u0414\u043e\u0431\u0430\u0432\u044c\u0442\u0435 \u043e\u043f\u0438\u0441\u0430\u043d\u0438\u0435...",
@@ -44,29 +46,33 @@ const CreateStudyGroupPage = () => {
   };
 
   return (
-    <section className="min-h-screen w-full px-10 py-8 text-white">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-8 flex items-center justify-between">
-          <Link href="/study-groups" className="flex items-center gap-2 text-sm font-semibold text-indigo-200 hover:text-white"><ChevronLeft size={20} />{labels.back}</Link>
+    <section className="mainSection pageStack">
+      <header className="pageHeader">
+        <div className="pageHeaderBody">
+          <Link href="/study-groups" className="button buttonGhost w-fit"><ChevronLeft size={18} />{labels.back}</Link>
+          <h1 className="pageTitle mt-4">{labels.pageTitle}</h1>
+          <p className="pageSubtitle">{labels.pageSubtitle}</p>
+        </div>
+        <div className="pageHeaderActions">
           <button className="button" type="button" onClick={save} disabled={createMutation.isPending}>{createMutation.isPending ? labels.saving : labels.save}</button>
         </div>
+      </header>
 
-        <div className="mb-8 space-y-3">
-          <label className="block rounded-[var(--radiusLg)] bg-[var(--colorSurfaceMuted)] px-[var(--paddingCardX)] py-[var(--paddingCardY)] border border-[var(--colorBorder)]">
-            <span className="mb-1 block text-xs font-bold text-[var(--colorTextMuted)]">{labels.title}</span>
-            <EditDeckComp original={title} updateCardfunc={(_id, value) => setTitle(value)} placeholder={labels.titlePlaceholder} className="w-full bg-transparent text-lg font-bold text-white outline-none" spanFlag={false} />
-          </label>
+      <div className="card sectionBlock">
+        <label>
+          <span className="metaText mb-2 block font-bold uppercase">{labels.title}</span>
+          <EditDeckComp original={title} updateCardfunc={(_id, value) => setTitle(value)} placeholder={labels.titlePlaceholder} className="input" spanFlag={false} />
+        </label>
 
-          <textarea value={description} onChange={(event) => setDescription(event.target.value)} placeholder={labels.descriptionPlaceholder} className="min-h-[70px] w-full resize-none rounded-[var(--radiusLg)] bg-[var(--colorSurfaceMuted)] border border-[var(--colorBorder)] px-[var(--paddingCardX)] py-[var(--paddingCardY)] font-semibold text-white outline-none placeholder:text-[var(--colorTextMuted)]" />
-        </div>
+        <textarea value={description} onChange={(event) => setDescription(event.target.value)} placeholder={labels.descriptionPlaceholder} className="input textarea" />
+      </div>
 
-        <div className="space-y-6">
-          {cards.map((card, index) => <AddCardField key={card.id} id={card.id} original={card.original} translation={card.translation} updateCardOriginal={updateOriginal} updateCardTranslation={updateTranslation} deleteCard={deleteCard} index={index} />)}
-        </div>
+      <div className="cardList">
+        {cards.map((card, index) => <AddCardField key={card.id} id={card.id} original={card.original} translation={card.translation} updateCardOriginal={updateOriginal} updateCardTranslation={updateTranslation} deleteCard={deleteCard} index={index} />)}
+      </div>
 
-        <div className="mt-6 flex items-center gap-4 justify-center">
-          <button type="button" onClick={() => setCards((current) => [...current, createCard()])} className="button"><Plus size={18} />{labels.addCard}</button>
-        </div>
+      <div className="actionRow justify-center">
+        <button type="button" onClick={() => setCards((current) => [...current, createCard()])} className="button"><Plus size={18} />{labels.addCard}</button>
       </div>
     </section>
   );
