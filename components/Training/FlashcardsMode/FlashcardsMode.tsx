@@ -18,21 +18,21 @@ import CardsController from '@/components/ui/CardsController/CardsController';
 import TrainingResult from '../TrainingResult/TrainingResult';
 import FlashcardsSettingsModal from '@/components/ui/FlashcardsSettingsModal/FlashcardsSettingsModal';
 import { FlashcardFrontSide, SlideDirection, TrainingMistake } from '@/types/types.type';
-import { delConnectedCardData, resetDeckCardData } from '@/api/localFunc';
+import { resetDeckCardData } from '@/api/localFunc';
 
 
 interface FlashcardsModeProps {
   deckCards: Card[];
   deckTitle: string;
   onExit: () => void;
-  deckId:string;
+  canTrackProgress?: boolean;
 }
 
 const FlashcardsMode = ({
   deckCards,
   deckTitle,
   onExit,
-  deckId
+  canTrackProgress = true
 }: FlashcardsModeProps) => {
   const dispatch = useDispatch();
 
@@ -86,6 +86,8 @@ const FlashcardsMode = ({
   };
 
   const finishTraining = () => {
+    if (!canTrackProgress) return;
+
     if (!repeatTracking) {
       setCorrectCount(orderedCards.length);
       setWrongCount(0);
@@ -119,7 +121,7 @@ const FlashcardsMode = ({
   };
 
   const handleKnownCard = () => {
-    if (!currentCard) return;
+    if (!currentCard || !canTrackProgress) return;
 
     const updatedCardData = updateCardDataCorrect(
       cardData,
@@ -134,7 +136,7 @@ const FlashcardsMode = ({
   };
 
   const handleUnknownCard = () => {
-    if (!currentCard) return;
+    if (!currentCard || !canTrackProgress) return;
 
     const updatedCardData = updateCardDataWrong(
       cardData,
@@ -149,7 +151,7 @@ const FlashcardsMode = ({
       ...prev,
       {
         card: currentCard,
-        selectedAnswer: 'Не знаю',
+        selectedAnswer: "\u041d\u0435 \u0437\u043d\u0430\u044e",
         correctAnswer:
           frontSide === 'original'
             ? currentCard.translation
@@ -250,7 +252,8 @@ const FlashcardsMode = ({
           onChangeFrontSide={setFrontSide}
           onResetProgress={resetProgress}
           onClose={() => setSettingsOpen(false)}
-          onCleanCardsData = {cleanLearningProgress}
+          onCleanCardsData={cleanLearningProgress}
+          canManageProgress={canTrackProgress}
         />
       )}
 
@@ -258,7 +261,8 @@ const FlashcardsMode = ({
         <FlashcardsToolbar
           repeatTracking={repeatTracking}
           shuffled={shuffled}
-          onToggleRepeatTracking={() => setRepeatTracking(prev => !prev)}
+          canTrackProgress={canTrackProgress}
+          onToggleRepeatTracking={() => canTrackProgress && setRepeatTracking(prev => !prev)}
           onToggleShuffle={toggleShuffle}
           onOpenSettings={() => setSettingsOpen(true)}
         />
@@ -351,3 +355,5 @@ const FlashcardsMode = ({
 };
 
 export default FlashcardsMode;
+
+

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { addNewCard, basicDeckName, connectedDecks, createLibraryItems, delCenDeck, delConnectedCards, delFolder, filterLibraryItems, getGroupTitle, getSortDate, groupLibraryItems, isSameDay, isThisWeek, removeDeckFromFolders, updateDeckLastRepeat } from './localFunc';
-import { Card, Deck, Folder, LibraryItem } from '@/types/types.type';
+import { addNewCard, basicDeckName, connectedDecks, createDeckCopy, createLibraryItems, delCenDeck, delConnectedCardData, delConnectedCards, delFolder, filterLibraryItems, getGroupTitle, getSortDate, groupLibraryItems, isSameDay, isThisWeek, removeDeckFromFolders, resetDeckCardData, updateDeckLastRepeat } from './localFunc';
+import { Card, CardData, Deck, Folder, LibraryItem } from '@/types/types.type';
 
 describe('cardFunctions', () => {
   it('создает новую карточку при получении id колоды', () => {
@@ -660,3 +660,154 @@ describe('groupLibraryItems', () => {
     expect(result['Май 2026'][0].id).toBe('month-item');
   });
 });
+
+describe('createDeckCopy', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('returns null when target deck does not exist', () => {
+    expect(createDeckCopy([], [], 'missing-deck')).toBeNull();
+  });
+
+  it('copies target deck and only its cards with new ids and timestamps', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-06-20T10:00:00.000Z'));
+
+    const randomUUID = vi
+      .spyOn(crypto, 'randomUUID')
+      .mockReturnValueOnce('new-deck-id')
+      .mockReturnValueOnce('new-card-id-1')
+      .mockReturnValueOnce('new-card-id-2');
+
+    const decks: Deck[] = [
+      {
+        id: 'deck-1',
+        title: 'English',
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-02T00:00:00.000Z',
+        createdBy: 'User',
+        public: false,
+        lastRepeat: '2026-01-03T00:00:00.000Z',
+      },
+    ];
+
+    const cards: Card[] = [
+      {
+        id: 'card-1',
+        deckId: 'deck-1',
+        original: 'cat',
+        translation: '���',
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-01T00:00:00.000Z',
+      },
+      {
+        id: 'card-2',
+        deckId: 'deck-2',
+        original: 'dog',
+        translation: '���',
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-01T00:00:00.000Z',
+      },
+      {
+        id: 'card-3',
+        deckId: 'deck-1',
+        original: 'bird',
+        translation: '�����',
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-01T00:00:00.000Z',
+      },
+    ];
+
+    const result = createDeckCopy(decks, cards, 'deck-1');
+
+    expect(result?.newDeckId).toBe('new-deck-id');
+    expect(result?.decks).toHaveLength(2);
+    expect(result?.decks[1]).toMatchObject({
+      id: 'new-deck-id',
+      title: 'Copy: English',
+      createdAt: '2026-06-20T10:00:00.000Z',
+      updatedAt: '2026-06-20T10:00:00.000Z',
+      lastRepeat: '2026-06-20T10:00:00.000Z',
+    });
+
+    const copiedCards = result?.cards.filter(card => card.deckId === 'new-deck-id');
+
+    expect(copiedCards).toEqual([
+      expect.objectContaining({
+        id: 'new-card-id-1',
+        original: 'cat',
+        deckId: 'new-deck-id',
+        createdAt: '2026-06-20T10:00:00.000Z',
+        updatedAt: '2026-06-20T10:00:00.000Z',
+      }),
+      expect.objectContaining({
+        id: 'new-card-id-2',
+        original: 'bird',
+        deckId: 'new-deck-id',
+        createdAt: '2026-06-20T10:00:00.000Z',
+        updatedAt: '2026-06-20T10:00:00.000Z',
+      }),
+    ]);
+    expect(randomUUID).toHaveBeenCalledTimes(3);
+  });
+});
+
+describe('cardDataFunctions', () => {
+  const cards: Card[] = [
+    {
+      id: 'card-1',
+      deckId: 'deck-1',
+      original: 'cat',
+      translation: '���',
+      createdAt: '2026-01-01',
+      updatedAt: '2026-01-01',
+    },
+    {
+      id: 'card-2',
+      deckId: 'deck-2',
+      original: 'dog',
+      translation: '���',
+      createdAt: '2026-01-01',
+      updatedAt: '2026-01-01',
+    },
+  ];
+
+  const cardData: CardData[] = [
+    {
+      id: 'data-1',
+      cardId: 'card-1',
+      numOfRepeats: 3,
+      wrongRepeats: 1,
+      lastRepeat: ['2026-01-01'],
+    },
+    {
+      id: 'data-2',
+      cardId: 'card-2',
+      numOfRepeats: 5,
+      wrongRepeats: 2,
+      lastRepeat: ['2026-02-01'],
+    },
+  ];
+
+  it('removes card data connected to deleted deck cards', () => {
+    const result = delConnectedCardData(cards, cardData, 'deck-1');
+
+    expect(result).toEqual([cardData[1]]);
+  });
+
+  it('resets stats only for provided card ids', () => {
+    const result = resetDeckCardData(cardData, ['card-1']);
+
+    expect(result[0]).toMatchObject({
+      id: 'data-1',
+      cardId: 'card-1',
+      numOfRepeats: 0,
+      wrongRepeats: 0,
+      lastRepeat: [],
+    });
+    expect(result[1]).toEqual(cardData[1]);
+  });
+});
+

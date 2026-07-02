@@ -1,12 +1,13 @@
 'use client'
 
 import { setUpdatedCards } from '@/store/cardStore'; 
-import{ changeDeck } from '@/store/deckStore';
+import { changeDeck } from '@/store/deckStore';
 import { RootState } from '@/store/store';
 import { Card, DeckStatsGroup } from '@/types/types.type';
 import { Pencil, Star, Volume2 } from 'lucide-react';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch } from '@/store/hooks';
+import { useSelector } from 'react-redux';
 
 interface DeckStatsProps {
   deckId: string;
@@ -15,7 +16,7 @@ interface DeckStatsProps {
 
 
 const DeckStats = ({ deckId, deckCards }: DeckStatsProps) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const allCards = useSelector(
     (state: RootState) => state.cardStore.cards

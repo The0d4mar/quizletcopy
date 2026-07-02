@@ -3,38 +3,65 @@ import React from 'react';
 import AddFolderBtn from '../ui/AddFolderBtn/AddFolderBtn';
 import FolderList from '../ui/FoldersList/FolderList';
 import Link from 'next/link';
+import { Folder } from 'lucide-react';
 
+interface SideBarChapExtraProps {
+  isCollapsed: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
+}
 
-
-const SideBarChap = ({id, title, headers, icons, ways }: SideBarChapProps) => {
-
+const SideBarChap = ({
+  id,
+  title,
+  headers,
+  icons,
+  ways,
+  isCollapsed,
+  onMouseEnter,
+  onMouseLeave,
+  onFocus,
+  onBlur,
+}: SideBarChapProps & SideBarChapExtraProps) => {
   const localway = ways.length === 0 ? headers.map(() => '/') : ways;
-
-
-
+  const isUserFolders = id === 'userFolders';
 
   return (
-    <div className = 'flex flex-col gap-2'>
-        <div className='flex items-center justify-between'>
-          <h2 className='text-sm font-bold px-4 py-2.5'>{title}</h2>
-          {id == 'userFolders' && (
+    <div
+      className="flex flex-col gap-2"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onFocus={onFocus}
+      onBlur={onBlur}
+    >
+      {title && (!isCollapsed || isUserFolders) && (
+        <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
+          <h2 className={`sideBarTitle ${isCollapsed ? 'sideBarTitleCollapsed' : ''}`}>
+            {isUserFolders && <Folder size={18} aria-hidden="true" />}
+            {!isCollapsed && <span>{title}</span>}
+          </h2>
+          {isUserFolders && !isCollapsed && (
             <AddFolderBtn />
           )}
         </div>
-        {headers.map((header, index) => (
-            <Link className='
-            
-            sideNavButton
-            
-            ' key={index}
-            href = {localway[index]}>
-                <span>{React.createElement(icons[index])}</span>
-                <span>{header}</span>
-            </Link>
-        ))}
-        {id === 'userFolders' ? <FolderList /> : null}
-        
-        
+      )}
+
+      {headers.map((header, index) => (
+        <Link
+          className="sideNavButton"
+          key={index}
+          href={localway[index]}
+          title={isCollapsed ? header : undefined}
+          aria-label={isCollapsed ? header : undefined}
+        >
+          <span className="sideNavIcon">{React.createElement(icons[index])}</span>
+          {!isCollapsed && <span className="sideNavText">{header}</span>}
+        </Link>
+      ))}
+
+      {isUserFolders && !isCollapsed ? <FolderList /> : null}
     </div>
   );
 };

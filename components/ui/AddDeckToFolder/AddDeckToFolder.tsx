@@ -1,84 +1,54 @@
-'use client'
+"use client";
 
-import { loadDecks, loadFolders, saveFolders } from '@/storage';
-import { addDeckFolderFlag } from '@/store/AddDeckToFolderStore';
-import { setFolders } from '@/store/folderStore';
-import { RootState } from '@/store/store';
-import { Deck, Folder } from '@/types/types.type';
-import { X } from 'lucide-react';
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDecks } from "@/features/decks/useDecks";
+import { useAddDeckToFolder, useFolders } from "@/features/folders/useFolders";
+import { addDeckFolderFlag } from "@/store/AddDeckToFolderStore";
+import { RootState } from "@/store/store";
+import { X } from "lucide-react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 interface AddDeckToFolderProps {
   folderId: string;
-
 }
 
-const AddDeckToFolder = ({
-  folderId,
-}: AddDeckToFolderProps) => {
+const AddDeckToFolder = ({ folderId }: AddDeckToFolderProps) => {
   const [selectedDeckIds, setSelectedDeckIds] = useState<string[]>([]);
-  const addDeckToFolderFlag = useSelector(
-    (state: RootState) => state.adddecktofolderflag.state
-  );
-
+  const addDeckToFolderFlag = useSelector((state: RootState) => state.adddecktofolderflag.state);
   const dispatch = useDispatch();
+  const addDeckMutation = useAddDeckToFolder();
 
-  const folders = loadFolders();
-  const decks = loadDecks();
-
-  const currentFolder = folders.find(folder => folder.id === folderId);
-
+  const folders = useFolders().data ?? [];
+  const decks = useDecks().data ?? [];
+  const currentFolder = folders.find((folder) => folder.id === folderId);
   const currentFolderDeckIds = currentFolder?.deckIds ?? [];
-
-  const availableDecks = decks.filter(
-    deck => !currentFolderDeckIds.includes(deck.id)
-  );
+  const availableDecks = decks.filter((deck) => !currentFolderDeckIds.includes(deck.id));
 
   const toggleDeck = (deckId: string) => {
-    setSelectedDeckIds(prev =>
-      prev.includes(deckId)
-        ? prev.filter(id => id !== deckId)
-        : [...prev, deckId]
+    setSelectedDeckIds((prev) =>
+      prev.includes(deckId) ? prev.filter((id) => id !== deckId) : [...prev, deckId],
     );
   };
 
   const handleClose = () => {
     setSelectedDeckIds([]);
-    dispatch(addDeckFolderFlag(false))
+    dispatch(addDeckFolderFlag(false));
   };
 
-  const handleAddDecks = () => {
+  const handleAddDecks = async () => {
     if (selectedDeckIds.length === 0) return;
 
-    const updatedFolders: Folder[] = folders.map(folder => {
-      if (folder.id !== folderId) {
-        return folder;
-      }
-
-      return {
-        ...folder,
-        deckIds: [...folder.deckIds, ...selectedDeckIds],
-        updatedAt: new Date().toISOString(),
-      };
-    });
-
-    saveFolders(updatedFolders);
-    dispatch(setFolders(updatedFolders));
+    await Promise.all(selectedDeckIds.map((deckId) => addDeckMutation.mutateAsync({ folderId, deckId })));
 
     setSelectedDeckIds([]);
-    dispatch(addDeckFolderFlag(false))
+    dispatch(addDeckFolderFlag(false));
   };
 
-
   return (
-    <div className={`${!addDeckToFolderFlag ? 'hidden' : 'fixed'
-    } inset-0 z-50 flex items-center justify-center bg-black/50`}>
+    <div className={`${!addDeckToFolderFlag ? "hidden" : "fixed"} inset-0 z-50 flex items-center justify-center bg-black/50`}>
       <div className="w-full max-w-lg rounded-2xl border border-[var(--colorBorder)] bg-black p-6 text-white">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">
-            Добавить модули в папку
-          </h2>
+          <h2 className="text-xl font-semibold">Добавить модули в папку</h2>
 
           <button
             type="button"
@@ -95,7 +65,7 @@ const AddDeckToFolder = ({
           </div>
         ) : (
           <ul className="mb-6 flex max-h-[320px] flex-col gap-3 overflow-y-auto">
-            {availableDecks.map(deck => (
+            {availableDecks.map((deck) => (
               <li key={deck.id}>
                 <label className="flex cursor-pointer items-center gap-4 rounded-[var(--radiusCard)] border border-[var(--colorBorder)] px-[var(--paddingCardX)] py-[var(--paddingCardY)] transition hover:bg-[var(--colorSurfaceMuted)]">
                   <input
@@ -106,18 +76,17 @@ const AddDeckToFolder = ({
                   />
 
                   <div>
-                    <h3 className="font-semibold">
-                      {deck.title}
-                    </h3>
-
-                    <p className="text-sm text-white/50">
-                      Автор: {deck.createdBy}
-                    </p>
+                    <h3 className="font-semibold">{deck.title}</h3>
+                    <p className="text-sm text-white/50">Автор: {deck.createdBy}</p>
                   </div>
                 </label>
               </li>
             ))}
           </ul>
+        )}
+
+        {addDeckMutation.error && (
+          <p className="mb-4 text-sm text-red-400">Не удалось добавить модуль. Попробуй ещё раз.</p>
         )}
 
         <div className="flex justify-end gap-3">
@@ -132,20 +101,10 @@ const AddDeckToFolder = ({
           <button
             type="button"
             onClick={handleAddDecks}
-            disabled={selectedDeckIds.length === 0}
-            className="
-              rounded-[var(--radiusCard)]
-              border border-[var(--colorBorder)]
-              px-[var(--paddingCardX)]
-              py-[var(--paddingCardY)]
-              transition
-              hover:bg-white
-              hover:text-black
-              disabled:cursor-not-allowed
-              disabled:opacity-40
-            "
+            disabled={selectedDeckIds.length === 0 || addDeckMutation.isPending}
+            className="rounded-[var(--radiusCard)] border border-[var(--colorBorder)] px-[var(--paddingCardX)] py-[var(--paddingCardY)] transition hover:bg-white hover:text-black disabled:cursor-not-allowed disabled:opacity-40"
           >
-            Добавить
+            {addDeckMutation.isPending ? "Добавляем..." : "Добавить"}
           </button>
         </div>
       </div>

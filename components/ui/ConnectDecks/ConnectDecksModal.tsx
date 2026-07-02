@@ -1,12 +1,12 @@
 import { connectedDecks } from '@/api/localFunc';
-import { loadDecks } from '@/storage';
 import { setUpdatedCards } from '@/store/cardStore';
-import { setDecks } from '@/store/deckStore';
+import { deleteDeckFromApi } from '@/store/deckStore';
 import { modalState } from '@/store/modalStore';
 import { RootState } from '@/store/store';
-import { Cross, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch } from '@/store/hooks';
+import { useSelector } from 'react-redux';
 
 interface ConnectDecksModalProps {
   sendedDeckId: string;
@@ -20,11 +20,11 @@ const ConnectDecksModal = ({
   const decks = useSelector((state: RootState) => state.deckStore.decks);
   const cards = useSelector((state: RootState) => state.cardStore.cards);
   const hideFlag = useSelector((state: RootState) => state.modal.state);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const connectFunc = (joinedDeckId: string) => {
-    const [updatedCards, newDecks] = connectedDecks(sendedDeckId, joinedDeckId, cards, decks);
-    dispatch(setDecks(newDecks))
+    const [updatedCards] = connectedDecks(sendedDeckId, joinedDeckId, cards, decks);
+    dispatch(deleteDeckFromApi(joinedDeckId))
     dispatch(setUpdatedCards(updatedCards))
     onConnected();
     dispatch(modalState(false));

@@ -134,10 +134,47 @@
   padding: 0;
   border-radius: var(--radiusPill);
 }
+.sideBar {
+  width: var(--sideBarWidth);
+  flex-shrink: 0;
+  overflow: hidden;
+  padding-block: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  transition: width var(--transitionBase);
+}
+
+.sideBarCollapsed {
+  width: 64px;
+}
+
+.sideBarExpanded {
+  width: var(--sideBarWidth);
+}
+
+.sideBarTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 10px 16px;
+  font-size: var(--fontSizeSm);
+  font-weight: var(--fontWeightBold);
+  white-space: nowrap;
+}
+
+.sideBarTitleCollapsed {
+  justify-content: center;
+  width: 100%;
+  padding-inline: 0;
+}
 
 .sideNavButton{
   display: flex;
   align-items: center;
+  min-height: 46px;
   gap: 8px;
   padding: var(--paddingButtonY) var(--paddingButtonX);
   border-radius: var(--radiusCard);
@@ -150,6 +187,25 @@
   border: 1px solid var(--colorBorder);
   transition: 0.3s ease-in-out;
 }
+
+.sideBarCollapsed .sideNavButton {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.sideNavIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sideNavText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /*  block
               w-[200px]
               truncate
@@ -721,7 +777,7 @@
     flex-direction: column;
   }
 }
-/* Старые стили: уникальные селекторы */
+/* Р РЋРЎвЂљР В°РЎР‚РЎвЂ№Р Вµ РЎРѓРЎвЂљР С‘Р В»Р С‘: РЎС“Р Р…Р С‘Р С”Р В°Р В»РЎРЉР Р…РЎвЂ№Р Вµ РЎРѓР ВµР В»Р ВµР С”РЎвЂљР С•РЎР‚РЎвЂ№ */
 .trainingResultBackBtn {
   background: var(--colorFocus);
   border-color: transparent;
@@ -735,4 +791,256 @@
   border-radius: var(--radiusCard);
   background-color: var(--colorFocus);
   padding: 6px 12px;
+}
+
+/* Header account */
+
+.headerAccountNav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gapSm);
+  min-width: 220px;
+}
+
+.userAccount {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.userAvatarButton {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  overflow: hidden;
+
+  border: 1px solid var(--colorBorder);
+  border-radius: var(--radiusPill);
+
+  background: linear-gradient(135deg, var(--colorFocus), #8b8cff);
+  color: var(--colorText);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  box-shadow: var(--shadowCard);
+
+  transition:
+    border-color var(--transitionBase),
+    transform var(--transitionFast),
+    box-shadow var(--transitionBase);
+}
+
+.userAvatarButton:hover {
+  border-color: var(--colorBorderHover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadowModal);
+}
+
+.userAvatarButton:focus-visible {
+  outline: none;
+  border-color: var(--colorFocus);
+  box-shadow: 0 0 0 3px var(--colorFocusSoft), var(--shadowCard);
+}
+
+.userAvatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.userAvatarInitials {
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightBold);
+  letter-spacing: 0;
+}
+
+.userMenu {
+  position: absolute;
+  top: calc(100% + 14px);
+  right: 0;
+  z-index: 80;
+
+  width: min(340px, calc(100vw - 32px));
+  overflow: hidden;
+
+  border: 1px solid var(--colorBorderStrong);
+  border-radius: var(--radiusCard);
+
+  background: var(--colorBgSoft);
+  color: var(--colorText);
+  box-shadow: var(--shadowModal);
+}
+
+.userMenuHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--gapMd);
+
+  padding: 22px 24px;
+  border-bottom: 1px solid var(--colorBorder);
+}
+
+.userMenuAvatar {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 auto;
+  overflow: hidden;
+
+  border-radius: var(--radiusPill);
+  border: 1px solid var(--colorBorder);
+  background: linear-gradient(135deg, #8b8cff, var(--colorFocus));
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: var(--fontSizeMd);
+  font-weight: var(--fontWeightBold);
+}
+
+.userMenuIdentity {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.userMenuIdentity strong,
+.userMenuIdentity span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userMenuIdentity strong {
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightBold);
+}
+
+.userMenuIdentity span {
+  color: var(--colorTextSoft);
+  font-size: var(--fontSizeSm);
+  font-weight: var(--fontWeightSemiBold);
+}
+
+.userMenuSection {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--colorBorder);
+}
+
+.userMenuSectionBottom {
+  border-bottom: 0;
+}
+
+.userMenuItem,
+.userMenuLogout {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 24px;
+
+  display: flex;
+  align-items: center;
+  gap: var(--gapMd);
+
+  border: 0;
+  background: transparent;
+  color: var(--colorText);
+
+  font-size: var(--fontSizeBase);
+  font-weight: var(--fontWeightBold);
+  text-align: left;
+  cursor: pointer;
+
+  transition:
+    background var(--transitionBase),
+    color var(--transitionBase),
+    opacity var(--transitionBase);
+}
+
+.userMenuItem:hover,
+.userMenuLogout:hover {
+  background: var(--colorSurfaceElevated);
+}
+
+.userMenuItem:focus-visible,
+.userMenuLogout:focus-visible {
+  outline: none;
+  background: var(--colorSurfaceElevated);
+  color: var(--colorFocus);
+}
+
+.userMenuItem svg,
+.userMenuLogout svg {
+  flex: 0 0 auto;
+}
+
+.userMenuLogout:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .headerAccountNav {
+    min-width: 0;
+  }
+
+  .userMenu {
+    right: -8px;
+  }
+}
+/* Password input */
+
+.passwordInputWrap {
+  position: relative;
+  width: 100%;
+}
+
+.passwordInput {
+  padding-right: 52px;
+}
+
+.passwordVisibilityButton {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+
+  width: 34px;
+  height: 34px;
+  padding: 0;
+
+  border: 0;
+  border-radius: var(--radiusPill);
+  background: transparent;
+  color: var(--colorTextMuted);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition:
+    color var(--transitionBase),
+    background var(--transitionBase);
+}
+
+.passwordVisibilityButton:hover {
+  color: var(--colorText);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.passwordVisibilityButton:focus-visible {
+  outline: none;
+  color: var(--colorFocus);
+  box-shadow: 0 0 0 3px var(--colorFocusSoft);
 }

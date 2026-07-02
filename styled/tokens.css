@@ -95,3 +95,24 @@
   --transitionFast: 150ms ease;
   --transitionBase: 250ms ease;
 }
+:root[data-theme="light"] {
+  --colorBg: #f4f6fb;
+  --colorBgSoft: #ffffff;
+
+  --colorSurface: #ffffff;
+  --colorSurfaceLight: #ffffff;
+  --colorSurfaceMuted: #eef2f8;
+  --colorSurfaceElevated: #e7edf7;
+
+  --colorText: #111827;
+  --colorTextMuted: #667085;
+  --colorTextSoft: rgba(17, 24, 39, 0.74);
+  --colorTextDisabled: rgba(17, 24, 39, 0.38);
+
+  --colorBorder: rgba(17, 24, 39, 0.18);
+  --colorBorderStrong: rgba(17, 24, 39, 0.36);
+  --colorBorderHover: rgba(17, 24, 39, 0.62);
+
+  --shadowCard: 0 14px 40px rgba(15, 23, 42, 0.12);
+  --shadowModal: 0 24px 80px rgba(15, 23, 42, 0.24);
+}

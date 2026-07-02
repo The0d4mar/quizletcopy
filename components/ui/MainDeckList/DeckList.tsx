@@ -1,52 +1,55 @@
-'use client'
+"use client";
 
-import DeckCard from '../Card/DeckCard';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
-import { Folder } from '@/types/types.type';
+import { useCards } from "@/features/cards/useCards";
+import { useDecks } from "@/features/decks/useDecks";
+import { Folder } from "@/types/types.type";
+import DeckCard from "../Card/DeckCard";
 
 interface DeckListProps {
-  currentFolder?: Folder,
-  folderId?: string
-  searchValue?: string,
+  currentFolder?: Folder;
+  folderId?: string;
+  searchValue?: string;
 }
 
+const DeckList = ({ currentFolder, folderId = "NaFolder", searchValue = "" }: DeckListProps) => {
+  const decksQuery = useDecks();
+  const decksList = decksQuery.data ?? [];
+  const cardsQuery = useCards(decksList);
+  const cardsList = cardsQuery.data ?? [];
 
-const DeckList = ({ currentFolder, folderId = 'NaFolder', searchValue = '' }: DeckListProps) => {
-
-  const decksList = useSelector((state: RootState) => state.deckStore.decks)
   let filteredDecks = decksList;
 
-  if(folderId != 'NaFolder'){
+  if (folderId !== "NaFolder") {
+    const folderDecks = decksList.filter((deck) => currentFolder?.deckIds.includes(deck.id)) || [];
 
-    const folderDecks =
-    decksList.filter(deck =>
-      currentFolder?.deckIds.includes(deck.id)
-    ) || [];
-
-    filteredDecks = folderDecks.filter(deck =>
-      deck.title
-        .toLowerCase()
-        .includes(searchValue.toLowerCase())
+    filteredDecks = folderDecks.filter((deck) =>
+      deck.title.toLowerCase().includes(searchValue.toLowerCase()),
     );
-    console.log(filteredDecks)
   }
-  
-  const cardsList = useSelector((state: RootState) => state.cardStore.cards)
-  
+
+  const isLoading = decksQuery.isLoading && decksList.length === 0;
+
+  if (isLoading) {
+    return <p className="card text-[var(--colorTextMuted)]">Загружаем колоды...</p>;
+  }
+
   return (
     <div className="mb-6 flex flex-col items-start gap-3">
-        {filteredDecks.map(deck => {
-          const cardsCount = cardsList.filter(card => card.deckId === deck.id).length;
+      {decksQuery.error && (
+        <p className="card text-[var(--colorTextMuted)]">
+          Не удалось загрузить колоды. Проверь backend и подключение к базе данных.
+        </p>
+      )}
 
-          return (
-            <DeckCard
-              key={deck.id}
-              deck={deck}
-              cardsCount={cardsCount}
-            />
-          );
-        })}
+      {filteredDecks.length === 0 ? (
+        <p className="card text-[var(--colorTextMuted)]">Колоды пока не созданы.</p>
+      ) : (
+        filteredDecks.map((deck) => {
+          const cardsCount = cardsList.filter((card) => card.deckId === deck.id).length;
+
+          return <DeckCard key={deck.id} deck={deck} cardsCount={cardsCount} />;
+        })
+      )}
     </div>
   );
 };
