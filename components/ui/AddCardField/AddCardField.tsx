@@ -36,9 +36,7 @@ const AddCardField = ({
 }: AddCardFieldProps) => {
   return (
     <div key={id} className="card sectionBlock">
-      <div className="cardRow">
-        <span className="badge">{index + 1}</span>
-
+      <div className="addCardFieldHeader">
         <button
           type="button"
           aria-label={labels.delete}
@@ -47,6 +45,8 @@ const AddCardField = ({
         >
           <Trash2 size={18} />
         </button>
+
+        <span className="cardIndexText">{index + 1}</span>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">

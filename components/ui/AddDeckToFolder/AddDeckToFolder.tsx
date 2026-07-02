@@ -48,12 +48,12 @@ const AddDeckToFolder = ({ folderId }: AddDeckToFolderProps) => {
     <div className={`${!addDeckToFolderFlag ? "hidden" : "fixed"} inset-0 z-50 flex items-center justify-center bg-black/50`}>
       <div className="w-full max-w-lg rounded-2xl border border-[var(--colorBorder)] bg-black p-6 text-white">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Добавить модули в папку</h2>
+          <h2 className="text-xl font-semibold">Р”РѕР±Р°РІРёС‚СЊ РјРѕРґСѓР»Рё РІ РїР°РїРєСѓ</h2>
 
           <button
             type="button"
             onClick={handleClose}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--colorBorder)] transition hover:bg-white hover:text-black"
+            className="button buttonGhost iconButton modalCloseButton"
           >
             <X size={18} />
           </button>
@@ -61,7 +61,7 @@ const AddDeckToFolder = ({ folderId }: AddDeckToFolderProps) => {
 
         {availableDecks.length === 0 ? (
           <div className="rounded-[var(--radiusCard)] border border-[var(--colorBorder)] px-[var(--paddingCardX)] py-[var(--paddingCardY)] text-white/60">
-            Нет доступных модулей для добавления
+            РќРµС‚ РґРѕСЃС‚СѓРїРЅС‹С… РјРѕРґСѓР»РµР№ РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ
           </div>
         ) : (
           <ul className="mb-6 flex max-h-[320px] flex-col gap-3 overflow-y-auto">
@@ -77,7 +77,7 @@ const AddDeckToFolder = ({ folderId }: AddDeckToFolderProps) => {
 
                   <div>
                     <h3 className="font-semibold">{deck.title}</h3>
-                    <p className="text-sm text-white/50">Автор: {deck.createdBy}</p>
+                    <p className="text-sm text-white/50">РђРІС‚РѕСЂ: {deck.createdBy}</p>
                   </div>
                 </label>
               </li>
@@ -86,7 +86,7 @@ const AddDeckToFolder = ({ folderId }: AddDeckToFolderProps) => {
         )}
 
         {addDeckMutation.error && (
-          <p className="mb-4 text-sm text-red-400">Не удалось добавить модуль. Попробуй ещё раз.</p>
+          <p className="mb-4 text-sm text-red-400">РќРµ СѓРґР°Р»РѕСЃСЊ РґРѕР±Р°РІРёС‚СЊ РјРѕРґСѓР»СЊ. РџРѕРїСЂРѕР±СѓР№ РµС‰С‘ СЂР°Р·.</p>
         )}
 
         <div className="flex justify-end gap-3">
@@ -95,7 +95,7 @@ const AddDeckToFolder = ({ folderId }: AddDeckToFolderProps) => {
             onClick={handleClose}
             className="rounded-[var(--radiusCard)] border border-[var(--colorBorder)] px-[var(--paddingCardX)] py-[var(--paddingCardY)] transition hover:bg-white hover:text-black"
           >
-            Отмена
+            РћС‚РјРµРЅР°
           </button>
 
           <button
@@ -104,7 +104,7 @@ const AddDeckToFolder = ({ folderId }: AddDeckToFolderProps) => {
             disabled={selectedDeckIds.length === 0 || addDeckMutation.isPending}
             className="rounded-[var(--radiusCard)] border border-[var(--colorBorder)] px-[var(--paddingCardX)] py-[var(--paddingCardY)] transition hover:bg-white hover:text-black disabled:cursor-not-allowed disabled:opacity-40"
           >
-            {addDeckMutation.isPending ? "Добавляем..." : "Добавить"}
+            {addDeckMutation.isPending ? "Р”РѕР±Р°РІР»СЏРµРј..." : "Р”РѕР±Р°РІРёС‚СЊ"}
           </button>
         </div>
       </div>

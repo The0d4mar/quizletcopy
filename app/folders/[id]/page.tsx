@@ -78,7 +78,7 @@ const FolderPage = () => {
     <section className="mainSection pageStack">
       <AddDeckToFolder folderId={currentFolder.id} />
 
-      <header className="pageHeader">
+      <header className="pageHeader folderPageHeader">
         <div className="cardIdentity">
           <span className="cardIconBox"><FolderIcon size={34} /></span>
           <div className="min-w-0">
