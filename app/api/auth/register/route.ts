@@ -17,25 +17,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (existingUser) {
-      if (process.env.NODE_ENV === "production") {
-        throw new ApiError(409, "User with this email already exists");
-      }
-
-      const user = await prisma.user.update({
-        where: { email: data.email },
-        data: {
-          name: data.name,
-          passwordHash,
-        },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          createdAt: true,
-        },
-      });
-
-      return NextResponse.json({ user, recovered: true });
+      throw new ApiError(409, "User with this email already exists");
     }
 
     const user = await prisma.user.create({

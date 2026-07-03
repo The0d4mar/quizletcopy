@@ -45,3 +45,32 @@ export async function loginUser(input: { email: string; password: string; callba
 export async function logoutUser() {
   await signOut({ callbackUrl: "/login" });
 }
+export async function updateAccount(input: { name: string | null }) {
+  const response = await fetch("/api/account", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+
+  return readJson<{ user: User }>(response);
+}
+
+export async function changePassword(input: { currentPassword: string; newPassword: string }) {
+  const response = await fetch("/api/account/password", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+
+  return readJson<{ ok: true }>(response);
+}
+
+export async function deleteAccount(input: { currentPassword: string }) {
+  const response = await fetch("/api/account", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+
+  return readJson<{ ok: true }>(response);
+}
