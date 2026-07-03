@@ -10,7 +10,7 @@ import { setUpdatedCards } from "@/store/cardStore";
 import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { Card, Deck } from "@/types/types.type";
-import { ChevronLeft, Plus } from "lucide-react";
+import { ChevronLeft, Plus, X } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
@@ -165,39 +165,33 @@ const EditDeckForm = ({ currentDeck, deckId, isCreateMode, isRenderDeckMode, ini
   };
 
   return (
-    <section className="min-h-screen w-full px-10 py-8 text-white">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-8 flex items-center justify-between">
+    <section className="deckEditPage">
+      <div className="deckEditContainer">
+        <div className="deckEditHeader">
           {isRenderDeckMode ? (
-            <Link href={`/deck/${deckId}`} className="flex items-center gap-2 text-sm font-semibold text-indigo-200 hover:text-white">
+            <Link href={`/deck/${deckId}`} className="deckEditBackLink">
               <ChevronLeft size={20} />
               {labels.backToDeck}
             </Link>
           ) : (
-            <button
-              className="font-light font-normal text-[var(--colorTextDisabled)] underline underline-offset-3 transition-all duration-0.3 hover:text-[var(--color-text)]"
-              onClick={(event) => cancelDeckCreation(event)}
-            >
-              {labels.cancel}
-            </button>
+            <>
+              <button className="deckEditCancelText" onClick={(event) => cancelDeckCreation(event)}>
+                {labels.cancel}
+              </button>
+              <button className="deckEditCancelIcon" aria-label={labels.cancel} onClick={(event) => cancelDeckCreation(event)}>
+                <X size={20} />
+              </button>
+            </>
           )}
 
-          <div className="flex items-center gap-5">
+          <div className="deckEditActions">
             {isCreateMode ? (
-              <button
-                className="px-[var(--paddingButtonX)] py-[var(--paddingButtonY)] text-sm font-bold text-white border border-[var(--colorBorder)] rounded-full transition hover:border-[var(--colorBorderHover)] disabled:opacity-60"
-                onClick={(event) => saveChanges(event, 0)}
-                disabled={isSaving}
-              >
+              <button className="button buttonPill" onClick={(event) => saveChanges(event, 0)} disabled={isSaving}>
                 {isSaving ? labels.saving : labels.createAndClose}
               </button>
             ) : null}
 
-            <button
-              onClick={(event) => saveChanges(event, 1)}
-              disabled={isSaving}
-              className="px-[var(--paddingButtonX)] py-[var(--paddingButtonY)] text-sm font-bold text-white border border-[var(--colorBorder)] rounded-full transition hover:border-[var(--colorBorderHover)] hover:bg-[var(--colorSuccess)] hover:text-white disabled:opacity-60"
-            >
+            <button onClick={(event) => saveChanges(event, 1)} disabled={isSaving} className="button buttonPill buttonSuccess">
               {isSaving ? labels.saving : isCreateMode ? labels.openDeck : labels.saveChanges}
             </button>
           </div>
@@ -210,7 +204,7 @@ const EditDeckForm = ({ currentDeck, deckId, isCreateMode, isRenderDeckMode, ini
               original={deckTitle}
               updateCardfunc={updateDeckTitle}
               placeholder={labels.titlePlaceholder}
-              className="w-full bg-transparent text-lg font-bold text-white outline-none"
+              className="w-full bg-transparent text-lg font-bold text-[var(--colorText)] outline-none"
               spanFlag={false}
             />
           </label>
@@ -233,11 +227,11 @@ const EditDeckForm = ({ currentDeck, deckId, isCreateMode, isRenderDeckMode, ini
             value={deckDescription}
             onChange={(event) => setDeckDescription(event.target.value)}
             placeholder={labels.descriptionPlaceholder}
-            className="min-h-[70px] w-full resize-none rounded-[var(--radiusLg)] bg-[var(--colorSurfaceMuted)] border border-[var(--colorBorder)] px-[var(--paddingCardX)] py-[var(--paddingCardY)] font-semibold text-white outline-none placeholder:text-[var(--colorTextMuted)]"
+            className="input textarea"
           />
         </div>
 
-        <div className="space-y-6">
+        <div className="cardList">
           {deckCards.map((card, index) => (
             <AddCardField
               key={card.id}
@@ -254,7 +248,7 @@ const EditDeckForm = ({ currentDeck, deckId, isCreateMode, isRenderDeckMode, ini
           ))}
         </div>
 
-        <div className="mt-6 flex items-center gap-4 justify-center">
+        <div className="mt-6 actionRow justify-center">
           <button onClick={addCard} className="button">
             <Plus size={18} />
             {labels.addCard}

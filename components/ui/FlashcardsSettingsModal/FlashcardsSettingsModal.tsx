@@ -35,7 +35,7 @@ const FlashcardsSettingsModal = ({
         <div className="mb-[var(--gapXl)] flex items-start justify-between">
           <h2 className="text-[var(--fontSizeXl)] font-bold">{labels.title}</h2>
 
-          <button type="button" onClick={onClose} className="button rounded-[var(--radiusPill)]">
+          <button type="button" onClick={onClose} className="button buttonGhost iconButton modalCloseButton">
             <X size={22} />
           </button>
         </div>

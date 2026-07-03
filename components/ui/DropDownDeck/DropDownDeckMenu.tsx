@@ -58,21 +58,9 @@ const DropDownDeckMenu = ( { localId, windowFlag = 'openedDeck' } : DropDownDeck
   return (
     <div
       ref={menuRef}
-      className="relative"
+      className="dropdownDeckRoot"
     >
-      <button
-        className="
-          flex
-          h-8
-          w-8
-          items-center
-          justify-center
-          rounded-full
-          border
-          bg-[var(--colorBg)]
-        "
-        onClick={changeDropDownFlag}
-      >
+      <button type="button" className="dropdownDeckButton" onClick={changeDropDownFlag}>
         <Ellipsis />
       </button>
 

@@ -6,6 +6,7 @@ interface TrainingModeTabsProps {
   currentMode: TrainingMode;
   onChangeMode: (mode: TrainingMode) => void;
   availableModes?: TrainingMode[];
+  className?: string;
 }
 
 const tabs: { label: string; value: TrainingMode }[] = [
@@ -18,24 +19,18 @@ const TrainingModeTabs = ({
   currentMode,
   onChangeMode,
   availableModes = ["cards", "learn", "test"],
+  className = "",
 }: TrainingModeTabsProps) => {
   const visibleTabs = tabs.filter((tab) => availableModes.includes(tab.value));
 
   return (
-    <div className="mb-[var(--gapXl)] flex flex-wrap gap-[var(--gapMd)]">
+    <div className={`trainingModeTabs ${className}`}>
       {visibleTabs.map((tab) => (
         <button
           key={tab.value}
           type="button"
           onClick={() => onChangeMode(tab.value)}
-          className={`
-            button rounded-[var(--radiusPill)]
-            ${
-              currentMode === tab.value
-                ? "border-[var(--colorFocus)] bg-[var(--colorSurfaceLight)]"
-                : "bg-[var(--colorSurfaceMuted)]"
-            }
-          `}
+          className={`button buttonPill ${currentMode === tab.value ? "border-[var(--colorFocus)] bg-[var(--colorSurfaceLight)]" : "buttonSurface"}`}
         >
           {tab.label}
         </button>

@@ -1,22 +1,23 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import SideBarChap from './SideBarChap';
-import { sideNavData } from '@/api/DataBlock';
+import { sideNavData } from "@/api/DataBlock";
+import React, { useState } from "react";
+import SideBarChap from "./SideBarChap";
 
 interface SideBarProps {
   isCollapsed: boolean;
+  onNavigate?: () => void;
 }
 
-const SideBar = ({ isCollapsed }: SideBarProps) => {
+const SideBar = ({ isCollapsed, onNavigate }: SideBarProps) => {
   const innerSideNav = sideNavData;
   const [isFoldersHovered, setIsFoldersHovered] = useState(false);
   const isExpanded = !isCollapsed || isFoldersHovered;
 
   return (
     <aside
-      className={`sideBar ${isExpanded ? 'sideBarExpanded' : 'sideBarCollapsed'}`}
-      aria-label="Боковая навигация"
+      className={`sideBar ${isExpanded ? "sideBarExpanded" : "sideBarCollapsed"}`}
+      aria-label="\u0411\u043e\u043a\u043e\u0432\u0430\u044f \u043d\u0430\u0432\u0438\u0433\u0430\u0446\u0438\u044f"
     >
       {Object.values(innerSideNav).map((item, index, array) => (
         <React.Fragment key={item.id}>
@@ -27,10 +28,11 @@ const SideBar = ({ isCollapsed }: SideBarProps) => {
             icons={item.icons}
             ways={item.ways}
             isCollapsed={!isExpanded}
-            onMouseEnter={item.id === 'userFolders' ? () => setIsFoldersHovered(true) : undefined}
-            onMouseLeave={item.id === 'userFolders' ? () => setIsFoldersHovered(false) : undefined}
-            onFocus={item.id === 'userFolders' ? () => setIsFoldersHovered(true) : undefined}
-            onBlur={item.id === 'userFolders' ? () => setIsFoldersHovered(false) : undefined}
+            onNavigate={onNavigate}
+            onMouseEnter={item.id === "userFolders" ? () => setIsFoldersHovered(true) : undefined}
+            onMouseLeave={item.id === "userFolders" ? () => setIsFoldersHovered(false) : undefined}
+            onFocus={item.id === "userFolders" ? () => setIsFoldersHovered(true) : undefined}
+            onBlur={item.id === "userFolders" ? () => setIsFoldersHovered(false) : undefined}
           />
 
           {index !== array.length - 1 && (

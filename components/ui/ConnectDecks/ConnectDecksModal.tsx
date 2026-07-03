@@ -40,11 +40,11 @@ const ConnectDecksModal = ({
       <div className="w-full max-w-lg rounded-2xl border border-white bg-black p-6">
         <div className="relative mb-6 flex items-center justify-between">
           <h2 className="text-xl">
-            Выберите колоду для объединения
+            Р’С‹Р±РµСЂРёС‚Рµ РєРѕР»РѕРґСѓ РґР»СЏ РѕР±СЉРµРґРёРЅРµРЅРёСЏ
           </h2>
 
           <button
-            className="text-white hover:text-gray-300"
+            className="button buttonGhost iconButton modalCloseButton"
             onClick={() => dispatch(modalState(false))}
           >
             <X size={24}/>

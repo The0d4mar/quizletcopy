@@ -113,7 +113,7 @@ const DropdownMenu = ({ localId, windowFlag = "openedDeck" }: DropdownMenuProps)
   const sendedMenuData = windowFlag === "openedDeck" ? menuItems : folderMenu;
 
   return (
-    <div className="w-[220px] overflow-hidden rounded-2xl border border-[var(--colorBorderStrong)] shadow-[var(--shadowModal)] bg-[var(--colorBg)] absolute right-[0] mt-3">
+    <div className="dropdownMenuPanel">
       {sendedMenuData.map((item) => (
         <DropDownMenuBtn item={item} key={item.label} />
       ))}

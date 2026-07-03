@@ -1,6 +1,6 @@
-import { DeckCardProps } from '@/types/types.type';
-import { IdCardLanyard } from 'lucide-react';
-import Link from 'next/link';
+import { DeckCardProps } from "@/types/types.type";
+import { IdCardLanyard } from "lucide-react";
+import Link from "next/link";
 
 const labels = {
   author: "\u0410\u0432\u0442\u043e\u0440",
@@ -9,15 +9,17 @@ const labels = {
 
 const DeckCard = ({ deck, cardsCount }: DeckCardProps) => {
   return (
-    <Link className="deckCard" href={`/deck/${deck.id}`}>
-      <div>
-        <IdCardLanyard size={48} />
-      </div>
-      <div className="flex flex-col justify-start">
-        <h2>{deck.title}</h2>
-        <div className="deckCardInfo">
-          <p>{labels.author}: {deck.createdBy}</p>
-          <p>{labels.cards}: {cardsCount}</p>
+    <Link className="deckCard cardRow" href={`/deck/${deck.id}`}>
+      <div className="cardIdentity">
+        <span className="cardIconBox">
+          <IdCardLanyard size={32} />
+        </span>
+        <div className="min-w-0">
+          <h2 className="sectionTitle truncate">{deck.title}</h2>
+          <div className="deckCardInfo">
+            <p>{labels.author}: {deck.createdBy}</p>
+            <p>{labels.cards}: {cardsCount}</p>
+          </div>
         </div>
       </div>
     </Link>

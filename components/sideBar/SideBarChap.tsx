@@ -11,6 +11,7 @@ interface SideBarChapExtraProps {
   onMouseLeave?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
+  onNavigate?: () => void;
 }
 
 const SideBarChap = ({
@@ -24,6 +25,7 @@ const SideBarChap = ({
   onMouseLeave,
   onFocus,
   onBlur,
+  onNavigate,
 }: SideBarChapProps & SideBarChapExtraProps) => {
   const localway = ways.length === 0 ? headers.map(() => '/') : ways;
   const isUserFolders = id === 'userFolders';
@@ -55,6 +57,7 @@ const SideBarChap = ({
           href={localway[index]}
           title={isCollapsed ? header : undefined}
           aria-label={isCollapsed ? header : undefined}
+          onClick={onNavigate}
         >
           <span className="sideNavIcon">{React.createElement(icons[index])}</span>
           {!isCollapsed && <span className="sideNavText">{header}</span>}

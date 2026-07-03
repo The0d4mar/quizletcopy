@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import UserAccountMenu from "@/features/auth/UserAccountMenu";
 import HeaderBarBtn from "./HeaderBarBtn";
 import HeaderSearch from "./HeaderSearch";
-import HeaderToMain from "./HeaderToMain";
 
 const labels = {
   account: "\u0410\u043a\u043a\u0430\u0443\u043d\u0442",
@@ -25,12 +24,12 @@ const Header = ({ isSidebarCollapsed, onToggleSidebar }: HeaderProps) => {
   const isAuthenticated = Boolean(session?.user);
 
   return (
-    <header className="px-6 py-5 flex items-center justify-between gap-5">
-      <div className="flex items-center justify-between">
+    <header className="appHeader">
+      <div className="flex items-center justify-between shrink-0">
         <HeaderBarBtn isSidebarCollapsed={isSidebarCollapsed} onToggleSidebar={onToggleSidebar} />
       </div>
 
-      {isAuthenticated ? <HeaderSearch /> : <div className="flex-1" aria-hidden="true" />}
+      {isAuthenticated ? <HeaderSearch /> : <div className="hidden flex-1 md:block" aria-hidden="true" />}
 
       <nav className="headerAccountNav" aria-label={labels.account}>
         {status === "loading" ? (
